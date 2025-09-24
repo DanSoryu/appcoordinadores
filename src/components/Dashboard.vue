@@ -12,7 +12,9 @@
               @click="showUserMenu = !showUserMenu"
               class="flex items-center space-x-3 hover:bg-blue-700 px-3 py-2 rounded-md transition-colors"
             >
-                <!-- Imagen de usuario eliminada por error de importación -->
+              <svg class="w-6 h-6" fill="white" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
               <span class="font-medium">{{ user.usuario }}</span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -61,7 +63,7 @@
         <h2 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h2>
         
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div class="bg-white p-6 rounded-lg shadow">
             <div class="flex items-center">
               <div class="p-2 bg-blue-100 rounded-lg">
@@ -71,7 +73,7 @@
               </div>
               <div class="ml-4">
                 <p class="text-sm font-medium text-gray-600">Total Órdenes</p>
-                <p class="text-2xl font-semibold text-gray-900">1,234</p>
+                <p class="text-2xl font-semibold text-gray-900">{{ dashboardData.total_ordenes }}</p>
               </div>
             </div>
           </div>
@@ -85,7 +87,7 @@
               </div>
               <div class="ml-4">
                 <p class="text-sm font-medium text-gray-600">Completas</p>
-                <p class="text-2xl font-semibold text-gray-900">856</p>
+                <p class="text-2xl font-semibold text-gray-900">{{ dashboardData.ordenes_completadas }}</p>
               </div>
             </div>
           </div>
@@ -99,21 +101,7 @@
               </div>
               <div class="ml-4">
                 <p class="text-sm font-medium text-gray-600">Pendientes</p>
-                <p class="text-2xl font-semibold text-gray-900">378</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex items-center">
-              <div class="p-2 bg-purple-100 rounded-lg">
-                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                </svg>
-              </div>
-              <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Materiales</p>
-                <p class="text-2xl font-semibold text-gray-900">2,456</p>
+                <p class="text-2xl font-semibold text-gray-900">{{ dashboardData.ordenes_incompletas }}</p>
               </div>
             </div>
           </div>
@@ -125,12 +113,23 @@
           <div class="bg-white p-6 rounded-lg shadow">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Órdenes por Mes</h3>
             <div class="h-64 flex items-end justify-between space-x-2">
-              <div v-for="(value, month) in barChartData" :key="month" class="flex flex-col items-center">
-                <div 
-                  class="bg-blue-500 w-8 rounded-t transition-all duration-300 hover:bg-blue-600"
-                  :style="{ height: `${(value / Math.max(...Object.values(barChartData))) * 200}px` }"
-                ></div>
-                <span class="text-xs text-gray-600 mt-2">{{ month }}</span>
+              <template v-if="dashboardData.ordenes_por_meses.length">
+                <div v-for="item in dashboardData.ordenes_por_meses" :key="item.mes" 
+                     class="flex flex-col items-center group relative">
+                  <div 
+                    class="bg-blue-500 w-8 rounded-t transition-all duration-300 hover:bg-blue-600"
+                    :style="{ height: item.total ? `${(item.total / Math.max(...dashboardData.ordenes_por_meses.map(m => m.total))) * 180}px` : '2px' }"
+                  >
+                    <!-- Tooltip -->
+                    <div class="opacity-0 group-hover:opacity-100 absolute bottom-full mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap">
+                      {{ item.total }} órdenes
+                    </div>
+                  </div>
+                  <span class="text-xs text-gray-600 mt-2">{{ getMesNombre(item.mes) }}</span>
+                </div>
+              </template>
+              <div v-else class="w-full h-full flex items-center justify-center text-gray-500">
+                No hay datos disponibles
               </div>
             </div>
           </div>
@@ -142,16 +141,37 @@
               <div class="relative w-48 h-48">
                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="40" fill="none" stroke="#e5e7eb" stroke-width="10"/>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#3b82f6" stroke-width="10" 
-                          stroke-dasharray="157" stroke-dashoffset="47" stroke-linecap="round"/>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#10b981" stroke-width="10" 
-                          stroke-dasharray="94" stroke-dashoffset="-110" stroke-linecap="round"/>
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="#f59e0b" stroke-width="10" 
-                          stroke-dasharray="63" stroke-dashoffset="-204" stroke-linecap="round"/>
+                  <!-- Círculo base para el perímetro total -->
+                  <circle 
+                    cx="50" cy="50" r="40" 
+                    fill="none" 
+                    stroke="#3b82f6" 
+                    stroke-width="10"
+                    :stroke-dasharray="getCircleLength(1)"
+                    stroke-dashoffset="0"
+                  />
+                  <!-- Círculo para órdenes completas -->
+                  <circle 
+                    cx="50" cy="50" r="40" 
+                    fill="none" 
+                    stroke="#10b981" 
+                    stroke-width="10"
+                    :stroke-dasharray="getCircleLength(dashboardData.ordenes_completadas / (dashboardData.total_ordenes || 1))"
+                    stroke-dashoffset="0"
+                  />
+                  <!-- Círculo para órdenes pendientes -->
+                  <circle 
+                    cx="50" cy="50" r="40" 
+                    fill="none" 
+                    stroke="#f59e0b" 
+                    stroke-width="10"
+                    :stroke-dasharray="getCircleLength(dashboardData.ordenes_incompletas / (dashboardData.total_ordenes || 1))"
+                    :stroke-dashoffset="-getCircleLength(dashboardData.ordenes_completadas / (dashboardData.total_ordenes || 1))"
+                  />
                 </svg>
                 <div class="absolute inset-0 flex items-center justify-center">
                   <div class="text-center">
-                    <div class="text-2xl font-bold text-gray-900">1,234</div>
+                    <div class="text-2xl font-bold text-gray-900">{{ dashboardData.total_ordenes }}</div>
                     <div class="text-sm text-gray-600">Total</div>
                   </div>
                 </div>
@@ -160,40 +180,139 @@
             <div class="mt-4 space-y-2">
               <div class="flex items-center">
                 <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                <span class="text-sm text-gray-600">Completas (70%)</span>
+                <span class="text-sm text-gray-600">
+                  Completas ({{ getPercentage(dashboardData.ordenes_completadas, dashboardData.total_ordenes) }}%)
+                </span>
               </div>
               <div class="flex items-center">
                 <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                <span class="text-sm text-gray-600">En Proceso (20%)</span>
+                <span class="text-sm text-gray-600">
+                  En Proceso (20%)
+                </span>
               </div>
               <div class="flex items-center">
                 <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                <span class="text-sm text-gray-600">Pendientes (10%)</span>
+                <span class="text-sm text-gray-600">
+                  Pendientes ({{ getPercentage(dashboardData.ordenes_incompletas, dashboardData.total_ordenes) }}%)
+                </span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Reports -->
         <div class="bg-white rounded-lg shadow">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">Reportes Recientes</h3>
-          </div>
-          <div class="p-6">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <h4 class="font-medium text-gray-900">Reporte Mensual - Enero 2024</h4>
-                  <p class="text-sm text-gray-600">Generado el 01/02/2024</p>
-                </div>
-                <button class="text-blue-600 hover:text-blue-800 font-medium">Descargar</button>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Top Técnicos -->
+            <div class="bg-white rounded-lg shadow">
+              <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Top 5 Técnicos con Más Órdenes</h3>
               </div>
-              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <h4 class="font-medium text-gray-900">Análisis de Materiales</h4>
-                  <p class="text-sm text-gray-600">Generado el 28/01/2024</p>
+              <div class="p-6">
+                <div class="space-y-4">
+                  <div v-for="(tecnico, index) in dashboardData.tecnicos_con_mas_ordenes" :key="index" 
+                       class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div class="flex items-center space-x-4">
+                      <span class="w-8 h-8 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full font-semibold">
+                        #{{ index + 1 }}
+                      </span>
+                      <div>
+                        <h4 class="font-medium text-gray-900">{{ dashboardData.nombres_tecnicos[index] || 'Técnico ' + tecnico.FK_Tecnico_apps }}</h4>
+                        <p class="text-sm text-gray-600">
+                          {{ tecnico.total_ordenes }} órdenes
+                          <span class="text-gray-400">
+                            ({{ Math.round((tecnico.total_ordenes / dashboardData.total_ordenes) * 100) }}% del total)
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="w-32 bg-gray-200 rounded-full h-2 relative group">
+                      <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                           :style="{ width: (tecnico.total_ordenes / dashboardData.tecnicos_con_mas_ordenes[0].total_ordenes * 100) + '%' }">
+                      </div>
+                      <!-- Tooltip -->
+                      <div class="opacity-0 group-hover:opacity-100 absolute right-0 bottom-full mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap">
+                        {{ Math.round((tecnico.total_ordenes / dashboardData.tecnicos_con_mas_ordenes[0].total_ordenes) * 100) }}% del máximo
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <button class="text-blue-600 hover:text-blue-800 font-medium">Descargar</button>
+              </div>
+            </div>
+
+            <!-- Folios Faltantes -->
+            <div class="bg-white rounded-lg shadow">
+              <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Folios Faltantes de Hoy</h3>
+                <p class="mt-1 text-sm text-gray-500">
+                  Total: {{ dashboardData.folios_faltantes_hoy?.length || 0 }} registros
+                </p>
+              </div>
+              <div class="p-6">
+                <div class="overflow-x-auto">
+                  <table class="min-w-full">
+                    <thead>
+                      <tr>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Folio Pisa
+                        </th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Técnico
+                        </th>
+                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Expediente
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                      <tr v-for="folio in paginatedFolios" :key="folio.Folio_Pisa" class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm text-gray-900">
+                          {{ folio.Folio_Pisa }}
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-900">
+                          {{ folio.Tecnico }}
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-900">
+                          {{ folio.Expediente }}
+                        </td>
+                      </tr>
+                      <tr v-if="!dashboardData.folios_faltantes_hoy?.length">
+                        <td colspan="3" class="px-4 py-3 text-sm text-gray-500 text-center">
+                          No hay folios faltantes hoy
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot v-if="dashboardData.folios_faltantes_hoy?.length > itemsPerPageFolios">
+                      <tr>
+                        <td colspan="6">
+                          <div class="px-4 py-3 flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                              <button 
+                                @click="previousPageFolios"
+                                :disabled="currentPageFolios === 1"
+                                class="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50"
+                              >
+                                Anterior
+                              </button>
+                              <span class="text-sm text-gray-700">
+                                Página {{ currentPageFolios }} de {{ totalPagesFolios }}
+                              </span>
+                              <button 
+                                @click="nextPageFolios"
+                                :disabled="currentPageFolios >= totalPagesFolios"
+                                class="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50"
+                              >
+                                Siguiente
+                              </button>
+                            </div>
+                            <div class="text-sm text-gray-700">
+                              Mostrando {{ startRecordFolios }} - {{ endRecordFolios }} de {{ dashboardData.folios_faltantes_hoy?.length || 0 }} registros
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -463,6 +582,15 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                       </button>
+                      <button 
+                        @click="openPDF(item)"
+                        class="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-100 transition-colors"
+                        title="Ver PDF"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -537,6 +665,96 @@
       </div>
       </div>
     </main>
+
+    <!-- Modal de Fotos -->
+    <div v-if="showPhotoModal" class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div class="bg-white w-[90%] max-h-[90vh] rounded-lg shadow-xl">
+        <!-- Encabezado del modal -->
+        <div class="bg-blue-600 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
+          <h3 class="text-xl font-semibold">Fotografías Orden: {{ currentPhotoItem?.Folio_Pisa }}</h3>
+          <button @click="showPhotoModal = false" class="text-white hover:text-gray-200">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Contenido del modal -->
+        <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 80px);">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Foto ONT -->
+            <div class="space-y-2">
+              <h4 class="font-semibold text-gray-700">Foto ONT</h4>
+              <p class="text-sm text-gray-500 mb-2">Una fotografía de la parte frontal de la ONT</p>
+              <div class="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden">
+                <img 
+                  :src="currentPhotoItem?.Foto_Ont ? 'https://api.ed-intra.com/' + currentPhotoItem.Foto_Ont.replace('../', '') : noImage" 
+                  class="object-contain w-full h-full"
+                  alt="Foto ONT"
+                  @error="$event.target.src = noImage"
+                />
+              </div>
+            </div>
+
+            <!-- Foto Casa Cliente -->
+            <div class="space-y-2">
+              <h4 class="font-semibold text-gray-700">Foto Casa Cliente</h4>
+              <p class="text-sm text-gray-500 mb-2">Una fotografía de la casa del cliente</p>
+              <div class="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden">
+                <img 
+                  :src="currentPhotoItem?.Foto_Casa_Cliente ? 'https://api.ed-intra.com/' + currentPhotoItem.Foto_Casa_Cliente.replace('../', '') : noImage" 
+                  class="object-contain w-full h-full"
+                  alt="Foto Casa Cliente"
+                  @error="$event.target.src = noImage"
+                />
+              </div>
+            </div>
+
+            <!-- Foto No. Serie ONT -->
+            <div class="space-y-2">
+              <h4 class="font-semibold text-gray-700">No. Serie ONT</h4>
+              <p class="text-sm text-gray-500 mb-2">Una fotografía de la parte trasera de la ONT</p>
+              <div class="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden">
+                <img 
+                  :src="currentPhotoItem?.No_Serie_ONT ? 'https://api.ed-intra.com/' + currentPhotoItem.No_Serie_ONT.replace('../', '') : noImage" 
+                  class="object-contain w-full h-full"
+                  alt="No. Serie ONT"
+                  @error="$event.target.src = noImage"
+                />
+              </div>
+            </div>
+
+            <!-- Foto Puerto -->
+            <div class="space-y-2">
+              <h4 class="font-semibold text-gray-700">Foto Terminal</h4>
+              <p class="text-sm text-gray-500 mb-2">Una fotografía de la terminal</p>
+              <div class="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden">
+                <img 
+                  :src="currentPhotoItem?.Foto_Puerto ? 'https://api.ed-intra.com/' + currentPhotoItem.Foto_Puerto.replace('../', '') : noImage" 
+                  class="object-contain w-full h-full"
+                  alt="Foto Puerto"
+                  @error="$event.target.src = noImage"
+                />
+              </div>
+            </div>
+
+            <!-- Foto INE -->
+            <div class="space-y-2">
+              <h4 class="font-semibold text-gray-700">Foto SO</h4>
+              <p class="text-sm text-gray-500 mb-2">Una fotografía de la hoja de servicio</p>
+              <div class="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg overflow-hidden">
+                <img 
+                  :src="currentPhotoItem?.Foto_INE ? 'https://api.ed-intra.com/' + currentPhotoItem.Foto_INE.replace('../', '') : noImage" 
+                  class="object-contain w-full h-full"
+                  alt="Foto INE"
+                  @error="$event.target.src = noImage"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -545,6 +763,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import apiClient from '@/services/api'
 import { useRouter } from 'vue-router'
+import noImage from '../assets/nodisponible.webp'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -600,23 +819,107 @@ const itemsPerPage = 15
 // Data
 const tabs = [
   { id: 'dashboard', name: 'Dashboard' },
-  { id: 'complete', name: 'Órdenes Completas' },
+  { id: 'complete', name: 'Órdenes' },
   { id: 'materials', name: 'Materiales' }
 ]
 
-const barChartData = {
-  'Ene': 120,
-  'Feb': 150,
-  'Mar': 180,
-  'Abr': 200,
-  'May': 170,
-  'Jun': 190,
-  'Jul': 220,
-  'Ago': 240,
-  'Sep': 210,
-  'Oct': 180,
-  'Nov': 160,
-  'Dic': 140
+// Estado del dashboard
+const dashboardData = ref({
+  total_ordenes: 0,
+  ordenes_completadas: 0,
+  ordenes_incompletas: 0,
+  ordenes_por_meses: [],
+  tecnicos_con_mas_ordenes: [],
+  nombres_tecnicos: [],
+  folios_faltantes_hoy: []
+})
+
+// Función para obtener datos del dashboard
+const fetchDashboardData = async () => {
+  if (activeTab.value !== 'dashboard') return
+
+  isLoading.value = true
+  error.value = null
+  
+  try {
+    const userData = JSON.parse(localStorage.getItem('user_data'))
+    if (!userData || !userData.division_id) {
+      throw new Error('No se encontró el ID de división en los datos del usuario')
+    }
+    
+    const response = await apiClient.get(`/coordiapp-dashboard/${userData.division_id}`)
+    
+    // Procesar órdenes por mes para asegurar que tenemos todos los meses
+    const ordenesPorMes = new Array(12).fill(0)
+    if (Array.isArray(response.data.ordenes_por_meses)) {
+      response.data.ordenes_por_meses.forEach(item => {
+        if (item.mes >= 1 && item.mes <= 12) {
+          ordenesPorMes[item.mes - 1] = parseInt(item.total) || 0
+        }
+      })
+      // Convertir el array a formato esperado
+      response.data.ordenes_por_meses = Array.from({ length: 12 }, (_, index) => ({
+        mes: index + 1,
+        total: ordenesPorMes[index]
+      }))
+    }
+    
+    // Asegurarse de que todos los valores numéricos sean números
+    response.data.total_ordenes = parseInt(response.data.total_ordenes) || 0
+    response.data.ordenes_completadas = parseInt(response.data.ordenes_completadas) || 0
+    response.data.ordenes_incompletas = parseInt(response.data.ordenes_incompletas) || 0
+
+    // Procesar folios_faltantes_hoy
+    if (response.data.folios_faltantes_hoy) {
+      // Asegurarnos de que los folios faltantes sean un array
+      let foliosFaltantes = response.data.folios_faltantes_hoy;
+      if (!Array.isArray(foliosFaltantes)) {
+        // Si no es un array, convertirlo
+        foliosFaltantes = Object.values(foliosFaltantes);
+      }
+      // Asegurarnos de que cada objeto tenga las propiedades necesarias
+      response.data.folios_faltantes_hoy = foliosFaltantes.map(folio => ({
+        Folio_Pisa: folio.Folio_Pisa || '',
+        Tecnico: folio.Tecnico || '',
+        Expediente: folio.Expediente || ''
+      }));
+      console.log('Folios faltantes procesados:', response.data.folios_faltantes_hoy);
+    } else {
+      response.data.folios_faltantes_hoy = [];
+    }
+
+    dashboardData.value = response.data
+  } catch (err) {
+    console.error('Error fetching dashboard data:', err)
+    if (err.response?.data?.message) {
+      error.value = `Error del servidor: ${err.response.data.message}`
+    } else if (err.message) {
+      error.value = err.message
+    } else {
+      error.value = 'Error al cargar los datos del dashboard.'
+    }
+    // Inicializar datos vacíos para evitar errores en la UI
+    dashboardData.value = {
+      total_ordenes: 0,
+      ordenes_completadas: 0,
+      ordenes_incompletas: 0,
+      ordenes_por_meses: [],
+      tecnicos_con_mas_ordenes: [],
+      nombres_tecnicos: [],
+      folios_faltantes_hoy: []
+    }
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Función para obtener el nombre del mes
+const getMesNombre = (mesNumero) => {
+  const meses = [
+    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+  ]
+  return meses[mesNumero - 1] || ''
 }
 
 //  Datos específicos para cada vista
@@ -658,6 +961,14 @@ const fetchOrdersData = async () => {
     error.value = 'Error al cargar los datos. Por favor, intente nuevamente.'
   } finally {
     isLoading.value = false
+  }
+}
+
+// Método para abrir el PDF en una nueva pestaña
+const openPDF = (item) => {
+  if (item?.Folio_Pisa) {
+    const pdfUrl = `https://erp.ed-intra.com/Operaciones/modal/R20.php?Folio_Pisa=${item.Folio_Pisa}`
+    window.open(pdfUrl, '_blank')
   }
 }
 
@@ -815,12 +1126,40 @@ const getStockClass = (stock) => {
   }
 }
 
-const viewMap = (item) => {
-  alert(`Ver mapa para registro ${item.id}`)
+// Funciones para el Pie Chart
+const getCircleLength = (percentage) => {
+  if (!percentage) return '0'
+  const circumference = 2 * Math.PI * 40
+  return (percentage * circumference).toString()
 }
 
+const getPercentage = (value, total) => {
+  if (!total) return 0
+  return Math.round((value / total) * 100)
+}
+
+const viewMap = (item) => {
+  if (item.Latitud && item.Longitud) {
+    let mapsUrl;
+    if (item.Latitud_Terminal && item.Longitud_Terminal) {
+      // Si tenemos coordenadas de terminal, mostrar la ruta
+      mapsUrl = `https://www.google.com/maps/dir/${item.Latitud},${item.Longitud}/${item.Latitud_Terminal},${item.Longitud_Terminal}`
+    } else {
+      // Si solo tenemos coordenadas del cliente, mostrar la ubicación
+      mapsUrl = `https://www.google.com/maps?q=${item.Latitud},${item.Longitud}`
+    }
+    window.open(mapsUrl, '_blank')
+  } else {
+    alert('No hay coordenadas disponibles para este registro')
+  }
+}
+
+const showPhotoModal = ref(false)
+const currentPhotoItem = ref(null)
+
 const viewPhotos = (item) => {
-  alert(`Ver fotos para registro ${item.id}`)
+  currentPhotoItem.value = item
+  showPhotoModal.value = true
 }
 
 const editRecord = (item) => {
@@ -884,7 +1223,9 @@ const handleClickOutside = (event) => {
 
 // Lifecycle
 onMounted(() => {
-  if (activeTab.value === 'complete') {
+  if (activeTab.value === 'dashboard') {
+    fetchDashboardData()
+  } else if (activeTab.value === 'complete') {
     fetchOrdersData()
   }
   materialsData.value = generateMaterialsData()
@@ -893,6 +1234,13 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+})
+
+// Watch para cargar datos del dashboard cuando se cambie a esa pestaña
+watch(activeTab, (newValue) => {
+  if (newValue === 'dashboard') {
+    fetchDashboardData()
+  }
 })
 
 // Watch para resetear filtros al cambiar de vista y cargar datos
