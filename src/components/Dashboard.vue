@@ -205,7 +205,7 @@
             <!-- Top Técnicos -->
             <div class="bg-white rounded-lg shadow">
               <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Top 5 Técnicos con Más Órdenes</h3>
+                <h3 class="text-lg font-semibold text-gray-900">Top 5 Técnicos con Más Órdenes de Hoy</h3>
               </div>
               <div class="p-6">
                 <div class="space-y-4">
