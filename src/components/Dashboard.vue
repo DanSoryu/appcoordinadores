@@ -834,6 +834,50 @@ const dashboardData = ref({
   folios_faltantes_hoy: []
 })
 
+// Estado para la paginación de folios
+const currentPageFolios = ref(1)
+const itemsPerPageFolios = 10
+
+// Computed properties para la paginación de folios
+const totalPagesFolios = computed(() => {
+  const total = dashboardData.value.folios_faltantes_hoy?.length || 0
+  return Math.ceil(total / itemsPerPageFolios)
+})
+
+const paginatedFolios = computed(() => {
+  const start = (currentPageFolios.value - 1) * itemsPerPageFolios
+  const end = start + itemsPerPageFolios
+  return dashboardData.value.folios_faltantes_hoy.slice(start, end)
+})
+
+const startRecordFolios = computed(() => {
+  return ((currentPageFolios.value - 1) * itemsPerPageFolios) + 1
+})
+
+const endRecordFolios = computed(() => {
+  const total = dashboardData.value.folios_faltantes_hoy.length
+  return Math.min(currentPageFolios.value * itemsPerPageFolios, total)
+})
+
+// Métodos de paginación
+const previousPageFolios = () => {
+  if (currentPageFolios.value > 1) {
+    currentPageFolios.value--
+  }
+}
+
+const nextPageFolios = () => {
+  if (currentPageFolios.value < totalPagesFolios.value) {
+    currentPageFolios.value++
+  }
+}
+
+const goToPageFolios = (page) => {
+  if (page >= 1 && page <= totalPagesFolios.value) {
+    currentPageFolios.value = page
+  }
+}
+
 // Función para obtener datos del dashboard
 const fetchDashboardData = async () => {
   if (activeTab.value !== 'dashboard') return
