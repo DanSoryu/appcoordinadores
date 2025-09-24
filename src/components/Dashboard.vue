@@ -219,9 +219,6 @@
                         <h4 class="font-medium text-gray-900">{{ dashboardData.nombres_tecnicos[index] || 'Técnico ' + tecnico.FK_Tecnico_apps }}</h4>
                         <p class="text-sm text-gray-600">
                           {{ tecnico.total_ordenes }} órdenes
-                          <span class="text-gray-400">
-                            ({{ Math.round((tecnico.total_ordenes / dashboardData.total_ordenes) * 100) }}% del total)
-                          </span>
                         </p>
                       </div>
                     </div>
