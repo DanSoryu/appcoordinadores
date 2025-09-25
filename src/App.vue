@@ -1,9 +1,8 @@
 <template>
   <router-view />
+  <Toast />
 </template>
 
-<script>
-export default {
-  name: 'App'
-}
+<script setup>
+import Toast from '@/components/Toast.vue'
 </script>

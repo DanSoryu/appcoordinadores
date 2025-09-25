@@ -1,5 +1,5 @@
 <template>
-<div class="flex justify-between items-center">
+        <div class="flex justify-between items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-900">Ordenes Coordinadores</h2>
           <button 
             @click="exportToExcel"
@@ -12,12 +12,8 @@
           </button>
         </div>
 
-        <!--  Agregando filtros específicos para cada vista -->
-        <!-- Filters -->
         <div class="bg-white p-4 rounded-lg shadow mb-6">
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <!-- Filtros para Órdenes (Completas) -->
-            <template v-if="activeTab === 'complete'">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Búsqueda General</label>
                 <input 
@@ -66,68 +62,12 @@
                   <option value="COMPLETADA">Completada</option>
                   <option value="INCOMPLETA">Incompleta</option>
                   <option value="OBJETADA">Objetada</option>
-                  <option value="EN_PROCESO">En Proceso</option>
-                  <option value="REAGENDAR">Reagendar</option>
                   <option value="VACIO">Vacío</option>
                 </select>
               </div>
-            </template>
-
-            <!-- Filtros para Materiales -->
-            <template v-if="activeTab === 'materials'">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Número de Serie</label>
-                <input 
-                  v-model="serieFilter"
-                  type="text" 
-                  placeholder="Buscar serie..."
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Localidad</label>
-                <select 
-                  v-model="localidadFilter"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Todas las localidades</option>
-                  <option value="ALMACEN LOCAL">ALMACEN LOCAL</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Ubicación Material</label>
-                <select 
-                  v-model="ubicacionFilter"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Todas las ubicaciones</option>
-                  <option value="Tecnico">Técnico</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Desde</label>
-                <input 
-                  v-model="dateFrom"
-                  type="date"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Hasta</label>
-                <input 
-                  v-model="dateTo"
-                  type="date"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-              </div>
-            </template>
           </div>
         </div>
 
-        <!--  Tabla con columnas específicas según la vista -->
         <!-- Table -->
         <div class="bg-white rounded-lg shadow overflow-hidden">
           <div v-if="isLoading" class="flex items-center justify-center p-8">
@@ -144,7 +84,6 @@
               <thead class="bg-gray-50">
                 <tr class="divide-x divide-gray-200">                  
                   <!-- Columnas para Órdenes -->
-                  <template v-if="activeTab === 'complete'">
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-l border-r border-gray-200">Folio Pisa</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ONT</th>
@@ -168,26 +107,12 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coord. Terminal</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                  </template>
-                  
-                  <!-- Columnas para Materiales -->
-                  <template v-if="activeTab === 'materials'">
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Salida</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Num Serie</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alfanumérico</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Localidad Material</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Folio Salida</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Salida</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ubicación Material</th>
-                  </template>
-                  
-                  <th v-if="activeTab !== 'materials'" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr v-for="item in paginatedData" :key="item.id" class="hover:bg-gray-50 divide-x divide-gray-200">                  
                   <!-- Datos para Órdenes -->
-                  <template v-if="activeTab === 'complete'">
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-l border-r border-gray-200">{{ item.Folio_Pisa }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Telefono }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Ont }}</td>
@@ -219,20 +144,7 @@
                         {{ item.Step_Registro === 5 ? 'COMPLETADA' : 'INCOMPLETA' }}
                       </span>
                     </td>
-                  </template>
-                  
-                  <!-- Datos para Materiales -->
-                  <template v-if="activeTab === 'materials'">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.id_Salida_Det }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Num_Serie_S }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Alfanumerico_S }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Localidad_Material_S }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Folio_Salida_Material_Det_S }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Fecha_Salida_S }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Ubicacion_Material }}</td>
-                  </template>
-                  
-                  <td v-if="activeTab !== 'materials'" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div class="flex space-x-2">
                       <button 
                         @click="viewMap(item)"
@@ -251,15 +163,6 @@
                       >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                        </svg>
-                      </button>
-                      <button 
-                        @click="editRecord(item)"
-                        class="text-yellow-600 hover:text-yellow-900 p-1 rounded hover:bg-yellow-100 transition-colors"
-                        title="Editar Registro"
-                      >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                       </button>
                       <button 
@@ -437,11 +340,13 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
 import apiClient from '@/services/api'
 import noImage from '../assets/nodisponible.webp'
+import * as XLSX from 'xlsx'
 
 const authStore = useAuthStore()
-const activeTab = ref('complete')
+const toastStore = useToastStore()
 const isLoading = ref(false)
 const error = ref(null)
 const ordersCompleteData = ref([])
@@ -486,8 +391,6 @@ const totalPages = ref(1)
 
 // Función para obtener datos de la API
 const fetchOrdersData = async () => {
-  if (activeTab.value !== 'complete') return
-  
   isLoading.value = true
   error.value = null
   
@@ -560,18 +463,15 @@ const getStatusClass = (status) => {
 }
 
 const currentData = computed(() => {
-  if (activeTab.value === 'complete') {
-    return ordersCompleteData.value
-  }
-  return []
+  return ordersCompleteData.value
 })
 
 const filteredData = computed(() => {
   // Asegurarse de que currentData.value es un array
   const dataArray = Array.isArray(currentData.value) ? currentData.value : []
   
-  // Si no hay datos o no estamos en la pestaña completa, retornar array vacío
-  if (!dataArray.length || activeTab.value !== 'complete') return []
+  // Si no hay datos, retornar array vacío
+  if (!dataArray.length) return []
   
   // Si no hay término de búsqueda, retornar todos los datos
   if (!searchQuery.value) return dataArray
@@ -588,15 +488,12 @@ const filteredData = computed(() => {
 })
 
 const paginatedData = computed(() => {
-  if (activeTab.value === 'complete') {
-    // Si hay término de búsqueda, usamos los datos filtrados
-    if (searchQuery.value) {
-      return filteredData.value
-    }
-    // Si no hay búsqueda, usamos los datos directamente de la API
-    return currentData.value
+  // Si hay término de búsqueda, usamos los datos filtrados
+  if (searchQuery.value) {
+    return filteredData.value
   }
-  return []
+  // Si no hay búsqueda, usamos los datos directamente de la API
+  return currentData.value
 })
 
 const startRecord = computed(() => ((currentPage.value - 1) * itemsPerPage) + 1)
@@ -651,44 +548,115 @@ const goToPage = async (page) => {
   await fetchOrdersData()
 }
 
-const resetFilters = async () => {
-  // Resetear todos los filtros
-  searchQuery.value = ''
-  dateFrom.value = ''
-  dateTo.value = ''
-  statusFilter.value = ''
-  
-  // Resetear paginación
-  currentPage.value = 1
-  await fetchOrdersData()
-}
+const exportToExcel = async () => {
+  try {
+    // Crear toast con barra de progreso
+    const toastId = toastStore.addToast({
+      message: 'Exportando datos...',
+      type: 'info',
+      progress: 0
+    });
+    
+    // Recopilamos todos los datos mediante peticiones paginadas
+    let allData = [];
+    let currentPage = 1;
+    let hasMoreData = true;
+    
+    while (hasMoreData) {
+      const response = await apiClient.get('/coordiapp-todas-division', {
+        params: {
+          page: currentPage,
+          per_page: 100, // Aumentamos registros por página para reducir número de peticiones
+          ...(dateFrom.value && dateTo.value ? { fecha_inicio: dateFrom.value, fecha_fin: dateTo.value } : {}),
+          ...(statusFilter.value ? { estatus_orden: statusFilter.value } : {})
+        }
+      });
+      
+      allData = [...allData, ...response.data.data];
+      
+      // Verificar si hay más páginas
+      hasMoreData = currentPage < response.data.last_page;
+      currentPage++;
+      
+      // Actualizar la barra de progreso del toast
+      const progress = Math.round((currentPage - 1) / response.data.last_page * 100);
+      toastStore.updateToastProgress(toastId, progress);
+    }
 
-const exportToExcel = () => {
-  alert('Exportando a Excel...')
+    const dataToExport = allData.map(item => ({
+      'Folio Pisa': item.Folio_Pisa,
+      'Teléfono': item.Telefono,
+      'ONT': item.Ont,
+      'N° Expediente': item.NExpediente,
+      'Cliente': item.nombre_completo_cliente,
+      'Dirección': item.Direccion_Cliente,
+      'Contratista': item.nombre_completo_contratista,
+      'Técnico': item.nombre_completo_tecnico,
+      'COPE': item.COPE,
+      'Área': item.area,
+      'División': item.Division,
+      'Distrito': item.Distrito,
+      'Tecnología': item.Tecnologia,
+      'Tipo Tarea': item.Tipo_Tarea,
+      'Tipo Instalación': item.Tipo_Instalacion,
+      'Metraje': item.Metraje,
+      'Terminal': item.Terminal,
+      'Puerto': item.Puerto,
+      'Paso': `${item.Step_Registro}/5`,
+      'Coordenadas': `${item.Latitud}, ${item.Longitud}`,
+      'Coordenadas Terminal': `${item.Latitud_Terminal}, ${item.Longitud_Terminal}`,
+      'Fecha': item.Fecha_Coordiapp,
+      'Estado': item.Step_Registro === 5 ? 'COMPLETADA' : 'INCOMPLETA'
+    }))
+
+    // Crear libro de Excel
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Ordenes')
+
+    // Generar archivo Excel
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    
+    // Crear link de descarga
+    const link = document.createElement('a')
+    link.href = window.URL.createObjectURL(data)
+    link.download = `ordenes_${new Date().toISOString().split('T')[0]}.xlsx`
+    link.click()
+    
+    // Asegurarnos de que el progreso llegue al 100%
+    toastStore.updateToastProgress(toastId, 100)
+    
+  } catch (error) {
+    console.error('Error al exportar a Excel:', error)
+    toastStore.addToast({
+      message: 'Error al exportar a Excel. Por favor, intente nuevamente.',
+      type: 'error',
+      duration: 5000
+    })
+  } finally {
+    isLoading.value = false
+  }
 }
 
 // Watches para filtros
 watch(statusFilter, () => {
-  if (activeTab.value === 'complete') {
-    currentPage.value = 1
-    fetchOrdersData()
-  }
+  currentPage.value = 1
+  fetchOrdersData()
 }, { debounce: 300 })
 
 watch([dateFrom, dateTo], ([newDateFrom, newDateTo]) => {
-  if (activeTab.value === 'complete' && newDateFrom && newDateTo) {
+  if (newDateFrom && newDateTo) {
     currentPage.value = 1
     fetchOrdersData()
   }
 }, { debounce: 300 })
 
 watch(searchQuery, (newValue) => {
-  if (activeTab.value === 'complete') {
-    if (!newValue) {
-      fetchOrdersData()
-    }
-    currentPage.value = 1
+  if (!newValue) {
+    fetchOrdersData()
   }
+  currentPage.value = 1
 }, { debounce: 300 })
 
 // Cargar datos iniciales
