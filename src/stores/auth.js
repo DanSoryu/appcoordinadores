@@ -92,7 +92,7 @@ export const useAuthStore = defineStore('auth', {
           this.user = {
             id: payload.id_usuario || payload.sub,
             usuario: payload.usuario,
-            division_id: payload.division_id
+            copes: payload.copes || [],
           }
           
           // Guardar también en localStorage para persistencia
