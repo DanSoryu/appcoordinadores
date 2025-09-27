@@ -385,7 +385,7 @@ watch(dateTo, (newValue) => {
 })
 
 const currentPage = ref(1)
-const itemsPerPage = 15
+const itemsPerPage = 20
 const totalItems = ref(0)
 const totalPages = ref(1)
 
