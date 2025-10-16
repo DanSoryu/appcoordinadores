@@ -1,32 +1,26 @@
 <template>
   <div>
     <!-- Header -->
-    <header class="bg-blue-600 text-white shadow-lg">
+  <header class="bg-primary-500 text-primary-50 shadow-custom">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-          <h1 class="text-xl font-bold">Portal Coordinadores</h1>
+          <h1 class="text-xl font-bold">MecaSoft</h1>
           
           <!-- User Menu -->
           <div class="relative">
             <button 
               @click="showUserMenu = !showUserMenu"
-              class="flex items-center space-x-3 hover:bg-blue-700 px-3 py-2 rounded-md transition-colors"
+              class="flex items-center space-x-3 hover:bg-primary-600 px-3 py-2 rounded-custom transition-colors"
             >
-              <svg class="w-6 h-6" fill="white" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
+              <font-awesome-icon icon="user" class="w-6 h-6" />
               <span class="font-medium">{{ user.usuario }}</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
+              <font-awesome-icon icon="chevron-down" class="w-4 h-4" />
             </button>
             
             <!-- Dropdown Menu -->
-            <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-              <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                </svg>
+            <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-custom shadow-custom-lg py-1 z-50">
+              <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
+                <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
                 Cerrar Sesión
               </button>
             </div>
@@ -36,7 +30,7 @@
     </header>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b">
+  <nav class="bg-white shadow-custom border-b">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex space-x-8">
           <button 
@@ -46,8 +40,8 @@
             :class="[
               'py-4 px-1 border-b-2 font-medium text-sm transition-colors',
               activeTab === tab.id 
-                ? 'border-blue-500 text-blue-600' 
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-primary-500 text-primary-600' 
+                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
             ]"
           >
             {{ tab.name }}
@@ -72,7 +66,9 @@ const showUserMenu = ref(false)
 // Tabs configuration
 const tabs = [
   { id: 'dashboard', name: 'Dashboard' },
-  { id: 'ordenescoordinador', name: 'Órdenes' }
+  { id: 'ordenescoordinador', name: 'Órdenes' },
+  { id: 'datosrecepcion', name: 'Datos Recepción' },
+  { id: 'checklistrecepcion', name: 'CheckList Recepción' }
 ]
 
 // Props
@@ -93,7 +89,7 @@ const emit = defineEmits(['update:activeTab'])
 // Methods
 const handleLogout = () => {
   authStore.logout()
-  router.push('/login')
+  window.location.reload()
   showUserMenu.value = false
 }
 

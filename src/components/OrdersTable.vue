@@ -65,6 +65,18 @@
                   <option value="VACIO">Vacío</option>
                 </select>
               </div>
+
+              <!-- Filtro por COPE -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">COPE</label>
+                <select
+                  v-model="copeFilter"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Todos los COPEs</option>
+                  <option v-for="cope in copesFromToken" :key="cope" :value="cope">{{ cope }}</option>
+                </select>
+              </div>
           </div>
         </div>
 
@@ -344,6 +356,7 @@ import { useToastStore } from '@/stores/toast'
 import apiClient from '@/services/api'
 import noImage from '../assets/nodisponible.webp'
 import * as XLSX from 'xlsx'
+import tokenService from '@/services/tokenService'
 
 const authStore = useAuthStore()
 const toastStore = useToastStore()
@@ -351,10 +364,19 @@ const isLoading = ref(false)
 const error = ref(null)
 const ordersCompleteData = ref([])
 
+
 // Filtros que hacen petición a la API
 const dateFrom = ref('')
 const dateTo = ref('')
 const statusFilter = ref('')
+const copeFilter = ref('')
+
+// Obtener copes del token decodificado
+const copesFromToken = ref([])
+const decodedToken = tokenService.decodeToken()
+if (decodedToken && Array.isArray(decodedToken.copes)) {
+  copesFromToken.value = decodedToken.copes
+}
 
 // Filtro local de búsqueda
 const searchQuery = ref('')

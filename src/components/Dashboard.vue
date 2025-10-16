@@ -13,18 +13,45 @@
       <div v-if="activeTab === 'ordenescoordinador'">
         <OrdersTable />
       </div>
+
+       <div v-if="activeTab === 'datosrecepcion'">
+         <DatosRecepcion />
+      </div>
+
+      <div v-if="activeTab === 'checklistrecepcion'">
+        <CheckListRecepcion @abrir-checklist-modal="handleAbrirChecklistModal" />
+        <CheckListFormModal 
+          v-if="showChecklistModal" 
+          :show="showChecklistModal" 
+          :checklistData="selectedChecklistData"
+          @close="showChecklistModal = false" 
+        />
+      </div>
     </main>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
+import CheckListFormModal from './recepcion/CheckListFormModal.vue'
 import { useAuthStore } from '@/stores/auth'
-import AppHeader from './AppHeader.vue'
+import AppHeader from './global/AppHeader.vue'
 import OrdersTable from './OrdersTable.vue'
 import DashboardView from './DashboardView.vue'
+import CheckListRecepcion from './recepcion/CheckListRecepcionTable.vue'
+import DatosRecepcion from './recepcion/DatosRecepcion.vue'
 
 const authStore = useAuthStore()
 const user = computed(() => authStore.user)
 const activeTab = ref('dashboard')
+
+// Control del modal checklist
+const showChecklistModal = ref(false)
+const selectedChecklistData = ref({})
+
+function handleAbrirChecklistModal(item) {
+  selectedChecklistData.value = item
+  showChecklistModal.value = true
+  console.log('Datos pasados al modal:', item)
+}
 </script>
