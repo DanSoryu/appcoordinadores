@@ -65,8 +65,8 @@ const showUserMenu = ref(false)
 
 // Tabs configuration
 const tabs = [
-  { id: 'dashboard', name: 'Dashboard' },
-  { id: 'ordenescoordinador', name: 'Órdenes' },
+  // { id: 'dashboard', name: 'Dashboard' },
+  // { id: 'ordenescoordinador', name: 'Órdenes' },
   { id: 'datosrecepcion', name: 'Datos Recepción' },
   { id: 'checklistrecepcion', name: 'CheckList Recepción' }
 ]

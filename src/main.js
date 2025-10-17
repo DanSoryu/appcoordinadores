@@ -29,7 +29,17 @@ import {
   faChevronRight,
   faChevronDown,
   faSignOutAlt,
-  faTimes
+  faTimes,
+  faTachometerAlt,
+  faCarSide,
+  faDoorClosed,
+  faChair,
+  faLifeRing,
+  faWindowMaximize,
+  faGasPump,
+  faSmog,
+  faCircle,
+  faMicrochip
 } from '@fortawesome/free-solid-svg-icons'
 
 // Agregar iconos a la librería
@@ -53,7 +63,17 @@ library.add(
   faChevronRight,
   faChevronDown,
   faSignOutAlt,
-  faTimes
+  faTimes,
+  faTachometerAlt,
+  faCarSide,
+  faDoorClosed,
+  faChair,
+  faLifeRing,
+  faWindowMaximize,
+  faGasPump,
+  faSmog,
+  faCircle,
+  faMicrochip
 )
 
 const app = createApp(App)

@@ -5,17 +5,17 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       <!-- Dashboard View -->
-      <div v-if="activeTab === 'dashboard'">
+      <!-- <div v-if="activeTab === 'dashboard'">
         <DashboardView />
-      </div>
+      </div> -->
 
       <!-- Table Views -->
-      <div v-if="activeTab === 'ordenescoordinador'">
+      <!-- <div v-if="activeTab === 'ordenescoordinador'">
         <OrdersTable />
-      </div>
+      </div> -->
 
        <div v-if="activeTab === 'datosrecepcion'">
-         <DatosRecepcion />
+         <RecepcionTable />
       </div>
 
       <div v-if="activeTab === 'checklistrecepcion'">
@@ -39,11 +39,11 @@ import AppHeader from './global/AppHeader.vue'
 import OrdersTable from './OrdersTable.vue'
 import DashboardView from './DashboardView.vue'
 import CheckListRecepcion from './recepcion/CheckListRecepcionTable.vue'
-import DatosRecepcion from './recepcion/DatosRecepcion.vue'
+import RecepcionTable from './recepcion/RecepcionTable.vue'
 
 const authStore = useAuthStore()
 const user = computed(() => authStore.user)
-const activeTab = ref('dashboard')
+const activeTab = ref('datosrecepcion')
 
 // Control del modal checklist
 const showChecklistModal = ref(false)

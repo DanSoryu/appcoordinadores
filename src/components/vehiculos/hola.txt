@@ -1,0 +1,22 @@
+que esta >> === }{{}{[] "" array define undefiened array }}
+
+let array [] define autr
+
+class pesopluma extends DiamantesClass{
+    __constructor(string cancion="vivo muy aprisa la vida de artista drogas y mujeres una mas para la lista")
+    {
+
+    }
+
+    public method cantar()
+    {
+
+    }
+
+    private llamaralcompaerick(string numero="8719201871", mensaje="quibo compa erick como has estado deja de juntarte con el
+    fracasado de gael barajas y ven conmigo y desfruta del oro diamantes y mujeres conmigo")
+    {
+        $accion=this->llamaralcompaerick()
+        echo (accion)
+    }
+}

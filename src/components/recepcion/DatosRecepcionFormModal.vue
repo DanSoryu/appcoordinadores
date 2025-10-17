@@ -1,6 +1,11 @@
 <template>
-	<div>
-		<div class="bg-white p-8 rounded-2xl shadow-xl mb-6 max-w-xl mx-auto border border-gray-200">
+	<div v-if="show" class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+		<div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg relative border border-gray-200 overflow-y-auto max-h-[90vh]">
+			<button @click="$emit('close')" class="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white rounded-md p-2">
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
 			<h2 class="text-2xl font-bold mb-6 text-blue-600 text-center">Datos de Recepción</h2>
 			<form @submit.prevent="handleSubmit">
 				<!-- SECCIÓN ÚNICA: DATOS DE RECEPCIÓN -->
@@ -76,12 +81,13 @@
 				</div>
 			</form>
 		</div>
-		<VehiculosFormModal 
-			:show="showVehiculoModal" 
-			@close="showVehiculoModal = false"
-			@vehiculo-guardado="handleVehiculoGuardado"
-		/>
 	</div>
+		
+	<VehiculosFormModal 
+		:show="showVehiculoModal" 
+		@close="showVehiculoModal = false"
+		@vehiculo-guardado="handleVehiculoGuardado"
+	/>
 </template>
 <script>
 import { computed } from 'vue'
@@ -91,11 +97,22 @@ import { useSubmitButton } from '../../composables/useSubmitButton.js'
 import { useToastStore } from '../../stores/toast.js'
 
 export default {
-	name: 'DatosRecepcion',
+	name: 'DatosRecepcionFormModal',
 	components: {
 		VehiculosFormModal,
 		BaseButton
 	},
+	props: {
+		show: {
+			type: Boolean,
+			required: true
+		},
+		recepcionData: {
+			type: Object,
+			default: () => ({})
+		}
+	},
+	emits: ['close', 'recepcion-guardada'],
 	setup() {
 		const { executeSubmit } = useSubmitButton();
 		const toastStore = useToastStore();
@@ -113,10 +130,11 @@ export default {
 				vehiculo: ''
 			},
 			vehiculos: [
-				{ numeroControl: '123123', nombre: 'Volkswagen' },
+				{ numeroControl: '123123', nombre: 'Volkswagen Jetta' },
 				{ numeroControl: '456456', nombre: 'Toyota Corolla' },
 				{ numeroControl: '789789', nombre: 'Ford Fiesta' },
-				{ numeroControl: '321321', nombre: 'Chevrolet Spark' }
+				{ numeroControl: '321321', nombre: 'Chevrolet Spark' },
+				{ numeroControl: '654654', nombre: 'Honda Civic' }
 			],
 			showVehiculoModal: false
 		};
@@ -134,6 +152,26 @@ export default {
 				this.formData.tallerRecepcion && this.formData.tallerRecepcion.trim() !== '' &&
 				this.formData.vehiculo && this.formData.vehiculo !== ''
 			);
+		},
+		nombreVehiculo() {
+			if (!this.formData.vehiculo) return '';
+			const vehiculo = this.vehiculos.find(v => v.numeroControl === this.formData.vehiculo);
+			return vehiculo ? vehiculo.nombre : '';
+		}
+	},
+	watch: {
+		recepcionData: {
+			handler(newData) {
+				if (newData && Object.keys(newData).length > 0) {
+					this.formData = { ...newData };
+				}
+			},
+			immediate: true
+		},
+		show(value) {
+			if (value && !Object.keys(this.recepcionData).length) {
+				this.resetForm();
+			}
 		}
 	},
 	methods: {
@@ -148,7 +186,17 @@ export default {
 					// Simulamos el guardado de datos
 					console.log('Guardando datos de recepción...');
 					await new Promise(resolve => setTimeout(resolve, 500));
-					console.log('Datos guardados:', JSON.stringify(this.formData, null, 2));
+					
+					// Preparar datos para enviar
+					const datosGuardados = {
+						...this.formData,
+						nombreVehiculo: this.nombreVehiculo
+					};
+					
+					console.log('Datos guardados:', JSON.stringify(datosGuardados, null, 2));
+					
+					// Emitir evento con los datos guardados
+					this.$emit('recepcion-guardada', datosGuardados);
 				});
 				
 				this.toastStore.addToast({
@@ -157,7 +205,8 @@ export default {
 					duration: 3500
 				});
 				
-				this.resetForm();
+				// Cerrar el modal al finalizar (no resetear aquí porque se cierra)
+				this.$emit('close');
 			} catch (error) {
 				console.error('Error al guardar datos:', error);
 				this.toastStore.addToast({
