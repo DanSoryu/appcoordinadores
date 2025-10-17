@@ -199,10 +199,11 @@
       </div>
     </div>
 
-    <!-- Modal de Nueva Recepción -->
+    <!-- Modal de Nueva/Editar Recepción -->
     <DatosRecepcionFormModal
       v-if="showRecepcionModal"
       :show="showRecepcionModal"
+      :recepcionData="recepcionToEdit"
       @close="showRecepcionModal = false"
       @recepcion-guardada="handleRecepcionGuardada"
     />
@@ -355,6 +356,7 @@ export default {
     const showRecepcionModal = ref(false)
     const showDetallesModal = ref(false)
     const currentRecepcion = ref(null)
+    const recepcionToEdit = ref(null)
 
     // Filtros
     const searchQuery = ref('')
@@ -497,6 +499,7 @@ export default {
 
     // Acciones de la tabla
     const abrirModalNuevaRecepcion = () => {
+      recepcionToEdit.value = null
       showRecepcionModal.value = true
     }
 
@@ -506,12 +509,19 @@ export default {
     }
 
     const editarRecepcion = (item) => {
-      // Aquí se puede implementar la edición
-      toastStore.addToast({
-        message: 'Función de editar en desarrollo',
-        type: 'info',
-        duration: 3000
-      })
+      // Preparar el objeto para edición
+      const recepcionForEdit = {
+        fechaRecepcion: item.fechaRecepcion,
+        lugarRecepcion: item.lugarRecepcion,
+        tallerRecepcion: item.tallerRecepcion,
+        vehiculo: item.vehiculo?.numeroControl || ''
+      }
+      
+      // Asignar datos al objeto de edición
+      recepcionToEdit.value = recepcionForEdit
+      
+      // Mostrar el modal de edición
+      showRecepcionModal.value = true
     }
 
     const eliminarRecepcion = (item) => {
@@ -528,31 +538,60 @@ export default {
     }
 
     const handleRecepcionGuardada = (nuevaRecepcion) => {
-      // Crear un ID para la nueva recepción
-      const newId = recepciones.value.length > 0 ? Math.max(...recepciones.value.map(r => r.id)) + 1 : 1
-      
       // Encontrar el vehículo seleccionado
       const vehiculoSeleccionado = {
         numeroControl: nuevaRecepcion.vehiculo,
         nombre: nuevaRecepcion.nombreVehiculo || 'Vehículo sin especificar'
       }
       
-      // Agregar la nueva recepción
-      recepciones.value.push({
-        id: newId,
-        fechaRecepcion: nuevaRecepcion.fechaRecepcion,
-        lugarRecepcion: nuevaRecepcion.lugarRecepcion,
-        tallerRecepcion: nuevaRecepcion.tallerRecepcion,
-        vehiculo: vehiculoSeleccionado
-      })
+      // Verificar si es una edición o una nueva recepción
+      if (recepcionToEdit.value) {
+        // Edición: buscar la recepción existente por fecha, lugar y taller
+        const index = recepciones.value.findIndex(r => 
+          r.fechaRecepcion === recepcionToEdit.value.fechaRecepcion && 
+          r.lugarRecepcion === recepcionToEdit.value.lugarRecepcion &&
+          r.tallerRecepcion === recepcionToEdit.value.tallerRecepcion
+        );
+        
+        if (index !== -1) {
+          // Actualizar la recepción existente
+          recepciones.value[index] = {
+            ...recepciones.value[index],
+            fechaRecepcion: nuevaRecepcion.fechaRecepcion,
+            lugarRecepcion: nuevaRecepcion.lugarRecepcion,
+            tallerRecepcion: nuevaRecepcion.tallerRecepcion,
+            vehiculo: vehiculoSeleccionado
+          };
+          
+          toastStore.addToast({
+            message: 'Recepción actualizada correctamente',
+            type: 'success',
+            duration: 3000
+          });
+        }
+      } else {
+        // Nueva recepción: crear un nuevo ID
+        const newId = recepciones.value.length > 0 ? Math.max(...recepciones.value.map(r => r.id)) + 1 : 1;
+        
+        // Agregar la nueva recepción
+        recepciones.value.push({
+          id: newId,
+          fechaRecepcion: nuevaRecepcion.fechaRecepcion,
+          lugarRecepcion: nuevaRecepcion.lugarRecepcion,
+          tallerRecepcion: nuevaRecepcion.tallerRecepcion,
+          vehiculo: vehiculoSeleccionado
+        });
+        
+        toastStore.addToast({
+          message: 'Recepción guardada correctamente',
+          type: 'success',
+          duration: 3000
+        });
+      }
       
-      showRecepcionModal.value = false
-      
-      toastStore.addToast({
-        message: 'Recepción guardada correctamente',
-        type: 'success',
-        duration: 3000
-      })
+      // Limpiar y cerrar el modal
+      recepcionToEdit.value = null;
+      showRecepcionModal.value = false;
     }
 
     // Reset de filtros
@@ -589,6 +628,7 @@ export default {
       showRecepcionModal,
       showDetallesModal,
       currentRecepcion,
+      recepcionToEdit,
       previousPage,
       nextPage,
       goToPage,

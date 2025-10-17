@@ -96,6 +96,7 @@ export default {
 			default: () => ({})
 		}
 	},
+	emits: ['close', 'cliente-guardado'],
 	setup() {
 		const { executeSubmit } = useSubmitButton();
 		const toastStore = useToastStore();
@@ -188,14 +189,26 @@ export default {
 				if (!this.isStepValid) return;
 				try {
 					await this.saveCurrentStepData();
+					
+					// Preparar los datos del cliente para emitir
+					const nuevoCliente = {
+						id: Date.now().toString(), // Generamos un ID único basado en timestamp
+						nombre: this.formData.nombre,
+						...this.finalFormData
+					};
+					
+					// Emitir el evento con los datos del cliente
+					this.$emit('cliente-guardado', nuevoCliente);
+					
 					this.toastStore.addToast({
 						message: 'Datos del cliente guardados correctamente',
 						type: 'success',
 						duration: 3500
 					});
+					
 					this.$emit('close');
 					this.resetForm();
-					console.log('Datos del cliente enviados:', JSON.stringify(this.finalFormData, null, 2));
+					console.log('Datos del cliente enviados:', JSON.stringify(nuevoCliente, null, 2));
 				} catch (error) {
 					console.error('Error al guardar datos:', error);
 					this.toastStore.addToast({

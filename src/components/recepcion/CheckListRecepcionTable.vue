@@ -297,9 +297,6 @@ export default {
         tarjetaCirculacion: true,
         otroDocumento: 'Mapeo proceso taller vehicular.pdf',
         accesoriosHerramienta: 'gaelillo.jpeg',
-        direccion: 'Calle Falsa 123',
-        telefono: '555-1234',
-        comentario: 'Todo en orden',
         terminado: true
       },
       {
@@ -309,9 +306,6 @@ export default {
         tarjetaCirculacion: false,
         otroDocumento: 'manual_usuario.docx',
         accesoriosHerramienta: 'llave_rueda.png',
-        direccion: 'Av. Principal 456',
-        telefono: '555-5678',
-        comentario: 'Faltan documentos',
         terminado: false
       },
       {
@@ -321,9 +315,6 @@ export default {
         tarjetaCirculacion: true,
         otroDocumento: 'factura_auto.pdf',
         accesoriosHerramienta: 'destornillador.jpg',
-        direccion: 'Boulevard Central 789',
-        telefono: '555-9012',
-        comentario: 'Revisar accesorios',
         terminado: false
       },
       {
@@ -333,9 +324,6 @@ export default {
         tarjetaCirculacion: true,
         otroDocumento: null,
         accesoriosHerramienta: 'llaves_birlo.jpg',
-        direccion: 'Avenida Los Pinos 234',
-        telefono: '555-3456',
-        comentario: 'Pendiente póliza de seguro',
         terminado: false
       },
       {
@@ -345,9 +333,6 @@ export default {
         tarjetaCirculacion: true,
         otroDocumento: 'instrucciones.pdf',
         accesoriosHerramienta: null,
-        direccion: 'Calle Robles 567',
-        telefono: '555-7890',
-        comentario: 'Cliente no entregó llaves',
         terminado: true
       }
     ]);

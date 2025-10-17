@@ -101,6 +101,7 @@ export default {
 			default: () => ({})
 		}
 	},
+	emits: ['close', 'vehiculo-guardado'],
 	setup() {
 		const { executeSubmit } = useSubmitButton();
 		const toastStore = useToastStore();
@@ -187,14 +188,26 @@ export default {
 				if (!this.isStepValid) return;
 				try {
 					await this.saveCurrentStepData();
+					
+					// Preparar los datos del vehículo para emitir
+					const nuevoVehiculo = {
+						numeroControl: this.formData.numeroSerie, // Usando numeroSerie como numeroControl
+						nombre: `${this.formData.marca} ${this.formData.tipoVersion}`,
+						...this.finalFormData
+					};
+					
+					// Emitir el evento con los datos del vehículo
+					this.$emit('vehiculo-guardado', nuevoVehiculo);
+					
 					this.toastStore.addToast({
 						message: 'Datos del vehículo guardados correctamente',
 						type: 'success',
 						duration: 3500
 					});
+					
 					this.$emit('close');
 					this.resetForm();
-					console.log('Datos del vehículo enviados:', JSON.stringify(this.finalFormData, null, 2));
+					console.log('Datos del vehículo enviados:', JSON.stringify(nuevoVehiculo, null, 2));
 				} catch (error) {
 					console.error('Error al guardar datos:', error);
 					this.toastStore.addToast({

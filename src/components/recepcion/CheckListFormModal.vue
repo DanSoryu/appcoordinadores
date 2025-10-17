@@ -1660,38 +1660,41 @@ export default {
     finalFormData() {
       const result = {
         // --- STEP 1 ---
-        // Inicializar todas las claves con null por defecto
-        cantidadLlaves: null,
-        polizaSeguro: null,
-        tarjetaCirculacion: null,
-        otroDocumento: null,
-        accesoriosHerramienta: null,
+        // Inicializar todas las claves con null por defecto o con valores predeterminados según requerimiento
+        cantidadLlaves: false, // Por defecto es false si no se proporciona
+        polizaSeguro: false, // Por defecto es false
+        polizaSeguroArchivo: null, // Nuevo campo para el nombre del archivo
+        tarjetaCirculacion: false, // Por defecto es false
+        otroDocumento: false, // Por defecto es false
+        otroDocumentoArchivo: null, // Nuevo campo para el nombre del archivo
+        accesoriosHerramienta: false, // Por defecto es false
+        accesoriosHerramientaArchivo: null, // Nuevo campo para el nombre del archivo
         
         // --- STEP 2 ---
         // Cluster
-        gatoArchivo: null,
-        odometroArchivo: null,
+        gatoArchivo: false, // Por defecto es false
+        odometroArchivo: null, // Mantener como null para archivo
         nivelCombustible: this.formData.nivelCombustible,
-        combustibleArchivo: null,
+        combustibleImagen: null, // Cambio de nombre a imagen
         testigosEncendidos: this.formData.testigosEncendidos,
-        testigosEncendidosArchivo: null,
+        testigosImagen: null, // Cambio de nombre a imagen
         
         // Tablero
         estadoGuantera: this.formData.estadoGuantera,
         estereo: this.uiControls.estereo === 'true' ? true : (this.uiControls.estereo === 'false' ? false : null),
-        cantidadBocinas: null,
+        cantidadBocinas: false, // Por defecto es false si no se proporciona
         
         // Puertas
         manijas: this.formData.manijas === 'true' ? true : (this.formData.manijas === 'false' ? false : null),
         estadoSeguros: this.formData.estadoSeguros,
         estadoCristales: this.formData.estadoCristales,
-        cristalesArchivo: null,
+        cristalesImagen: null, // Cambio de nombre a imagen
         
         // Asientos
         estadoVestiduras: this.formData.estadoVestiduras,
-        vestidurasArchivo: null,
+        vestidurasImagen: null, // Cambio de nombre a imagen
         estadoCabeceras: this.formData.estadoCabeceras,
-        cabecerasArchivo: null,
+        cabecerasImagen: null, // Cambio de nombre a imagen
         
         // Cinturones
         funcionalidadCinturones: this.formData.funcionalidadCinturones,
@@ -1699,81 +1702,100 @@ export default {
         // --- STEP 3 ---
         // Carrocería
         carroceriaLadoDerecho: this.formData.carroceriaLadoDerecho,
-        carroceriaLadoDerechoArchivo: null,
+        carroceriaLadoDerechoImagen: null, // Cambio de nombre a imagen
         carroceriaLadoIzquierdo: this.formData.carroceriaLadoIzquierdo,
-        carroceriaLadoIzquierdoArchivo: null,
+        carroceriaLadoIzquierdoImagen: null, // Cambio de nombre a imagen
         carroceriaLadoTrasero: this.formData.carroceriaLadoTrasero,
-        carroceriaLadoTraseroArchivo: null,
+        carroceriaLadoTraseroImagen: null, // Cambio de nombre a imagen
         carroceriaLadoFrontal: this.formData.carroceriaLadoFrontal,
-        carroceriaLadoFrontalArchivo: null,
+        carroceriaLadoFrontalImagen: null, // Cambio de nombre a imagen
         
         // Neumáticos
         neumaticosLadoPiloto: this.formData.neumaticosLadoPiloto,
-        neumaticosLadoPilotoArchivo: null,
+        neumaticosLadoPilotoImagen: null, // Cambio de nombre a imagen
         neumaticosLadoAtrasPiloto: this.formData.neumaticosLadoAtrasPiloto,
-        neumaticosLadoAtrasPilotoArchivo: null,
+        neumaticosLadoAtrasPilotoImagen: null, // Cambio de nombre a imagen
         neumaticosLadoCopiloto: this.formData.neumaticosLadoCopiloto,
-        neumaticosLadoCopilotoArchivo: null,
+        neumaticosLadoCopilotoImagen: null, // Cambio de nombre a imagen
         neumaticosLadoAtrasCopiloto: this.formData.neumaticosLadoAtrasCopiloto,
-        neumaticosLadoAtrasCopilotoArchivo: null,
+        neumaticosLadoAtrasCopilotoImagen: null, // Cambio de nombre a imagen
         
         // Cristales
         cristalesParabrisas: this.formData.cristalesParabrisas,
-        cristalesParabrisasArchivo: null,
+        cristalesParabrisasImagen: null, // Cambio de nombre a imagen
         cristalesMedallonTrasero: this.formData.cristalesMedallonTrasero,
-        cristalesMedallonTraseroArchivo: null,
+        cristalesMedallonTraseroImagen: null, // Cambio de nombre a imagen
         cristalesLimpiadores: this.formData.cristalesLimpiadores,
-        cristalesLimpiadoresArchivo: null,
+        cristalesLimpiadoresImagen: null, // Cambio de nombre a imagen
         
         // Motor
         motorTapones: this.formData.motorTapones,
-        motorTaponesArchivo: null,
+        motorTaponesImagen: null, // Cambio de nombre a imagen
         motorBateria: this.formData.motorBateria,
-        motorBateriaArchivo: null,
+        motorBateriaImagen: null, // Cambio de nombre a imagen
         motorNivelAceite: this.formData.motorNivelAceite,
-        motorNivelAceiteArchivo: null,
+        motorNivelAceiteImagen: null, // Cambio de nombre a imagen
         motorNivelLiquidoFrenos: this.formData.motorNivelLiquidoFrenos,
-        motorNivelLiquidoFrenosArchivo: null,
+        motorNivelLiquidoFrenosImagen: null, // Cambio de nombre a imagen
         motorNivelAnticongelante: this.formData.motorNivelAnticongelante,
-        motorNivelAnticongelanteArchivo: null,
+        motorNivelAnticongelanteImagen: null, // Cambio de nombre a imagen
         
         // Depósito Gasolina y Escape
         depositoPuerta: this.formData.depositoPuerta === 'true' ? true : (this.formData.depositoPuerta === 'false' ? false : null),
         depositoTapon: this.formData.depositoTapon === 'true' ? true : (this.formData.depositoTapon === 'false' ? false : null),
         escapeSilenciador: this.formData.escapeSilenciador === 'true' ? true : (this.formData.escapeSilenciador === 'false' ? false : null),
-        escapeSilenciadorArchivo: null,
+        escapeSilenciadorImagen: null, // Cambio de nombre a imagen
         escapeCatalizador: this.formData.escapeCatalizador === 'true' ? true : (this.formData.escapeCatalizador === 'false' ? false : null),
-        escapeCatalizadorArchivo: null,
-      };      // --- STEP 1 ---
-      // Solo asignar cantidadLlaves si llavesRecibidas es true y hay valor
+        escapeCatalizadorImagen: null, // Cambio de nombre a imagen
+      };      
+      
+      // --- STEP 1 ---
+      // Asignar cantidadLlaves si llavesRecibidas es true y hay valor, de lo contrario false
       if (this.uiControls.llavesRecibidas === 'true' && this.formData.cantidadLlaves) {
         result.cantidadLlaves = this.formData.cantidadLlaves;
+      } else {
+        result.cantidadLlaves = false;
       }
       
-      // Solo asignar polizaSeguro si polizaSeguro es true y hay archivo
-      if (this.uiControls.polizaSeguro === 'true' && this.formData.polizaSeguroArchivo) {
-        result.polizaSeguro = this.formData.polizaSeguroArchivo.name;
+      // Asignar polizaSeguro como true/false y guardar nombre del archivo
+      if (this.uiControls.polizaSeguro === 'true') {
+        result.polizaSeguro = true;
+        if (this.formData.polizaSeguroArchivo) {
+          result.polizaSeguroArchivo = this.formData.polizaSeguroArchivo.name;
+        }
+      } else {
+        result.polizaSeguro = false;
       }
       
-      // Solo asignar tarjetaCirculacion si es true
-      if (this.uiControls.tarjetaCirculacion === 'true') {
-        result.tarjetaCirculacion = true;
+      // Asignar tarjetaCirculacion true/false según la selección
+      result.tarjetaCirculacion = this.uiControls.tarjetaCirculacion === 'true';
+      
+      // Asignar otroDocumento como true/false y guardar nombre del archivo
+      if (this.uiControls.otroDocumento === 'true') {
+        result.otroDocumento = true;
+        if (this.formData.otroDocumentoArchivo) {
+          result.otroDocumentoArchivo = this.formData.otroDocumentoArchivo.name;
+        }
+      } else {
+        result.otroDocumento = false;
       }
       
-      // Solo asignar otroDocumento si otroDocumento es true y hay archivo
-      if (this.uiControls.otroDocumento === 'true' && this.formData.otroDocumentoArchivo) {
-        result.otroDocumento = this.formData.otroDocumentoArchivo.name;
-      }
-      
-      // Solo asignar accesoriosHerramienta si accesoriosHerramienta es true y hay archivo
-      if (this.uiControls.accesoriosHerramienta === 'true' && this.formData.accesoriosHerramientaArchivo) {
-        result.accesoriosHerramienta = this.formData.accesoriosHerramientaArchivo.name;
+      // Asignar accesoriosHerramienta como true/false y guardar nombre del archivo
+      if (this.uiControls.accesoriosHerramienta === 'true') {
+        result.accesoriosHerramienta = true;
+        if (this.formData.accesoriosHerramientaArchivo) {
+          result.accesoriosHerramientaArchivo = this.formData.accesoriosHerramientaArchivo.name;
+        }
+      } else {
+        result.accesoriosHerramienta = false;
       }
       
       // --- STEP 2 ---
       // Cluster
       if (this.uiControls.gato === 'true' && this.formData.gatoArchivo) {
         result.gatoArchivo = this.formData.gatoArchivo.name;
+      } else {
+        result.gatoArchivo = false;
       }
       
       if (this.formData.odometroArchivo) {
@@ -1781,110 +1803,115 @@ export default {
       }
       
       if (this.formData.combustibleArchivo) {
-        result.combustibleArchivo = this.formData.combustibleArchivo.name;
+        result.combustibleImagen = this.formData.combustibleArchivo.name;
       }
       
       if (this.hayTestigosSeleccionados && !this.isNingunoSeleccionado && this.formData.testigosEncendidosArchivo) {
-        result.testigosEncendidosArchivo = this.formData.testigosEncendidosArchivo.name;
+        result.testigosImagen = this.formData.testigosEncendidosArchivo.name;
       }
       
       // Tablero
       if (this.uiControls.bocinas === 'true' && this.formData.cantidadBocinas) {
         result.cantidadBocinas = this.formData.cantidadBocinas;
+      } else {
+        result.cantidadBocinas = false;
       }
       
       // Puertas
       if (this.formData.estadoCristales === 'mal_estado' && this.formData.cristalesArchivo) {
-        result.cristalesArchivo = this.formData.cristalesArchivo.name;
+        result.cristalesImagen = this.formData.cristalesArchivo.name;
       }
       
       // Asientos
       if (this.formData.estadoVestiduras === 'mal_estado' && this.formData.vestidurasArchivo) {
-        result.vestidurasArchivo = this.formData.vestidurasArchivo.name;
+        result.vestidurasImagen = this.formData.vestidurasArchivo.name;
       }
       
       if (this.formData.estadoCabeceras === 'mal_estado' && this.formData.cabecerasArchivo) {
-        result.cabecerasArchivo = this.formData.cabecerasArchivo.name;
+        result.cabecerasImagen = this.formData.cabecerasArchivo.name;
       }
       
       // --- STEP 3 ---
       // Carrocería
       if (this.formData.carroceriaLadoDerecho === 'mal_estado' && this.formData.carroceriaLadoDerechoArchivo) {
-        result.carroceriaLadoDerechoArchivo = this.formData.carroceriaLadoDerechoArchivo.name;
+        result.carroceriaLadoDerechoImagen = this.formData.carroceriaLadoDerechoArchivo.name;
       }
       
       if (this.formData.carroceriaLadoIzquierdo === 'mal_estado' && this.formData.carroceriaLadoIzquierdoArchivo) {
-        result.carroceriaLadoIzquierdoArchivo = this.formData.carroceriaLadoIzquierdoArchivo.name;
+        result.carroceriaLadoIzquierdoImagen = this.formData.carroceriaLadoIzquierdoArchivo.name;
       }
       
       if (this.formData.carroceriaLadoTrasero === 'mal_estado' && this.formData.carroceriaLadoTraseroArchivo) {
-        result.carroceriaLadoTraseroArchivo = this.formData.carroceriaLadoTraseroArchivo.name;
+        result.carroceriaLadoTraseroImagen = this.formData.carroceriaLadoTraseroArchivo.name;
       }
       
       if (this.formData.carroceriaLadoFrontal === 'mal_estado' && this.formData.carroceriaLadoFrontalArchivo) {
-        result.carroceriaLadoFrontalArchivo = this.formData.carroceriaLadoFrontalArchivo.name;
+        result.carroceriaLadoFrontalImagen = this.formData.carroceriaLadoFrontalArchivo.name;
       }
       
       // Neumáticos
       if (this.formData.neumaticosLadoPiloto === 'mal_estado' && this.formData.neumaticosLadoPilotoArchivo) {
-        result.neumaticosLadoPilotoArchivo = this.formData.neumaticosLadoPilotoArchivo.name;
+        result.neumaticosLadoPilotoImagen = this.formData.neumaticosLadoPilotoArchivo.name;
       }
       
       if (this.formData.neumaticosLadoAtrasPiloto === 'mal_estado' && this.formData.neumaticosLadoAtrasPilotoArchivo) {
-        result.neumaticosLadoAtrasPilotoArchivo = this.formData.neumaticosLadoAtrasPilotoArchivo.name;
+        result.neumaticosLadoAtrasPilotoImagen = this.formData.neumaticosLadoAtrasPilotoArchivo.name;
       }
       
       if (this.formData.neumaticosLadoCopiloto === 'mal_estado' && this.formData.neumaticosLadoCopilotoArchivo) {
-        result.neumaticosLadoCopilotoArchivo = this.formData.neumaticosLadoCopilotoArchivo.name;
+        result.neumaticosLadoCopilotoImagen = this.formData.neumaticosLadoCopilotoArchivo.name;
       }
       
       if (this.formData.neumaticosLadoAtrasCopiloto === 'mal_estado' && this.formData.neumaticosLadoAtrasCopilotoArchivo) {
-        result.neumaticosLadoAtrasCopilotoArchivo = this.formData.neumaticosLadoAtrasCopilotoArchivo.name;
+        result.neumaticosLadoAtrasCopilotoImagen = this.formData.neumaticosLadoAtrasCopilotoArchivo.name;
       }
       
       // Cristales
       if (this.formData.cristalesParabrisas === 'mal_estado' && this.formData.cristalesParabrisasArchivo) {
-        result.cristalesParabrisasArchivo = this.formData.cristalesParabrisasArchivo.name;
+        result.cristalesParabrisasImagen = this.formData.cristalesParabrisasArchivo.name;
       }
       
       if (this.formData.cristalesMedallonTrasero === 'mal_estado' && this.formData.cristalesMedallonTraseroArchivo) {
-        result.cristalesMedallonTraseroArchivo = this.formData.cristalesMedallonTraseroArchivo.name;
+        result.cristalesMedallonTraseroImagen = this.formData.cristalesMedallonTraseroArchivo.name;
       }
       
       if (this.formData.cristalesLimpiadores === 'mal_estado' && this.formData.cristalesLimpiadoresArchivo) {
-        result.cristalesLimpiadoresArchivo = this.formData.cristalesLimpiadoresArchivo.name;
+        result.cristalesLimpiadoresImagen = this.formData.cristalesLimpiadoresArchivo.name;
       }
       
       // Motor
       if (this.formData.motorTapones === 'mal_estado' && this.formData.motorTaponesArchivo) {
-        result.motorTaponesArchivo = this.formData.motorTaponesArchivo.name;
+        result.motorTaponesImagen = this.formData.motorTaponesArchivo.name;
       }
       
       if (this.formData.motorBateria === 'mal_estado' && this.formData.motorBateriaArchivo) {
-        result.motorBateriaArchivo = this.formData.motorBateriaArchivo.name;
+        result.motorBateriaImagen = this.formData.motorBateriaArchivo.name;
       }
       
       // Los niveles siempre requieren evidencia independientemente del valor seleccionado
       if (this.formData.motorNivelAceiteArchivo) {
-        result.motorNivelAceiteArchivo = this.formData.motorNivelAceiteArchivo.name;
+        result.motorNivelAceiteImagen = this.formData.motorNivelAceiteArchivo.name;
       }
       
       if (this.formData.motorNivelLiquidoFrenosArchivo) {
-        result.motorNivelLiquidoFrenosArchivo = this.formData.motorNivelLiquidoFrenosArchivo.name;
+        result.motorNivelLiquidoFrenosImagen = this.formData.motorNivelLiquidoFrenosArchivo.name;
       }
       
       if (this.formData.motorNivelAnticongelanteArchivo) {
-        result.motorNivelAnticongelanteArchivo = this.formData.motorNivelAnticongelanteArchivo.name;
+        result.motorNivelAnticongelanteImagen = this.formData.motorNivelAnticongelanteArchivo.name;
       }
       
       // Depósito Gasolina y Escape
       if (this.formData.escapeSilenciador === 'true' && this.formData.escapeSilenciadorArchivo) {
-        result.escapeSilenciadorArchivo = this.formData.escapeSilenciadorArchivo.name;
+        result.escapeSilenciadorImagen = this.formData.escapeSilenciadorArchivo.name;
       }
       
       if (this.formData.escapeCatalizador === 'true' && this.formData.escapeCatalizadorArchivo) {
-        result.escapeCatalizadorArchivo = this.formData.escapeCatalizadorArchivo.name;
+        result.escapeCatalizadorImagen = this.formData.escapeCatalizadorArchivo.name;
       }
+      
+      // Agregamos un log para verificar la estructura final del JSON
+      console.log('Estructura JSON actualizada para API:', JSON.stringify(result, null, 2));
       
       return result;
     }
@@ -1928,160 +1955,279 @@ export default {
       
       console.log('Cargando datos del checklist:', this.checklistData);
       
+      // Reiniciar todos los controles UI a estado vacío (sin selección)
+      Object.keys(this.uiControls).forEach(key => {
+        this.uiControls[key] = '';
+      });
+      
       // --- STEP 1 ---
-      // Cargar datos del formulario (Step 1)
-      this.formData.cantidadLlaves = this.checklistData.cantidadLlaves || null;
+      // Solo configurar los campos que realmente existen en el objeto de datos de prueba
+      if ('cantidadLlaves' in this.checklistData) {
+        this.formData.cantidadLlaves = this.checklistData.cantidadLlaves;
+        this.uiControls.llavesRecibidas = 'true';
+      }
       
-      // Configurar controles de UI basados en los datos (Step 1)
-      this.uiControls.llavesRecibidas = this.checklistData.cantidadLlaves !== null ? 'true' : 'false';
-      this.uiControls.polizaSeguro = this.checklistData.polizaSeguro ? 'true' : 'false';
-      this.uiControls.tarjetaCirculacion = this.checklistData.tarjetaCirculacion !== null ? 'true' : 'false';
-      this.uiControls.otroDocumento = this.checklistData.otroDocumento ? 'true' : 'false';
-      this.uiControls.accesoriosHerramienta = this.checklistData.accesoriosHerramienta ? 'true' : 'false';
-      
-      // Configurar valores booleanos (Step 1)
-      this.formData.tarjetaCirculacion = this.checklistData.tarjetaCirculacion;
-      
-      // Simular archivos (Step 1)
-      if (this.checklistData.polizaSeguro) {
+      if ('polizaSeguro' in this.checklistData) {
+        this.uiControls.polizaSeguro = 'true';
         this.formData.polizaSeguroArchivo = { name: this.checklistData.polizaSeguro };
       }
-      if (this.checklistData.otroDocumento) {
+      
+      if ('tarjetaCirculacion' in this.checklistData) {
+        this.formData.tarjetaCirculacion = this.checklistData.tarjetaCirculacion;
+        this.uiControls.tarjetaCirculacion = this.checklistData.tarjetaCirculacion ? 'true' : 'false';
+      }
+      
+      if ('otroDocumento' in this.checklistData) {
+        this.uiControls.otroDocumento = 'true';
         this.formData.otroDocumentoArchivo = { name: this.checklistData.otroDocumento };
       }
-      if (this.checklistData.accesoriosHerramienta) {
+      
+      if ('accesoriosHerramienta' in this.checklistData) {
+        this.uiControls.accesoriosHerramienta = 'true';
         this.formData.accesoriosHerramientaArchivo = { name: this.checklistData.accesoriosHerramienta };
       }
       
       // --- STEP 2 ---
-      // Cluster
-      this.uiControls.gato = this.checklistData.gatoArchivo ? 'true' : 'false';
-      if (this.checklistData.gatoArchivo) {
+      // Cluster - Solo configurar si existe en los datos de prueba
+      if ('gatoArchivo' in this.checklistData && this.checklistData.gatoArchivo) {
+        this.uiControls.gato = 'true';
         this.formData.gatoArchivo = { name: this.checklistData.gatoArchivo };
       }
-      if (this.checklistData.odometroArchivo) {
+      
+      if ('odometroArchivo' in this.checklistData && this.checklistData.odometroArchivo) {
         this.formData.odometroArchivo = { name: this.checklistData.odometroArchivo };
       }
-      this.formData.nivelCombustible = this.checklistData.nivelCombustible || null;
-      if (this.checklistData.combustibleArchivo) {
+      
+      if ('nivelCombustible' in this.checklistData) {
+        this.formData.nivelCombustible = this.checklistData.nivelCombustible;
+      }
+      
+      if ('combustibleArchivo' in this.checklistData && this.checklistData.combustibleArchivo) {
         this.formData.combustibleArchivo = { name: this.checklistData.combustibleArchivo };
       }
-      this.formData.testigosEncendidos = this.checklistData.testigosEncendidos || ['NINGUNO'];
-      if (this.checklistData.testigosEncendidosArchivo) {
+      
+      if ('testigosEncendidos' in this.checklistData) {
+        this.formData.testigosEncendidos = this.checklistData.testigosEncendidos;
+      } else {
+        this.formData.testigosEncendidos = ['NINGUNO']; // Valor por defecto
+      }
+      
+      if ('testigosEncendidosArchivo' in this.checklistData && this.checklistData.testigosEncendidosArchivo) {
         this.formData.testigosEncendidosArchivo = { name: this.checklistData.testigosEncendidosArchivo };
       }
       
-      // Tablero
-      this.formData.estadoGuantera = this.checklistData.estadoGuantera || null;
-      this.uiControls.estereo = this.checklistData.estereo !== null ? String(this.checklistData.estereo) : '';
-      this.uiControls.bocinas = this.checklistData.cantidadBocinas !== null ? 'true' : 'false';
-      this.formData.cantidadBocinas = this.checklistData.cantidadBocinas || null;
+      // Tablero - Solo configurar si existe en los datos de prueba
+      if ('estadoGuantera' in this.checklistData) {
+        this.formData.estadoGuantera = this.checklistData.estadoGuantera;
+      }
       
-      // Puertas
-      this.formData.manijas = this.checklistData.manijas || null;
-      this.formData.estadoSeguros = this.checklistData.estadoSeguros || null;
-      this.formData.estadoCristales = this.checklistData.estadoCristales || null;
-      if (this.checklistData.cristalesArchivo) {
+      if ('estereo' in this.checklistData && this.checklistData.estereo !== null) {
+        this.uiControls.estereo = String(this.checklistData.estereo);
+        this.formData.estereo = this.checklistData.estereo;
+      }
+      
+      if ('cantidadBocinas' in this.checklistData && this.checklistData.cantidadBocinas !== null) {
+        this.uiControls.bocinas = 'true';
+        this.formData.cantidadBocinas = this.checklistData.cantidadBocinas;
+      }
+      
+      // Puertas - Solo configurar si existe en los datos de prueba
+      if ('manijas' in this.checklistData) {
+        this.formData.manijas = this.checklistData.manijas;
+      }
+      
+      if ('estadoSeguros' in this.checklistData) {
+        this.formData.estadoSeguros = this.checklistData.estadoSeguros;
+      }
+      
+      if ('estadoCristales' in this.checklistData) {
+        this.formData.estadoCristales = this.checklistData.estadoCristales;
+      }
+      
+      if ('cristalesArchivo' in this.checklistData && this.checklistData.cristalesArchivo) {
         this.formData.cristalesArchivo = { name: this.checklistData.cristalesArchivo };
       }
       
-      // Asientos
-      this.formData.estadoVestiduras = this.checklistData.estadoVestiduras || null;
-      if (this.checklistData.vestidurasArchivo) {
+      // Asientos - Solo configurar si existe en los datos de prueba
+      if ('estadoVestiduras' in this.checklistData) {
+        this.formData.estadoVestiduras = this.checklistData.estadoVestiduras;
+      }
+      
+      if ('vestidurasArchivo' in this.checklistData && this.checklistData.vestidurasArchivo) {
         this.formData.vestidurasArchivo = { name: this.checklistData.vestidurasArchivo };
       }
-      this.formData.estadoCabeceras = this.checklistData.estadoCabeceras || null;
-      if (this.checklistData.cabecerasArchivo) {
+      
+      if ('estadoCabeceras' in this.checklistData) {
+        this.formData.estadoCabeceras = this.checklistData.estadoCabeceras;
+      }
+      
+      if ('cabecerasArchivo' in this.checklistData && this.checklistData.cabecerasArchivo) {
         this.formData.cabecerasArchivo = { name: this.checklistData.cabecerasArchivo };
       }
       
-      // Cinturones
-      this.formData.funcionalidadCinturones = this.checklistData.funcionalidadCinturones || null;
+      // Cinturones - Solo configurar si existe en los datos de prueba
+      if ('funcionalidadCinturones' in this.checklistData) {
+        this.formData.funcionalidadCinturones = this.checklistData.funcionalidadCinturones;
+      }
       
       // --- STEP 3 ---
-      // Carrocería
-      this.formData.carroceriaLadoDerecho = this.checklistData.carroceriaLadoDerecho || null;
-      if (this.checklistData.carroceriaLadoDerechoArchivo) {
+      // Carrocería - Solo configurar si existe en los datos de prueba
+      if ('carroceriaLadoDerecho' in this.checklistData) {
+        this.formData.carroceriaLadoDerecho = this.checklistData.carroceriaLadoDerecho;
+      }
+      
+      if ('carroceriaLadoDerechoArchivo' in this.checklistData && this.checklistData.carroceriaLadoDerechoArchivo) {
         this.formData.carroceriaLadoDerechoArchivo = { name: this.checklistData.carroceriaLadoDerechoArchivo };
       }
-      this.formData.carroceriaLadoIzquierdo = this.checklistData.carroceriaLadoIzquierdo || null;
-      if (this.checklistData.carroceriaLadoIzquierdoArchivo) {
+      
+      if ('carroceriaLadoIzquierdo' in this.checklistData) {
+        this.formData.carroceriaLadoIzquierdo = this.checklistData.carroceriaLadoIzquierdo;
+      }
+      
+      if ('carroceriaLadoIzquierdoArchivo' in this.checklistData && this.checklistData.carroceriaLadoIzquierdoArchivo) {
         this.formData.carroceriaLadoIzquierdoArchivo = { name: this.checklistData.carroceriaLadoIzquierdoArchivo };
       }
-      this.formData.carroceriaLadoTrasero = this.checklistData.carroceriaLadoTrasero || null;
-      if (this.checklistData.carroceriaLadoTraseroArchivo) {
+      
+      if ('carroceriaLadoTrasero' in this.checklistData) {
+        this.formData.carroceriaLadoTrasero = this.checklistData.carroceriaLadoTrasero;
+      }
+      
+      if ('carroceriaLadoTraseroArchivo' in this.checklistData && this.checklistData.carroceriaLadoTraseroArchivo) {
         this.formData.carroceriaLadoTraseroArchivo = { name: this.checklistData.carroceriaLadoTraseroArchivo };
       }
-      this.formData.carroceriaLadoFrontal = this.checklistData.carroceriaLadoFrontal || null;
-      if (this.checklistData.carroceriaLadoFrontalArchivo) {
+      
+      if ('carroceriaLadoFrontal' in this.checklistData) {
+        this.formData.carroceriaLadoFrontal = this.checklistData.carroceriaLadoFrontal;
+      }
+      
+      if ('carroceriaLadoFrontalArchivo' in this.checklistData && this.checklistData.carroceriaLadoFrontalArchivo) {
         this.formData.carroceriaLadoFrontalArchivo = { name: this.checklistData.carroceriaLadoFrontalArchivo };
       }
       
-      // Neumáticos
-      this.formData.neumaticosLadoPiloto = this.checklistData.neumaticosLadoPiloto || null;
-      if (this.checklistData.neumaticosLadoPilotoArchivo) {
+      // Neumáticos - Solo configurar si existe en los datos de prueba
+      if ('neumaticosLadoPiloto' in this.checklistData) {
+        this.formData.neumaticosLadoPiloto = this.checklistData.neumaticosLadoPiloto;
+      }
+      
+      if ('neumaticosLadoPilotoArchivo' in this.checklistData && this.checklistData.neumaticosLadoPilotoArchivo) {
         this.formData.neumaticosLadoPilotoArchivo = { name: this.checklistData.neumaticosLadoPilotoArchivo };
       }
-      this.formData.neumaticosLadoAtrasPiloto = this.checklistData.neumaticosLadoAtrasPiloto || null;
-      if (this.checklistData.neumaticosLadoAtrasPilotoArchivo) {
+      
+      if ('neumaticosLadoAtrasPiloto' in this.checklistData) {
+        this.formData.neumaticosLadoAtrasPiloto = this.checklistData.neumaticosLadoAtrasPiloto;
+      }
+      
+      if ('neumaticosLadoAtrasPilotoArchivo' in this.checklistData && this.checklistData.neumaticosLadoAtrasPilotoArchivo) {
         this.formData.neumaticosLadoAtrasPilotoArchivo = { name: this.checklistData.neumaticosLadoAtrasPilotoArchivo };
       }
-      this.formData.neumaticosLadoCopiloto = this.checklistData.neumaticosLadoCopiloto || null;
-      if (this.checklistData.neumaticosLadoCopilotoArchivo) {
+      
+      if ('neumaticosLadoCopiloto' in this.checklistData) {
+        this.formData.neumaticosLadoCopiloto = this.checklistData.neumaticosLadoCopiloto;
+      }
+      
+      if ('neumaticosLadoCopilotoArchivo' in this.checklistData && this.checklistData.neumaticosLadoCopilotoArchivo) {
         this.formData.neumaticosLadoCopilotoArchivo = { name: this.checklistData.neumaticosLadoCopilotoArchivo };
       }
-      this.formData.neumaticosLadoAtrasCopiloto = this.checklistData.neumaticosLadoAtrasCopiloto || null;
-      if (this.checklistData.neumaticosLadoAtrasCopilotoArchivo) {
+      if ('neumaticosLadoAtrasCopiloto' in this.checklistData) {
+        this.formData.neumaticosLadoAtrasCopiloto = this.checklistData.neumaticosLadoAtrasCopiloto;
+      }
+      
+      if ('neumaticosLadoAtrasCopilotoArchivo' in this.checklistData && this.checklistData.neumaticosLadoAtrasCopilotoArchivo) {
         this.formData.neumaticosLadoAtrasCopilotoArchivo = { name: this.checklistData.neumaticosLadoAtrasCopilotoArchivo };
       }
       
-      // Cristales
-      this.formData.cristalesParabrisas = this.checklistData.cristalesParabrisas || null;
-      if (this.checklistData.cristalesParabrisasArchivo) {
+      // Cristales - Solo configurar si existe en los datos de prueba
+      if ('cristalesParabrisas' in this.checklistData) {
+        this.formData.cristalesParabrisas = this.checklistData.cristalesParabrisas;
+      }
+      
+      if ('cristalesParabrisasArchivo' in this.checklistData && this.checklistData.cristalesParabrisasArchivo) {
         this.formData.cristalesParabrisasArchivo = { name: this.checklistData.cristalesParabrisasArchivo };
       }
-      this.formData.cristalesMedallonTrasero = this.checklistData.cristalesMedallonTrasero || null;
-      if (this.checklistData.cristalesMedallonTraseroArchivo) {
+      
+      if ('cristalesMedallonTrasero' in this.checklistData) {
+        this.formData.cristalesMedallonTrasero = this.checklistData.cristalesMedallonTrasero;
+      }
+      
+      if ('cristalesMedallonTraseroArchivo' in this.checklistData && this.checklistData.cristalesMedallonTraseroArchivo) {
         this.formData.cristalesMedallonTraseroArchivo = { name: this.checklistData.cristalesMedallonTraseroArchivo };
       }
-      this.formData.cristalesLimpiadores = this.checklistData.cristalesLimpiadores || null;
-      if (this.checklistData.cristalesLimpiadoresArchivo) {
+      
+      if ('cristalesLimpiadores' in this.checklistData) {
+        this.formData.cristalesLimpiadores = this.checklistData.cristalesLimpiadores;
+      }
+      
+      if ('cristalesLimpiadoresArchivo' in this.checklistData && this.checklistData.cristalesLimpiadoresArchivo) {
         this.formData.cristalesLimpiadoresArchivo = { name: this.checklistData.cristalesLimpiadoresArchivo };
       }
       
-      // Motor
-      this.formData.motorTapones = this.checklistData.motorTapones || null;
-      if (this.checklistData.motorTaponesArchivo) {
+      // Motor - Solo configurar si existe en los datos de prueba
+      if ('motorTapones' in this.checklistData) {
+        this.formData.motorTapones = this.checklistData.motorTapones;
+      }
+      
+      if ('motorTaponesArchivo' in this.checklistData && this.checklistData.motorTaponesArchivo) {
         this.formData.motorTaponesArchivo = { name: this.checklistData.motorTaponesArchivo };
       }
-      this.formData.motorBateria = this.checklistData.motorBateria || null;
-      if (this.checklistData.motorBateriaArchivo) {
+      
+      if ('motorBateria' in this.checklistData) {
+        this.formData.motorBateria = this.checklistData.motorBateria;
+      }
+      
+      if ('motorBateriaArchivo' in this.checklistData && this.checklistData.motorBateriaArchivo) {
         this.formData.motorBateriaArchivo = { name: this.checklistData.motorBateriaArchivo };
       }
-      this.formData.motorNivelAceite = this.checklistData.motorNivelAceite || null;
-      if (this.checklistData.motorNivelAceiteArchivo) {
+      
+      if ('motorNivelAceite' in this.checklistData) {
+        this.formData.motorNivelAceite = this.checklistData.motorNivelAceite;
+      }
+      
+      if ('motorNivelAceiteArchivo' in this.checklistData && this.checklistData.motorNivelAceiteArchivo) {
         this.formData.motorNivelAceiteArchivo = { name: this.checklistData.motorNivelAceiteArchivo };
       }
-      this.formData.motorNivelLiquidoFrenos = this.checklistData.motorNivelLiquidoFrenos || null;
-      if (this.checklistData.motorNivelLiquidoFrenosArchivo) {
+      
+      if ('motorNivelLiquidoFrenos' in this.checklistData) {
+        this.formData.motorNivelLiquidoFrenos = this.checklistData.motorNivelLiquidoFrenos;
+      }
+      
+      if ('motorNivelLiquidoFrenosArchivo' in this.checklistData && this.checklistData.motorNivelLiquidoFrenosArchivo) {
         this.formData.motorNivelLiquidoFrenosArchivo = { name: this.checklistData.motorNivelLiquidoFrenosArchivo };
       }
-      this.formData.motorNivelAnticongelante = this.checklistData.motorNivelAnticongelante || null;
-      if (this.checklistData.motorNivelAnticongelanteArchivo) {
+      if ('motorNivelAnticongelante' in this.checklistData) {
+        this.formData.motorNivelAnticongelante = this.checklistData.motorNivelAnticongelante;
+      }
+      
+      if ('motorNivelAnticongelanteArchivo' in this.checklistData && this.checklistData.motorNivelAnticongelanteArchivo) {
         this.formData.motorNivelAnticongelanteArchivo = { name: this.checklistData.motorNivelAnticongelanteArchivo };
       }
       
-      // Depósito Gasolina y Escape
-      this.formData.depositoPuerta = this.checklistData.depositoPuerta !== null ? String(this.checklistData.depositoPuerta) : null;
-      this.formData.depositoTapon = this.checklistData.depositoTapon !== null ? String(this.checklistData.depositoTapon) : null;
-      this.formData.escapeSilenciador = this.checklistData.escapeSilenciador !== null ? String(this.checklistData.escapeSilenciador) : null;
-      if (this.checklistData.escapeSilenciadorArchivo) {
+      // Depósito Gasolina y Escape - Solo configurar si existe en los datos de prueba
+      if ('depositoPuerta' in this.checklistData) {
+        this.formData.depositoPuerta = String(this.checklistData.depositoPuerta);
+      }
+      
+      if ('depositoTapon' in this.checklistData) {
+        this.formData.depositoTapon = String(this.checklistData.depositoTapon);
+      }
+      
+      if ('escapeSilenciador' in this.checklistData) {
+        this.formData.escapeSilenciador = String(this.checklistData.escapeSilenciador);
+      }
+      
+      if ('escapeSilenciadorArchivo' in this.checklistData && this.checklistData.escapeSilenciadorArchivo) {
         this.formData.escapeSilenciadorArchivo = { name: this.checklistData.escapeSilenciadorArchivo };
       }
-      this.formData.escapeCatalizador = this.checklistData.escapeCatalizador !== null ? String(this.checklistData.escapeCatalizador) : null;
-      if (this.checklistData.escapeCatalizadorArchivo) {
+      
+      if ('escapeCatalizador' in this.checklistData) {
+        this.formData.escapeCatalizador = String(this.checklistData.escapeCatalizador);
+      }
+      
+      if ('escapeCatalizadorArchivo' in this.checklistData && this.checklistData.escapeCatalizadorArchivo) {
         this.formData.escapeCatalizadorArchivo = { name: this.checklistData.escapeCatalizadorArchivo };
       }
+      
+      console.log('Datos cargados correctamente. Solamente se han seleccionado campos presentes en los datos de prueba.');
+      console.log('Estado de uiControls después de cargar:', JSON.stringify(this.uiControls, null, 2));
     },
     
     async handleNextStep() {
