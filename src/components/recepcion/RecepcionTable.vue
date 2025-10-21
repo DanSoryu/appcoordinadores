@@ -252,16 +252,80 @@
                     <p class="font-semibold">{{ currentRecepcion.vehiculo.numeroControl }}</p>
                   </div>
                   <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Nombre</p>
+                    <p class="text-sm font-medium text-gray-500">Nombre del Vehículo</p>
                     <p class="font-semibold">{{ currentRecepcion.vehiculo.nombre }}</p>
                   </div>
                   <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Marca</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.marca || 'No disponible' }}</p>
+                    <p class="text-sm font-medium text-gray-500">VIN</p>
+                    <p class="font-semibold text-xs">{{ currentRecepcion.vehiculo.vin }}</p>
                   </div>
                   <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Color</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.color || 'No disponible' }}</p>
+                    <p class="text-sm font-medium text-gray-500">Marca</p>
+                    <p class="font-semibold">{{ currentRecepcion.vehiculo.marca }}</p>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-sm font-medium text-gray-500">Modelo</p>
+                    <p class="font-semibold">{{ currentRecepcion.vehiculo.modelo }}</p>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-sm font-medium text-gray-500">Año</p>
+                    <p class="font-semibold">{{ currentRecepcion.vehiculo.anio }}</p>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-sm font-medium text-gray-500">Placas</p>
+                    <p class="font-semibold">{{ currentRecepcion.vehiculo.placas }}</p>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-sm font-medium text-gray-500">Kilometraje</p>
+                    <p class="font-semibold">{{ currentRecepcion.vehiculo.kilometraje?.toLocaleString() }} km</p>
+                  </div>
+                </div>
+                
+                <!-- Últimos Servicios -->
+                <div class="mt-4">
+                  <h5 class="text-md font-semibold text-gray-700 mb-2">Últimos Servicios</h5>
+                  <div v-if="currentRecepcion.vehiculo.ultimosServicios && currentRecepcion.vehiculo.ultimosServicios.length > 0" class="space-y-2">
+                    <div 
+                      v-for="(servicio, index) in currentRecepcion.vehiculo.ultimosServicios" 
+                      :key="index"
+                      class="flex items-center justify-between bg-white p-3 rounded border border-gray-200"
+                    >
+                      <div class="flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                          </svg>
+                        </div>
+                        <div>
+                          <p class="font-medium text-gray-900">{{ servicio.fecha }}</p>
+                          <p class="text-sm text-gray-500">{{ servicio.descripcion }}</p>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          {{ servicio.kilometraje?.toLocaleString() }} km
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else class="text-sm text-gray-500 bg-gray-100 p-3 rounded">
+                    No hay registros de servicios disponibles
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-6">
+              <h4 class="text-lg font-bold text-gray-800 mb-3">Asignaciones de Personal</h4>
+              <div class="bg-blue-50 p-4 rounded-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="space-y-1">
+                    <p class="text-sm font-medium text-blue-600">Persona Asignación Anterior</p>
+                    <p class="font-semibold text-blue-800">{{ currentRecepcion.vehiculo.personaAsignacionAnterior }}</p>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-sm font-medium text-green-600">Persona Asignación Actual</p>
+                    <p class="font-semibold text-green-800">{{ currentRecepcion.vehiculo.personaAsignacionActual }}</p>
                   </div>
                 </div>
               </div>
@@ -288,7 +352,7 @@ export default {
     const isLoading = ref(false)
     const error = ref(null)
     
-    // Datos de recepción
+    // Datos de recepción con información completa del vehículo
     const recepciones = ref([
       {
         id: 1,
@@ -296,10 +360,21 @@ export default {
         lugarRecepcion: 'Sucursal Centro',
         tallerRecepcion: 'Taller Principal',
         vehiculo: {
-          numeroControl: '123123',
-          nombre: 'Volkswagen Jetta',
-          marca: 'Volkswagen',
-          color: 'Negro'
+          numeroControl: 'ECO001',
+          nombre: 'Honda Civic',
+          vin: '1HGBH41JXMN109186',
+          marca: 'Honda',
+          modelo: 'Civic',
+          anio: '2021',
+          placas: 'ABC-123',
+          kilometraje: 45000,
+          personaAsignacionAnterior: 'Carlos Mendoza',
+          personaAsignacionActual: 'Ana López',
+          ultimosServicios: [
+            { fecha: '2025-08-15', descripcion: 'Mantenimiento preventivo completo', kilometraje: 43500 },
+            { fecha: '2025-06-20', descripcion: 'Cambio de aceite y filtros', kilometraje: 41200 },
+            { fecha: '2025-04-10', descripcion: 'Revisión de frenos y suspension', kilometraje: 38800 }
+          ]
         }
       },
       {
@@ -308,10 +383,21 @@ export default {
         lugarRecepcion: 'Sucursal Norte',
         tallerRecepcion: 'Taller Norte',
         vehiculo: {
-          numeroControl: '456456',
-          nombre: 'Toyota Corolla',
-          marca: 'Toyota',
-          color: 'Blanco'
+          numeroControl: 'ECO002',
+          nombre: 'Chevrolet Malibu',
+          vin: '1G1JC524817123456',
+          marca: 'Chevrolet',
+          modelo: 'Malibu',
+          anio: '2020',
+          placas: 'DEF-456',
+          kilometraje: 38500,
+          personaAsignacionAnterior: 'María González',
+          personaAsignacionActual: 'Roberto Díaz',
+          ultimosServicios: [
+            { fecha: '2025-09-05', descripcion: 'Inspección anual completa', kilometraje: 38000 },
+            { fecha: '2025-07-12', descripcion: 'Cambio de llantas delanteras', kilometraje: 36200 },
+            { fecha: '2025-05-18', descripcion: 'Reparación sistema eléctrico', kilometraje: 34500 }
+          ]
         }
       },
       {
@@ -320,10 +406,22 @@ export default {
         lugarRecepcion: 'Sucursal Sur',
         tallerRecepcion: 'Taller Sur',
         vehiculo: {
-          numeroControl: '789789',
-          nombre: 'Ford Fiesta',
-          marca: 'Ford',
-          color: 'Rojo'
+          numeroControl: 'ECO003',
+          nombre: 'Mercedes-Benz C-Class',
+          vin: 'WDBRF40J03A123456',
+          marca: 'Mercedes-Benz',
+          modelo: 'C-Class',
+          anio: '2019',
+          placas: 'GHI-789',
+          kilometraje: 52000,
+          personaAsignacionAnterior: 'Luis Martínez',
+          personaAsignacionActual: 'Sandra Pérez',
+          ultimosServicios: [
+            { fecha: '2025-09-01', descripcion: 'Servicio Mercedes-Benz Premium', kilometraje: 51500 },
+            { fecha: '2025-06-15', descripcion: 'Cambio de aceite sintético', kilometraje: 49200 },
+            { fecha: '2025-04-05', descripcion: 'Revisión de transmisión automática', kilometraje: 47800 },
+            { fecha: '2025-01-20', descripcion: 'Mantenimiento de aire acondicionado', kilometraje: 45600 }
+          ]
         }
       },
       {
@@ -332,10 +430,20 @@ export default {
         lugarRecepcion: 'Sucursal Este',
         tallerRecepcion: 'Taller Este',
         vehiculo: {
-          numeroControl: '321321',
-          nombre: 'Chevrolet Spark',
-          marca: 'Chevrolet',
-          color: 'Azul'
+          numeroControl: 'ECO004',
+          nombre: 'Honda Odyssey',
+          vin: '5FNRL38779B123456',
+          marca: 'Honda',
+          modelo: 'Odyssey',
+          anio: '2022',
+          placas: 'JKL-012',
+          kilometraje: 25000,
+          personaAsignacionAnterior: 'Pedro Ruiz',
+          personaAsignacionActual: 'Carmen Vega',
+          ultimosServicios: [
+            { fecha: '2025-08-30', descripcion: 'Primer servicio de garantía', kilometraje: 24500 },
+            { fecha: '2025-05-22', descripcion: 'Inspección de 20,000 km', kilometraje: 20000 }
+          ]
         }
       },
       {
@@ -344,10 +452,20 @@ export default {
         lugarRecepcion: 'Sucursal Oeste',
         tallerRecepcion: 'Taller Principal',
         vehiculo: {
-          numeroControl: '654654',
-          nombre: 'Honda Civic',
-          marca: 'Honda',
-          color: 'Gris'
+          numeroControl: 'ECO005',
+          nombre: 'Ford Escape',
+          vin: '1FMCU0F75KUA12345',
+          marca: 'Ford',
+          modelo: 'Escape',
+          anio: '2023',
+          placas: 'MNO-345',
+          kilometraje: 15000,
+          personaAsignacionAnterior: 'José Ramírez',
+          personaAsignacionActual: 'Elena Castro',
+          ultimosServicios: [
+            { fecha: '2025-09-10', descripcion: 'Servicio de 15,000 km', kilometraje: 15000 },
+            { fecha: '2025-06-01', descripción: 'Primer cambio de aceite', kilometraje: 10000 }
+          ]
         }
       }
     ])

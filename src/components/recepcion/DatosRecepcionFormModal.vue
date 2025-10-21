@@ -27,6 +27,20 @@
 								required
 							>
 						</div>
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">Kilometraje</label>
+								<input 
+									v-model="formData.kilometraje"
+									type="text"
+									maxlength="7"
+									inputmode="numeric"
+									pattern="[0-9]*"
+									placeholder="Ejemplo: 15000"
+									class="input mb-2 w-full"
+									required
+									@input="validarKilometraje"
+								>
+							</div>
 						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 							<label class="block mb-2 font-semibold text-gray-700">Lugar Recepción</label>
 							<input 
@@ -39,13 +53,16 @@
 						</div>
 						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 							<label class="block mb-2 font-semibold text-gray-700">Taller Recepción</label>
-							<input 
+							<select
 								v-model="formData.tallerRecepcion"
-								type="text"
-								placeholder="Ejemplo: Taller Principal"
 								class="input mb-2 w-full"
 								required
 							>
+								<option value="">Seleccione un taller</option>
+								<option v-for="taller in talleres" :key="taller.id" :value="taller.nombre">
+									{{ taller.nombre }}
+								</option>
+							</select>
 						</div>
 						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 							<label class="block mb-2 font-semibold text-gray-700">Vehículo</label>
@@ -127,7 +144,8 @@ export default {
 				fechaRecepcion: '',
 				lugarRecepcion: '',
 				tallerRecepcion: '',
-				vehiculo: ''
+				vehiculo: '',
+				kilometraje: ''
 			},
 			vehiculos: [
 				{ numeroControl: '123123', nombre: 'Volkswagen Jetta' },
@@ -135,6 +153,16 @@ export default {
 				{ numeroControl: '789789', nombre: 'Ford Fiesta' },
 				{ numeroControl: '321321', nombre: 'Chevrolet Spark' },
 				{ numeroControl: '654654', nombre: 'Honda Civic' }
+			],
+			talleres: [
+				{ id: 1, nombre: 'Taller Principal' },
+				{ id: 2, nombre: 'Sucursal Norte' },
+				{ id: 3, nombre: 'Sucursal Sur' },
+				{ id: 4, nombre: 'Sucursal Este' },
+				{ id: 5, nombre: 'Sucursal Oeste' },
+				{ id: 6, nombre: 'Taller Especializado' },
+				{ id: 7, nombre: 'Centro de Servicio' },
+				{ id: 8, nombre: 'Taller de Emergencia' }
 			],
 			showVehiculoModal: false
 		};
@@ -150,7 +178,11 @@ export default {
 				this.formData.fechaRecepcion && this.formData.fechaRecepcion !== '' &&
 				this.formData.lugarRecepcion && this.formData.lugarRecepcion.trim() !== '' &&
 				this.formData.tallerRecepcion && this.formData.tallerRecepcion.trim() !== '' &&
-				this.formData.vehiculo && this.formData.vehiculo !== ''
+				this.formData.vehiculo && this.formData.vehiculo !== '' &&
+				this.formData.kilometraje !== '' &&
+				!isNaN(this.formData.kilometraje) &&
+				Number(this.formData.kilometraje) >= 0 &&
+				Number(this.formData.kilometraje) <= 2000000
 			);
 		},
 		nombreVehiculo() {
@@ -178,6 +210,16 @@ export default {
 		abrirVehiculoModal() {
 			this.showVehiculoModal = true;
 		},
+			validarKilometraje(event) {
+				let valor = event.target.value;
+				// Eliminar cualquier caracter que no sea dígito
+				valor = valor.replace(/[^0-9]/g, '');
+				// Limitar a 7 caracteres
+				if (valor.length > 7) {
+					valor = valor.slice(0, 7);
+				}
+				this.formData.kilometraje = valor;
+			},
 		async handleSubmit() {
 			if (!this.isFormValid) return;
 			
@@ -199,12 +241,6 @@ export default {
 					this.$emit('recepcion-guardada', datosGuardados);
 				});
 				
-				this.toastStore.addToast({
-					message: 'Datos de recepción guardados correctamente',
-					type: 'success',
-					duration: 3500
-				});
-				
 				// Cerrar el modal al finalizar (no resetear aquí porque se cierra)
 				this.$emit('close');
 			} catch (error) {
@@ -221,7 +257,8 @@ export default {
 				fechaRecepcion: '',
 				lugarRecepcion: '',
 				tallerRecepcion: '',
-				vehiculo: ''
+				vehiculo: '',
+				kilometraje: ''
 			};
 		},
 		handleVehiculoGuardado(nuevoVehiculo) {

@@ -69,11 +69,11 @@
                 </div>
                 <div v-if="uiControls.polizaSeguro === 'true'" class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de la evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="polizaSeguroArchivo"
-                    accept=".pdf, .jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.polizaSeguro"
-                    @file-selected="(file) => handleFileChange('polizaSeguroArchivo', file)"
+                    fileNamePrefix="foto_poliza"
+                    :preloadedPhoto="checklistData.polizaSeguro"
+                    @photo-captured="(file) => handlePhotoCaptured('polizaSeguroArchivo', file)"
                   />
                 </div>
               </div>
@@ -95,31 +95,6 @@
                 </div>
               </div>
 
-              <!-- Otro documento -->
-              <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <h4 class="text-base font-semibold text-gray-800 mb-3">¿Cuenta con otro documento?</h4>
-                <div class="flex gap-6 mb-4">
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" value="true" v-model="uiControls.otroDocumento" 
-                           class="w-4 h-4 text-secondary-600 border-gray-300 focus:ring-secondary-500" />
-                    <span class="text-gray-700 font-medium">Sí</span>
-                  </label>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" value="false" v-model="uiControls.otroDocumento" 
-                           class="w-4 h-4 text-secondary-600 border-gray-300 focus:ring-secondary-500" />
-                    <span class="text-gray-700 font-medium">No</span>
-                  </label>
-                </div>
-                <div v-if="uiControls.otroDocumento === 'true'" class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de la evidencia</p>
-                  <FileUploadPreview
-                    id="otroDocumentoArchivo"
-                    accept=".pdf, .csv, .jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.otroDocumento"
-                    @file-selected="(file) => handleFileChange('otroDocumentoArchivo', file)"
-                  />
-                </div>
-              </div>
             </div>
           </div>
 
@@ -134,26 +109,21 @@
             
             <div class="space-y-4">
               <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <h4 class="text-base font-semibold text-gray-800 mb-3">¿Cuenta con llave birlo?</h4>
-                <div class="flex gap-6 mb-4">
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" value="true" v-model="uiControls.accesoriosHerramienta" 
-                           class="w-4 h-4 text-accent-blue border-gray-300 focus:ring-blue-500" />
-                    <span class="text-gray-700 font-medium">Sí</span>
-                  </label>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" value="false" v-model="uiControls.accesoriosHerramienta" 
-                           class="w-4 h-4 text-accent-blue border-gray-300 focus:ring-blue-500" />
-                    <span class="text-gray-700 font-medium">No</span>
-                  </label>
-                </div>
-                <div v-if="uiControls.accesoriosHerramienta === 'true'" class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de la evidencia</p>
-                  <FileUploadPreview
+                <h4 class="text-base font-semibold text-gray-800 mb-3">Descripción de Accesorios y Herramientas</h4>
+                <p class="text-sm text-gray-600 mb-3">Describe detalladamente qué accesorios y herramientas contaba el vehículo</p>
+                <textarea 
+                  v-model="formData.descripcionAccesorios" 
+                  placeholder="Ej: Gato hidráulico, llave de ruedas, triángulos de seguridad, extintor, botiquín, cables de corriente, etc."
+                  class="w-full min-h-[100px] p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-accent-blue resize-y"
+                  rows="4"
+                ></textarea>
+                <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de los accesorios y herramientas</p>
+                  <PhotoUploadAndPreview
                     id="accesoriosHerramientaArchivo"
-                    accept=".pdf, .jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.accesoriosHerramienta"
-                    @file-selected="(file) => handleFileChange('accesoriosHerramientaArchivo', file)"
+                    fileNamePrefix="foto_accesorios"
+                    :preloadedPhoto="checklistData.accesoriosHerramienta"
+                    @photo-captured="(file) => handlePhotoCaptured('accesoriosHerramientaArchivo', file)"
                   />
                 </div>
               </div>
@@ -171,41 +141,15 @@
             </div>
             
             <div class="space-y-4">
-              <!-- Gato -->
-              <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <h4 class="text-base font-semibold text-gray-800 mb-3">¿Cuenta con gato?</h4>
-                <div class="flex gap-6 mb-4">
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" value="true" v-model="uiControls.gato" 
-                           class="w-4 h-4 text-emerald-600 border-gray-300 focus:ring-emerald-500" />
-                    <span class="text-gray-700 font-medium">Sí</span>
-                  </label>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" value="false" v-model="uiControls.gato" 
-                           class="w-4 h-4 text-emerald-600 border-gray-300 focus:ring-emerald-500" />
-                    <span class="text-gray-700 font-medium">No</span>
-                  </label>
-                </div>
-                <div v-if="uiControls.gato === 'true'" class="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                  <p class="text-sm text-green-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
-                    id="gatoArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.gatoArchivo"
-                    @file-selected="(file) => handleFileChange('gatoArchivo', file)"
-                  />
-                </div>
-              </div>
-
               <!-- Odómetro (KM) -->
               <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <h4 class="text-base font-semibold text-gray-800 mb-3">Odómetro (KM)</h4>
                 <p class="text-sm text-gray-600 mb-3">Por favor, sube una foto del odómetro</p>
-                <FileUploadPreview
+                <PhotoUploadAndPreview
                   id="odometroArchivo"
-                  accept=".jpeg, .jpg, .png"
-                  :preloadedFile="checklistData.odometroArchivo"
-                  @file-selected="(file) => handleFileChange('odometroArchivo', file)"
+                  fileNamePrefix="foto_odometro"
+                  :preloadedPhoto="checklistData.odometroArchivo"
+                  @photo-captured="(file) => handlePhotoCaptured('odometroArchivo', file)"
                 />
               </div>
 
@@ -258,11 +202,11 @@
                 <!-- Evidencia nivel combustible (siempre visible) -->
                 <div class="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
                   <p class="text-sm text-green-800 font-medium mb-3">Por favor, sube una foto de evidencia del nivel de combustible</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="combustibleArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.combustibleArchivo"
-                    @file-selected="(file) => handleFileChange('combustibleArchivo', file)"
+                    fileNamePrefix="foto_combustible"
+                    :preloadedPhoto="checklistData.combustibleArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('combustibleArchivo', file)"
                   />
                 </div>
               </div>
@@ -316,13 +260,13 @@
                 </div>
                 
                 <!-- Evidencia de testigos encendidos -->
-                <div v-if="hayTestigosSeleccionados && !isNingunoSeleccionado" class="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                  <p class="text-sm text-green-800 font-medium mb-3">Por favor, sube una foto de evidencia de los testigos encendidos</p>
-                  <FileUploadPreview
+                <div class="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                  <p class="text-sm text-green-800 font-medium mb-3">Por favor, sube una foto de evidencia de los testigos del tablero</p>
+                  <PhotoUploadAndPreview
                     id="testigosEncendidosArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.testigosEncendidosArchivo"
-                    @file-selected="(file) => handleFileChange('testigosEncendidosArchivo', file)"
+                    fileNamePrefix="foto_testigos"
+                    :preloadedPhoto="checklistData.testigosEncendidosArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('testigosEncendidosArchivo', file)"
                   />
                 </div>
               </div>
@@ -339,23 +283,6 @@
             </div>
             
             <div class="space-y-4">
-              <!-- Guantera -->
-              <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <h4 class="text-base font-semibold text-gray-800 mb-3">Estado de Guantera</h4>
-                <div class="flex gap-6 mb-4">
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" value="buen_estado" v-model="formData.estadoGuantera" 
-                           class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                    <span class="text-gray-700 font-medium">Buen Estado</span>
-                  </label>
-                  <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" value="mal_estado" v-model="formData.estadoGuantera" 
-                           class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" />
-                    <span class="text-gray-700 font-medium">Mal Estado</span>
-                  </label>
-                </div>
-              </div>
-
               <!-- Estéreo -->
               <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <h4 class="text-base font-semibold text-gray-800 mb-3">¿Cuenta con estéreo?</h4>
@@ -429,7 +356,7 @@
               <!-- Seguros -->
               <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <h4 class="text-base font-semibold text-gray-800 mb-3">Estado de los Seguros</h4>
-                <div class="flex gap-6">
+                <div class="flex gap-6 mb-4">
                   <label class="flex items-center gap-2 cursor-pointer">
                     <input type="radio" value="buen_estado" v-model="formData.estadoSeguros" 
                            class="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500" />
@@ -440,6 +367,14 @@
                            class="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500" />
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
+                </div>
+                <div class="mt-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <p class="text-sm text-yellow-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
+                  <PhotoUploadAndPreview
+                    id="segurosArchivo"
+                    :preloadedPhoto="checklistData.segurosArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('segurosArchivo', file)"
+                  />
                 </div>
               </div>
 
@@ -458,13 +393,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.estadoCristales === 'mal_estado'" class="mt-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div class="mt-4 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
                   <p class="text-sm text-yellow-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="cristalesArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.cristalesArchivo"
-                    @file-selected="(file) => handleFileChange('cristalesArchivo', file)"
+                    :preloadedPhoto="checklistData.cristalesArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('cristalesArchivo', file)"
                   />
                 </div>
               </div>
@@ -496,13 +430,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.estadoVestiduras === 'mal_estado'" class="mt-4 p-4 bg-pink-50 rounded-lg border border-pink-200">
+                <div class="mt-4 p-4 bg-pink-50 rounded-lg border border-pink-200">
                   <p class="text-sm text-pink-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="vestidurasArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.vestidurasArchivo"
-                    @file-selected="(file) => handleFileChange('vestidurasArchivo', file)"
+                    :preloadedPhoto="checklistData.vestidurasArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('vestidurasArchivo', file)"
                   />
                 </div>
               </div>
@@ -522,13 +455,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.estadoCabeceras === 'mal_estado'" class="mt-4 p-4 bg-pink-50 rounded-lg border border-pink-200">
+                <div class="mt-4 p-4 bg-pink-50 rounded-lg border border-pink-200">
                   <p class="text-sm text-pink-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="cabecerasArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.cabecerasArchivo"
-                    @file-selected="(file) => handleFileChange('cabecerasArchivo', file)"
+                    :preloadedPhoto="checklistData.cabecerasArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('cabecerasArchivo', file)"
                   />
                 </div>
               </div>
@@ -590,13 +522,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.carroceriaLadoDerecho === 'mal_estado'" class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                  <p class="text-sm text-orange-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                <div class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                  <p class="text-sm text-orange-800 font-medium mb-3">Por favor, toma una foto de evidencia</p>
+                  <PhotoUploadAndPreview
                     id="carroceriaLadoDerechoArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.carroceriaLadoDerechoArchivo"
-                    @file-selected="(file) => handleFileChange('carroceriaLadoDerechoArchivo', file)"
+                    :preloadedPhoto="checklistData.carroceriaLadoDerechoArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoDerechoArchivo', file)"
                   />
                 </div>
               </div>
@@ -616,13 +547,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.carroceriaLadoIzquierdo === 'mal_estado'" class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                  <p class="text-sm text-orange-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                <div class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                  <p class="text-sm text-orange-800 font-medium mb-3">Por favor, toma una foto de evidencia</p>
+                  <PhotoUploadAndPreview
                     id="carroceriaLadoIzquierdoArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.carroceriaLadoIzquierdoArchivo"
-                    @file-selected="(file) => handleFileChange('carroceriaLadoIzquierdoArchivo', file)"
+                    :preloadedPhoto="checklistData.carroceriaLadoIzquierdoArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoIzquierdoArchivo', file)"
                   />
                 </div>
               </div>
@@ -642,13 +572,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.carroceriaLadoTrasero === 'mal_estado'" class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                  <p class="text-sm text-orange-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                <div class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                  <p class="text-sm text-orange-800 font-medium mb-3">Por favor, toma una foto de evidencia</p>
+                  <PhotoUploadAndPreview
                     id="carroceriaLadoTraseroArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.carroceriaLadoTraseroArchivo"
-                    @file-selected="(file) => handleFileChange('carroceriaLadoTraseroArchivo', file)"
+                    :preloadedPhoto="checklistData.carroceriaLadoTraseroArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoTraseroArchivo', file)"
                   />
                 </div>
               </div>
@@ -668,13 +597,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.carroceriaLadoFrontal === 'mal_estado'" class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                  <p class="text-sm text-orange-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                <div class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                  <p class="text-sm text-orange-800 font-medium mb-3">Por favor, toma una foto de evidencia</p>
+                  <PhotoUploadAndPreview
                     id="carroceriaLadoFrontalArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.carroceriaLadoFrontalArchivo"
-                    @file-selected="(file) => handleFileChange('carroceriaLadoFrontalArchivo', file)"
+                    :preloadedPhoto="checklistData.carroceriaLadoFrontalArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoFrontalArchivo', file)"
                   />
                 </div>
               </div>
@@ -706,13 +634,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.neumaticosLadoPiloto === 'mal_estado'" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                   <p class="text-sm text-gray-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="neumaticosLadoPilotoArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.neumaticosLadoPilotoArchivo"
-                    @file-selected="(file) => handleFileChange('neumaticosLadoPilotoArchivo', file)"
+                    :preloadedPhoto="checklistData.neumaticosLadoPilotoArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoPilotoArchivo', file)"
                   />
                 </div>
               </div>
@@ -732,13 +659,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.neumaticosLadoAtrasPiloto === 'mal_estado'" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                   <p class="text-sm text-gray-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="neumaticosLadoAtrasPilotoArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.neumaticosLadoAtrasPilotoArchivo"
-                    @file-selected="(file) => handleFileChange('neumaticosLadoAtrasPilotoArchivo', file)"
+                    :preloadedPhoto="checklistData.neumaticosLadoAtrasPilotoArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoAtrasPilotoArchivo', file)"
                   />
                 </div>
               </div>
@@ -758,13 +684,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.neumaticosLadoCopiloto === 'mal_estado'" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                   <p class="text-sm text-gray-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="neumaticosLadoCopilotoArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.neumaticosLadoCopilotoArchivo"
-                    @file-selected="(file) => handleFileChange('neumaticosLadoCopilotoArchivo', file)"
+                    :preloadedPhoto="checklistData.neumaticosLadoCopilotoArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoCopilotoArchivo', file)"
                   />
                 </div>
               </div>
@@ -784,13 +709,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.neumaticosLadoAtrasCopiloto === 'mal_estado'" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                   <p class="text-sm text-gray-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="neumaticosLadoAtrasCopilotoArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.neumaticosLadoAtrasCopilotoArchivo"
-                    @file-selected="(file) => handleFileChange('neumaticosLadoAtrasCopilotoArchivo', file)"
+                    :preloadedPhoto="checklistData.neumaticosLadoAtrasCopilotoArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoAtrasCopilotoArchivo', file)"
                   />
                 </div>
               </div>
@@ -822,13 +746,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.cristalesParabrisas === 'mal_estado'" class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="cristalesParabrisasArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.cristalesParabrisasArchivo"
-                    @file-selected="(file) => handleFileChange('cristalesParabrisasArchivo', file)"
+                    :preloadedPhoto="checklistData.cristalesParabrisasArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('cristalesParabrisasArchivo', file)"
                   />
                 </div>
               </div>
@@ -848,13 +771,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.cristalesMedallonTrasero === 'mal_estado'" class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="cristalesMedallonTraseroArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.cristalesMedallonTraseroArchivo"
-                    @file-selected="(file) => handleFileChange('cristalesMedallonTraseroArchivo', file)"
+                    :preloadedPhoto="checklistData.cristalesMedallonTraseroArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('cristalesMedallonTraseroArchivo', file)"
                   />
                 </div>
               </div>
@@ -874,13 +796,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.cristalesLimpiadores === 'mal_estado'" class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="cristalesLimpiadoresArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.cristalesLimpiadoresArchivo"
-                    @file-selected="(file) => handleFileChange('cristalesLimpiadoresArchivo', file)"
+                    :preloadedPhoto="checklistData.cristalesLimpiadoresArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('cristalesLimpiadoresArchivo', file)"
                   />
                 </div>
               </div>
@@ -912,13 +833,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.motorTapones === 'mal_estado'" class="mt-4 p-4 bg-red-50 rounded-lg border border-red-200">
+                <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-200">
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="motorTaponesArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.motorTaponesArchivo"
-                    @file-selected="(file) => handleFileChange('motorTaponesArchivo', file)"
+                    :preloadedPhoto="checklistData.motorTaponesArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('motorTaponesArchivo', file)"
                   />
                 </div>
               </div>
@@ -938,13 +858,12 @@
                     <span class="text-gray-700 font-medium">Mal Estado</span>
                   </label>
                 </div>
-                <div v-if="formData.motorBateria === 'mal_estado'" class="mt-4 p-4 bg-red-50 rounded-lg border border-red-200">
+                <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-200">
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="motorBateriaArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.motorBateriaArchivo"
-                    @file-selected="(file) => handleFileChange('motorBateriaArchivo', file)"
+                    :preloadedPhoto="checklistData.motorBateriaArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('motorBateriaArchivo', file)"
                   />
                 </div>
               </div>
@@ -996,11 +915,10 @@
                 </div>
                 <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-200">
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="motorNivelAceiteArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.motorNivelAceiteArchivo"
-                    @file-selected="(file) => handleFileChange('motorNivelAceiteArchivo', file)"
+                    :preloadedPhoto="checklistData.motorNivelAceiteArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('motorNivelAceiteArchivo', file)"
                   />
                 </div>
               </div>
@@ -1052,11 +970,10 @@
                 </div>
                 <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-200">
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="motorNivelLiquidoFrenosArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.motorNivelLiquidoFrenosArchivo"
-                    @file-selected="(file) => handleFileChange('motorNivelLiquidoFrenosArchivo', file)"
+                    :preloadedPhoto="checklistData.motorNivelLiquidoFrenosArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('motorNivelLiquidoFrenosArchivo', file)"
                   />
                 </div>
               </div>
@@ -1108,11 +1025,10 @@
                 </div>
                 <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-200">
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="motorNivelAnticongelanteArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.motorNivelAnticongelanteArchivo"
-                    @file-selected="(file) => handleFileChange('motorNivelAnticongelanteArchivo', file)"
+                    :preloadedPhoto="checklistData.motorNivelAnticongelanteArchivo"
+                    @photo-captured="(file) => handlePhotoCaptured('motorNivelAnticongelanteArchivo', file)"
                   />
                 </div>
               </div>
@@ -1190,7 +1106,7 @@
                     <span class="text-gray-700 font-medium">No</span>
                   </label>
                 </div>
-                <div v-if="formData.escapeSilenciador === 'true'" class="mt-4 p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <div class="mt-4 p-4 bg-teal-50 rounded-lg border border-teal-200">
                   <p class="text-sm text-teal-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <FileUploadPreview
                     id="escapeSilenciadorArchivo"
@@ -1216,7 +1132,7 @@
                     <span class="text-gray-700 font-medium">No</span>
                   </label>
                 </div>
-                <div v-if="formData.escapeCatalizador === 'true'" class="mt-4 p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <div class="mt-4 p-4 bg-teal-50 rounded-lg border border-teal-200">
                   <p class="text-sm text-teal-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <FileUploadPreview
                     id="escapeCatalizadorArchivo"
@@ -1228,29 +1144,50 @@
               </div>
             </div>
           </div>
+
+          <!-- SECCIÓN 7: COMENTARIOS GENERALES -->
+          <div class="mb-6 p-6 bg-gradient-to-r from-slate-50 to-gray-100 rounded-xl border-l-4 border-slate-500">
+            <div class="flex items-center mb-4">
+              <div class="w-8 h-8 bg-slate-500 text-white rounded-full flex items-center justify-center mr-3">
+                <font-awesome-icon icon="comment-alt" class="w-4 h-4" />
+              </div>
+              <h3 class="text-xl font-bold text-slate-700">Comentarios Generales</h3>
+            </div>
+            
+            <div class="space-y-4">
+              <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                <h4 class="text-base font-semibold text-gray-800 mb-3">Observaciones Adicionales</h4>
+                <p class="text-sm text-gray-600 mb-3">Incluya cualquier observación adicional sobre el vehículo que considere relevante</p>
+                <textarea 
+                  v-model="formData.comentarioGeneral"
+                  class="w-full input resize-none"
+                  placeholder="Ej: Rayones menores en la puerta del conductor, desgaste normal del volante, ruido en el motor al acelerar..."
+                  rows="4"
+                ></textarea>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="flex justify-between mt-8">
           <BaseButton 
-            type="submit" 
+            type="button" 
             variant="secondary" 
             :disabled="currentStep === 1"
             :onClick="handlePrevStep"
-            custom-loading-text="Procesando"
           >
             <div class="flex items-center gap-2">
               <font-awesome-icon icon="chevron-left" class="w-4 h-4" />
-              Guardar y regresar
+              Anterior
             </div>
           </BaseButton>
           <BaseButton 
             v-if="currentStep < 3" 
-            type="submit" 
+            type="button" 
             variant="primary"
             :onClick="handleNextStep"
-            custom-loading-text="Procesando"
           >
             <div class="flex items-center gap-2">
-              Guardar y continuar
+              Siguiente
               <font-awesome-icon icon="chevron-right" class="w-4 h-4" />
             </div>
           </BaseButton>
@@ -1260,7 +1197,7 @@
             variant="success"
             :disabled="!isStepValid"
             :onClick="handleFinalSubmit"
-            custom-loading-text="Procesando"
+            custom-loading-text="Enviando formulario"
             :min-delay="2500"
           >
             Guardar
@@ -1276,6 +1213,7 @@
 
 <script>
 import FileUploadPreview from '../global/FileUploadPreview.vue';
+import PhotoUploadAndPreview from '../global/PhotoUploadAndPreview.vue';
 import BaseButton from '../global/BaseButton.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
@@ -1284,6 +1222,7 @@ export default {
   name: 'CheckListFormModal',
   components: {
     FileUploadPreview,
+    PhotoUploadAndPreview,
     BaseButton
   },
   props: {
@@ -1314,10 +1253,6 @@ export default {
         llavesRecibidas: '',
         polizaSeguro: '',
         tarjetaCirculacion: '',
-        otroDocumento: '',
-        accesoriosHerramienta: '',
-        // Step 2 - Cluster
-        gato: '',
         // Step 2 - Tablero
         estereo: '',
         bocinas: ''
@@ -1331,14 +1266,12 @@ export default {
         polizaSeguroArchivo: null,
         // Tarjeta Circulación
         tarjetaCirculacion: null,
-        // Otro documento
-        otroDocumentoArchivo: null,
         // Accesorios/Herramienta
+        descripcionAccesorios: '',
         accesoriosHerramientaArchivo: null,
         
         // --- STEP 2 ---
         // Cluster
-        gatoArchivo: null,
         odometroArchivo: null,
         nivelCombustible: null,
         combustibleArchivo: null,
@@ -1346,13 +1279,13 @@ export default {
         testigosEncendidosArchivo: null,
         
         // Tablero
-        estadoGuantera: null,
         estereo: null,
         cantidadBocinas: null,
         
         // Puertas
         manijas: null,
         estadoSeguros: null,
+        segurosArchivo: null,
         estadoCristales: null,
         cristalesArchivo: null,
         
@@ -1413,6 +1346,9 @@ export default {
         escapeSilenciadorArchivo: null,
         escapeCatalizador: null,
         escapeCatalizadorArchivo: null,
+        
+        // Comentarios Generales
+        comentarioGeneral: ''
       }
     };
   },
@@ -1444,9 +1380,7 @@ export default {
         const step1Controls = [
           this.uiControls.llavesRecibidas,
           this.uiControls.polizaSeguro,
-          this.uiControls.tarjetaCirculacion,
-          this.uiControls.otroDocumento,
-          this.uiControls.accesoriosHerramienta
+          this.uiControls.tarjetaCirculacion
         ];
 
         // Validar campos condicionales
@@ -1456,10 +1390,12 @@ export default {
         if (this.uiControls.polizaSeguro === 'true' && !this.formData.polizaSeguroArchivo) {
           return false;
         }
-        if (this.uiControls.otroDocumento === 'true' && !this.formData.otroDocumentoArchivo) {
+        
+        // Validar campos obligatorios para Accesorios/Herramienta
+        if (!this.formData.descripcionAccesorios || this.formData.descripcionAccesorios.trim() === '') {
           return false;
         }
-        if (this.uiControls.accesoriosHerramienta === 'true' && !this.formData.accesoriosHerramientaArchivo) {
+        if (!this.formData.accesoriosHerramientaArchivo) {
           return false;
         }
 
@@ -1471,26 +1407,15 @@ export default {
         
         // Cluster - campos requeridos
         const clusterControls = [
-          this.uiControls.gato,
           !!this.formData.odometroArchivo,
           !!this.formData.nivelCombustible,
           !!this.formData.combustibleArchivo,
-          !!this.formData.testigosEncendidos.length
+          !!this.formData.testigosEncendidos.length,
+          !!this.formData.testigosEncendidosArchivo // Foto de testigos siempre requerida
         ];
-        
-        // Cluster - campos condicionales
-        if (this.uiControls.gato === 'true' && !this.formData.gatoArchivo) {
-          return false;
-        }
-        
-        // Si hay testigos seleccionados diferentes a NINGUNO, verificar que tenga archivo
-        if (this.hayTestigosSeleccionados && !this.isNingunoSeleccionado && !this.formData.testigosEncendidosArchivo) {
-          return false;
-        }
         
         // Tablero - campos requeridos
         const tableroControls = [
-          !!this.formData.estadoGuantera,
           this.uiControls.estereo,
           this.uiControls.bocinas
         ];
@@ -1507,8 +1432,11 @@ export default {
           !!this.formData.estadoCristales
         ];
         
-        // Puertas - campos condicionales
-        if (this.formData.estadoCristales === 'mal_estado' && !this.formData.cristalesArchivo) {
+        // Puertas - campos de fotos obligatorios
+        if (!this.formData.segurosArchivo) {
+          return false;
+        }
+        if (!this.formData.cristalesArchivo) {
           return false;
         }
         
@@ -1518,11 +1446,11 @@ export default {
           !!this.formData.estadoCabeceras
         ];
         
-        // Asientos - campos condicionales
-        if (this.formData.estadoVestiduras === 'mal_estado' && !this.formData.vestidurasArchivo) {
+        // Asientos - campos de fotos obligatorios
+        if (!this.formData.vestidurasArchivo) {
           return false;
         }
-        if (this.formData.estadoCabeceras === 'mal_estado' && !this.formData.cabecerasArchivo) {
+        if (!this.formData.cabecerasArchivo) {
           return false;
         }
         
@@ -1548,17 +1476,17 @@ export default {
           !!this.formData.carroceriaLadoFrontal
         ];
         
-        // Validar campos condicionales de Carrocería
-        if (this.formData.carroceriaLadoDerecho === 'mal_estado' && !this.formData.carroceriaLadoDerechoArchivo) {
+        // Validar campos obligatorios de Carrocería - fotos siempre requeridas
+        if (!this.formData.carroceriaLadoDerechoArchivo) {
           return false;
         }
-        if (this.formData.carroceriaLadoIzquierdo === 'mal_estado' && !this.formData.carroceriaLadoIzquierdoArchivo) {
+        if (!this.formData.carroceriaLadoIzquierdoArchivo) {
           return false;
         }
-        if (this.formData.carroceriaLadoTrasero === 'mal_estado' && !this.formData.carroceriaLadoTraseroArchivo) {
+        if (!this.formData.carroceriaLadoTraseroArchivo) {
           return false;
         }
-        if (this.formData.carroceriaLadoFrontal === 'mal_estado' && !this.formData.carroceriaLadoFrontalArchivo) {
+        if (!this.formData.carroceriaLadoFrontalArchivo) {
           return false;
         }
         
@@ -1570,17 +1498,17 @@ export default {
           !!this.formData.neumaticosLadoAtrasCopiloto
         ];
         
-        // Validar campos condicionales de Neumáticos
-        if (this.formData.neumaticosLadoPiloto === 'mal_estado' && !this.formData.neumaticosLadoPilotoArchivo) {
+        // Validar campos obligatorios de Neumáticos - fotos siempre requeridas
+        if (!this.formData.neumaticosLadoPilotoArchivo) {
           return false;
         }
-        if (this.formData.neumaticosLadoAtrasPiloto === 'mal_estado' && !this.formData.neumaticosLadoAtrasPilotoArchivo) {
+        if (!this.formData.neumaticosLadoAtrasPilotoArchivo) {
           return false;
         }
-        if (this.formData.neumaticosLadoCopiloto === 'mal_estado' && !this.formData.neumaticosLadoCopilotoArchivo) {
+        if (!this.formData.neumaticosLadoCopilotoArchivo) {
           return false;
         }
-        if (this.formData.neumaticosLadoAtrasCopiloto === 'mal_estado' && !this.formData.neumaticosLadoAtrasCopilotoArchivo) {
+        if (!this.formData.neumaticosLadoAtrasCopilotoArchivo) {
           return false;
         }
         
@@ -1591,14 +1519,14 @@ export default {
           !!this.formData.cristalesLimpiadores
         ];
         
-        // Validar campos condicionales de Cristales
-        if (this.formData.cristalesParabrisas === 'mal_estado' && !this.formData.cristalesParabrisasArchivo) {
+        // Validar campos obligatorios de Cristales - fotos siempre requeridas
+        if (!this.formData.cristalesParabrisasArchivo) {
           return false;
         }
-        if (this.formData.cristalesMedallonTrasero === 'mal_estado' && !this.formData.cristalesMedallonTraseroArchivo) {
+        if (!this.formData.cristalesMedallonTraseroArchivo) {
           return false;
         }
-        if (this.formData.cristalesLimpiadores === 'mal_estado' && !this.formData.cristalesLimpiadoresArchivo) {
+        if (!this.formData.cristalesLimpiadoresArchivo) {
           return false;
         }
         
@@ -1611,11 +1539,11 @@ export default {
           !!this.formData.motorNivelAnticongelante
         ];
         
-        // Validar campos condicionales de Motor
-        if (this.formData.motorTapones === 'mal_estado' && !this.formData.motorTaponesArchivo) {
+        // Validar campos obligatorios de Motor - fotos siempre requeridas
+        if (!this.formData.motorTaponesArchivo) {
           return false;
         }
-        if (this.formData.motorBateria === 'mal_estado' && !this.formData.motorBateriaArchivo) {
+        if (!this.formData.motorBateriaArchivo) {
           return false;
         }
         // Los archivos de nivel son obligatorios independientemente del valor
@@ -1637,21 +1565,21 @@ export default {
           !!this.formData.escapeCatalizador
         ];
         
-        // Validar campos condicionales de Depósito y Escape
-        if (this.formData.escapeSilenciador === 'true' && !this.formData.escapeSilenciadorArchivo) {
+        // Validar campos obligatorios de Escape - fotos siempre requeridas
+        if (!this.formData.escapeSilenciadorArchivo) {
           return false;
         }
-        if (this.formData.escapeCatalizador === 'true' && !this.formData.escapeCatalizadorArchivo) {
+        if (!this.formData.escapeCatalizadorArchivo) {
           return false;
         }
         
-        // Verificar que los campos requeridos tengan valor y que el comentario no esté vacío
+        // Verificar que los campos requeridos tengan valor y que el comentario general no esté vacío
         return carroceriaControls.every(control => !!control) &&
                neumaticosControls.every(control => !!control) &&
                cristalesControls.every(control => !!control) &&
                motorControls.every(control => !!control) &&
                depositoEscapeControls.every(control => !!control) &&
-               (this.formData.comentario && this.formData.comentario.trim() !== '');
+               (this.formData.comentarioGeneral && this.formData.comentarioGeneral.trim() !== '');
       }
 
       return false;
@@ -1661,32 +1589,29 @@ export default {
       const result = {
         // --- STEP 1 ---
         // Inicializar todas las claves con null por defecto o con valores predeterminados según requerimiento
-        cantidadLlaves: false, // Por defecto es false si no se proporciona
+        cantidadLlaves: 0, // Por defecto es 0 si no se proporciona
         polizaSeguro: false, // Por defecto es false
-        polizaSeguroArchivo: null, // Nuevo campo para el nombre del archivo
+        polizaSeguroImagen: null, // Nuevo campo para el nombre de la imagen
         tarjetaCirculacion: false, // Por defecto es false
-        otroDocumento: false, // Por defecto es false
-        otroDocumentoArchivo: null, // Nuevo campo para el nombre del archivo
-        accesoriosHerramienta: false, // Por defecto es false
-        accesoriosHerramientaArchivo: null, // Nuevo campo para el nombre del archivo
+        descripcionAccesorios: '', // Nuevo campo descriptivo
+        accesoriosHerramientaImagen: null, // Nuevo campo para el nombre de la imagen
         
         // --- STEP 2 ---
         // Cluster
-        gatoArchivo: false, // Por defecto es false
-        odometroArchivo: null, // Mantener como null para archivo
+        odometroImagen: null, // Mantener como null para imagen
         nivelCombustible: this.formData.nivelCombustible,
         combustibleImagen: null, // Cambio de nombre a imagen
         testigosEncendidos: this.formData.testigosEncendidos,
         testigosImagen: null, // Cambio de nombre a imagen
         
         // Tablero
-        estadoGuantera: this.formData.estadoGuantera,
         estereo: this.uiControls.estereo === 'true' ? true : (this.uiControls.estereo === 'false' ? false : null),
-        cantidadBocinas: false, // Por defecto es false si no se proporciona
+        cantidadBocinas: 0, // Por defecto es 0 si no se proporciona
         
         // Puertas
         manijas: this.formData.manijas === 'true' ? true : (this.formData.manijas === 'false' ? false : null),
         estadoSeguros: this.formData.estadoSeguros,
+        segurosImagen: null, // Nuevo campo para imagen de seguros
         estadoCristales: this.formData.estadoCristales,
         cristalesImagen: null, // Cambio de nombre a imagen
         
@@ -1747,21 +1672,24 @@ export default {
         escapeSilenciadorImagen: null, // Cambio de nombre a imagen
         escapeCatalizador: this.formData.escapeCatalizador === 'true' ? true : (this.formData.escapeCatalizador === 'false' ? false : null),
         escapeCatalizadorImagen: null, // Cambio de nombre a imagen
+        
+        // Comentarios Generales
+        comentarioGeneral: this.formData.comentarioGeneral || ''
       };      
       
       // --- STEP 1 ---
-      // Asignar cantidadLlaves si llavesRecibidas es true y hay valor, de lo contrario false
+      // Asignar cantidadLlaves si llavesRecibidas es true y hay valor, de lo contrario 0
       if (this.uiControls.llavesRecibidas === 'true' && this.formData.cantidadLlaves) {
         result.cantidadLlaves = this.formData.cantidadLlaves;
       } else {
-        result.cantidadLlaves = false;
+        result.cantidadLlaves = 0;
       }
       
-      // Asignar polizaSeguro como true/false y guardar nombre del archivo
+      // Asignar polizaSeguro como true/false y guardar nombre de la imagen
       if (this.uiControls.polizaSeguro === 'true') {
         result.polizaSeguro = true;
         if (this.formData.polizaSeguroArchivo) {
-          result.polizaSeguroArchivo = this.formData.polizaSeguroArchivo.name;
+          result.polizaSeguroImagen = this.formData.polizaSeguroArchivo.name;
         }
       } else {
         result.polizaSeguro = false;
@@ -1770,43 +1698,23 @@ export default {
       // Asignar tarjetaCirculacion true/false según la selección
       result.tarjetaCirculacion = this.uiControls.tarjetaCirculacion === 'true';
       
-      // Asignar otroDocumento como true/false y guardar nombre del archivo
-      if (this.uiControls.otroDocumento === 'true') {
-        result.otroDocumento = true;
-        if (this.formData.otroDocumentoArchivo) {
-          result.otroDocumentoArchivo = this.formData.otroDocumentoArchivo.name;
-        }
-      } else {
-        result.otroDocumento = false;
-      }
-      
-      // Asignar accesoriosHerramienta como true/false y guardar nombre del archivo
-      if (this.uiControls.accesoriosHerramienta === 'true') {
-        result.accesoriosHerramienta = true;
-        if (this.formData.accesoriosHerramientaArchivo) {
-          result.accesoriosHerramientaArchivo = this.formData.accesoriosHerramientaArchivo.name;
-        }
-      } else {
-        result.accesoriosHerramienta = false;
+      // Asignar descripcionAccesorios y accesoriosHerramientaImagen (siempre obligatorios)
+      result.descripcionAccesorios = this.formData.descripcionAccesorios || '';
+      if (this.formData.accesoriosHerramientaArchivo) {
+        result.accesoriosHerramientaImagen = this.formData.accesoriosHerramientaArchivo.name;
       }
       
       // --- STEP 2 ---
       // Cluster
-      if (this.uiControls.gato === 'true' && this.formData.gatoArchivo) {
-        result.gatoArchivo = this.formData.gatoArchivo.name;
-      } else {
-        result.gatoArchivo = false;
-      }
-      
       if (this.formData.odometroArchivo) {
-        result.odometroArchivo = this.formData.odometroArchivo.name;
+        result.odometroImagen = this.formData.odometroArchivo.name;
       }
       
       if (this.formData.combustibleArchivo) {
         result.combustibleImagen = this.formData.combustibleArchivo.name;
       }
       
-      if (this.hayTestigosSeleccionados && !this.isNingunoSeleccionado && this.formData.testigosEncendidosArchivo) {
+      if (this.formData.testigosEncendidosArchivo) {
         result.testigosImagen = this.formData.testigosEncendidosArchivo.name;
       }
       
@@ -1814,20 +1722,24 @@ export default {
       if (this.uiControls.bocinas === 'true' && this.formData.cantidadBocinas) {
         result.cantidadBocinas = this.formData.cantidadBocinas;
       } else {
-        result.cantidadBocinas = false;
+        result.cantidadBocinas = 0;
       }
       
-      // Puertas
-      if (this.formData.estadoCristales === 'mal_estado' && this.formData.cristalesArchivo) {
+      // Puertas - fotos siempre requeridas
+      if (this.formData.segurosArchivo) {
+        result.segurosImagen = this.formData.segurosArchivo.name;
+      }
+      
+      if (this.formData.cristalesArchivo) {
         result.cristalesImagen = this.formData.cristalesArchivo.name;
       }
       
-      // Asientos
-      if (this.formData.estadoVestiduras === 'mal_estado' && this.formData.vestidurasArchivo) {
+      // Asientos - fotos siempre requeridas
+      if (this.formData.vestidurasArchivo) {
         result.vestidurasImagen = this.formData.vestidurasArchivo.name;
       }
       
-      if (this.formData.estadoCabeceras === 'mal_estado' && this.formData.cabecerasArchivo) {
+      if (this.formData.cabecerasArchivo) {
         result.cabecerasImagen = this.formData.cabecerasArchivo.name;
       }
       
@@ -1901,12 +1813,12 @@ export default {
         result.motorNivelAnticongelanteImagen = this.formData.motorNivelAnticongelanteArchivo.name;
       }
       
-      // Depósito Gasolina y Escape
-      if (this.formData.escapeSilenciador === 'true' && this.formData.escapeSilenciadorArchivo) {
+      // Depósito Gasolina y Escape - fotos siempre requeridas
+      if (this.formData.escapeSilenciadorArchivo) {
         result.escapeSilenciadorImagen = this.formData.escapeSilenciadorArchivo.name;
       }
       
-      if (this.formData.escapeCatalizador === 'true' && this.formData.escapeCatalizadorArchivo) {
+      if (this.formData.escapeCatalizadorArchivo) {
         result.escapeCatalizadorImagen = this.formData.escapeCatalizadorArchivo.name;
       }
       
@@ -1926,12 +1838,6 @@ export default {
         }
         if (newVal.polizaSeguro === 'false') {
           this.formData.polizaSeguroArchivo = null;
-        }
-        if (newVal.otroDocumento === 'false') {
-          this.formData.otroDocumentoArchivo = null;
-        }
-        if (newVal.accesoriosHerramienta === 'false') {
-          this.formData.accesoriosHerramientaArchivo = null;
         }
         
         // Log cuando cambian los controles
@@ -1977,23 +1883,16 @@ export default {
         this.uiControls.tarjetaCirculacion = this.checklistData.tarjetaCirculacion ? 'true' : 'false';
       }
       
-      if ('otroDocumento' in this.checklistData) {
-        this.uiControls.otroDocumento = 'true';
-        this.formData.otroDocumentoArchivo = { name: this.checklistData.otroDocumento };
+      if ('descripcionAccesorios' in this.checklistData) {
+        this.formData.descripcionAccesorios = this.checklistData.descripcionAccesorios;
       }
       
-      if ('accesoriosHerramienta' in this.checklistData) {
-        this.uiControls.accesoriosHerramienta = 'true';
-        this.formData.accesoriosHerramientaArchivo = { name: this.checklistData.accesoriosHerramienta };
+      if ('accesoriosHerramientaArchivo' in this.checklistData) {
+        this.formData.accesoriosHerramientaArchivo = { name: this.checklistData.accesoriosHerramientaArchivo };
       }
       
       // --- STEP 2 ---
       // Cluster - Solo configurar si existe en los datos de prueba
-      if ('gatoArchivo' in this.checklistData && this.checklistData.gatoArchivo) {
-        this.uiControls.gato = 'true';
-        this.formData.gatoArchivo = { name: this.checklistData.gatoArchivo };
-      }
-      
       if ('odometroArchivo' in this.checklistData && this.checklistData.odometroArchivo) {
         this.formData.odometroArchivo = { name: this.checklistData.odometroArchivo };
       }
@@ -2017,10 +1916,6 @@ export default {
       }
       
       // Tablero - Solo configurar si existe en los datos de prueba
-      if ('estadoGuantera' in this.checklistData) {
-        this.formData.estadoGuantera = this.checklistData.estadoGuantera;
-      }
-      
       if ('estereo' in this.checklistData && this.checklistData.estereo !== null) {
         this.uiControls.estereo = String(this.checklistData.estereo);
         this.formData.estereo = this.checklistData.estereo;
@@ -2038,6 +1933,10 @@ export default {
       
       if ('estadoSeguros' in this.checklistData) {
         this.formData.estadoSeguros = this.checklistData.estadoSeguros;
+      }
+      
+      if ('segurosArchivo' in this.checklistData && this.checklistData.segurosArchivo) {
+        this.formData.segurosArchivo = { name: this.checklistData.segurosArchivo };
       }
       
       if ('estadoCristales' in this.checklistData) {
@@ -2226,63 +2125,26 @@ export default {
         this.formData.escapeCatalizadorArchivo = { name: this.checklistData.escapeCatalizadorArchivo };
       }
       
+      // Comentarios Generales - Solo configurar si existe en los datos de prueba
+      if ('comentarioGeneral' in this.checklistData) {
+        this.formData.comentarioGeneral = this.checklistData.comentarioGeneral || '';
+      }
+      
       console.log('Datos cargados correctamente. Solamente se han seleccionado campos presentes en los datos de prueba.');
       console.log('Estado de uiControls después de cargar:', JSON.stringify(this.uiControls, null, 2));
     },
     
-    async handleNextStep() {
-      try {
-        // Simular guardado de datos del paso actual
-        await this.saveCurrentStepData();
-        
-        // Avanzar al siguiente paso
-        if (this.currentStep < 3) {
-          this.currentStep++;
-        }
-        
-        // Mostrar toast de éxito
-        this.toastStore.addToast({
-          message: 'Datos guardados correctamente',
-          type: 'success',
-          duration: 3000
-        });
-        
-      } catch (error) {
-        console.error('Error al guardar datos:', error);
-        // Mostrar toast de error
-        this.toastStore.addToast({
-          message: 'Error al guardar los datos. Por favor, intente nuevamente.',
-          type: 'error',
-          duration: 5000
-        });
+    handleNextStep() {
+      // Avanzar al siguiente paso sin guardar datos
+      if (this.currentStep < 3) {
+        this.currentStep++;
       }
     },
     
-    async handlePrevStep() {
-      try {
-        // Simular guardado de datos del paso actual
-        await this.saveCurrentStepData();
-        
-        // Retroceder al paso anterior
-        if (this.currentStep > 1) {
-          this.currentStep--;
-        }
-        
-        // Mostrar toast de éxito
-        this.toastStore.addToast({
-          message: 'Datos guardados correctamente',
-          type: 'success',
-          duration: 3000
-        });
-        
-      } catch (error) {
-        console.error('Error al guardar datos:', error);
-        // Mostrar toast de error
-        this.toastStore.addToast({
-          message: 'Error al guardar los datos. Por favor, intente nuevamente.',
-          type: 'error',
-          duration: 5000
-        });
+    handlePrevStep() {
+      // Retroceder al paso anterior sin guardar datos
+      if (this.currentStep > 1) {
+        this.currentStep--;
       }
     },
     
@@ -2316,16 +2178,9 @@ export default {
       }
     },
     
+    // Este método ya no se utiliza porque ahora solo guardamos al final
     async saveCurrentStepData() {
-      // Simular guardado de datos del paso actual
-      // En una aplicación real, aquí harías una llamada a tu API
-      console.log(`Guardando datos del paso ${this.currentStep}...`);
-      console.log('Datos actuales:', JSON.stringify(this.finalFormData, null, 2));
-      
-      // Simular tiempo de procesamiento
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      console.log(`Datos del paso ${this.currentStep} guardados correctamente`);
+      console.log(`El guardado por pasos ha sido deshabilitado`);
     },
     
     async submitFormData() {
@@ -2379,6 +2234,33 @@ export default {
       });
     },
     
+    // Método para manejar las fotografías capturadas
+    handlePhotoCaptured(field, file) {
+      console.log(`=== INICIO handlePhotoCaptured ===`);
+      console.log(`Field: ${field}`);
+      console.log(`File:`, file);
+      console.log(`Photo name:`, file ? file.name : 'null');
+      
+      // Usar el mismo flujo que handleFileChange para mantener consistencia
+      this.formData[field] = file;
+      
+      console.log(`FormData[${field}] después de asignación:`, this.formData[field]);
+      console.log(`¿Foto tiene name?:`, this.formData[field] ? this.formData[field].name : 'No tiene name');
+      
+      // Log del estado actual de UI Controls
+      console.log('UI Controls actuales:', this.uiControls);
+      
+      // Calcular inmediatamente el finalFormData
+      const currentFinalFormData = this.finalFormData;
+      console.log('Final Form Data calculado inmediatamente:', JSON.stringify(currentFinalFormData, null, 2));
+      
+      // Forzar recálculo del computed en nextTick
+      this.$nextTick(() => {
+        console.log('Final Form Data en nextTick:', JSON.stringify(this.finalFormData, null, 2));
+        console.log(`=== FIN handlePhotoCaptured ===`);
+      });
+    },
+    
     // Método para manejar la exclusión mutua entre "NINGUNO" y los demás testigos
     handleTestigoChange(testigo) {
       // Si se seleccionó "NINGUNO", deseleccionar todos los demás
@@ -2402,10 +2284,7 @@ export default {
         console.log('No hay testigos seleccionados, se selecciona NINGUNO automáticamente');
       }
       
-      // Limpiar el archivo de evidencia si se selecciona "NINGUNO"
-      if (this.isNingunoSeleccionado) {
-        this.formData.testigosEncendidosArchivo = null;
-      }
+      // Nota: La foto de testigos es ahora siempre requerida, independientemente de la selección
     },
     
     prevStep() {

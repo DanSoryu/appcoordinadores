@@ -39,7 +39,8 @@ import {
   faGasPump,
   faSmog,
   faCircle,
-  faMicrochip
+  faMicrochip,
+  faCommentAlt
 } from '@fortawesome/free-solid-svg-icons'
 
 // Agregar iconos a la librería
@@ -73,7 +74,8 @@ library.add(
   faGasPump,
   faSmog,
   faCircle,
-  faMicrochip
+  faMicrochip,
+  faCommentAlt
 )
 
 const app = createApp(App)

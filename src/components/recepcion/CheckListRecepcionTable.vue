@@ -436,7 +436,7 @@ export default {
       return [...new Set(pages)].sort((a, b) => a - b);
     });
 
-    // Navegación de páginas
+    // Navegación de páginas  
     const previousPage = () => {
       if (currentPage.value > 1) {
         currentPage.value--;

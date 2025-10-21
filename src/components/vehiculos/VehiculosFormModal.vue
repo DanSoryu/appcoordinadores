@@ -24,11 +24,7 @@
 											{{ cliente.nombre }}
 										</option>
 									</select>
-									<div class="mt-2">
-										<button type="button" @click="abrirClienteModal" class="text-blue-600 hover:underline focus:outline-none">
-											¿No encuentras el cliente? Regístralo aquí
-										</button>
-									</div>
+									<!-- Eliminado botón de registrar cliente -->
 								</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Marca</label>
@@ -72,11 +68,7 @@
 			</form>
 		</div>
 	</div>
-	<ClientesFormModal 
-		:show="showClienteModal" 
-		@close="showClienteModal = false"
-		@cliente-guardado="handleClienteGuardado"
-	/>
+<!-- Eliminado modal de registrar cliente -->
 </template>
 
 <script>
@@ -121,13 +113,12 @@ export default {
 						numeroSerie: '',
 						numeroEconomico: ''
 					},
-					clientes: [
-						{ id: '1', nombre: 'Juan Pérez' },
-						{ id: '2', nombre: 'María López' },
-						{ id: '3', nombre: 'Carlos Sánchez' },
-						{ id: '4', nombre: 'Ana Torres' }
-					],
-					showClienteModal: false
+								clientes: [
+									{ id: '1', nombre: 'Juan Pérez' },
+									{ id: '2', nombre: 'María López' },
+									{ id: '3', nombre: 'Carlos Sánchez' },
+									{ id: '4', nombre: 'Ana Torres' }
+								]
 		};
 	},
 	created() {
@@ -236,15 +227,7 @@ export default {
 			await new Promise(resolve => setTimeout(resolve, 500));
 			console.log('Datos del vehículo guardados correctamente');
 		},
-		abrirClienteModal() {
-			this.showClienteModal = true;
-		},
-		handleClienteGuardado(nuevoCliente) {
-			// Agregar el nuevo cliente a la lista y seleccionarlo
-			this.clientes.push(nuevoCliente);
-			this.formData.cliente = nuevoCliente.id;
-			this.showClienteModal = false;
-		}
+		// Eliminados métodos de cliente
 	}
 };
 </script>
