@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../components/Dashboard.vue'
 import Login from '../components/Login.vue'
+import Recepciones from '../components/Recepciones.vue'
+import Diagnosticos from '../components/Diagnosticos.vue'
+import Vehiculos from '../components/Vehiculos.vue'
+import Clientes from '../components/Clientes.vue'
+import Usuarios from '../components/Usuarios.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const routes = [
@@ -11,7 +16,50 @@ const routes = [
   {
     path: '/dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true }
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin', 'mecanico']
+    }
+  },
+  {
+    path: '/recepciones',
+    component: Recepciones,
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin', 'mecanico']
+    }
+  },
+  {
+    path: '/diagnosticos',
+    component: Diagnosticos,
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin', 'mecanico']
+    }
+  },
+  {
+    path: '/vehiculos',
+    component: Vehiculos,
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin', 'mecanico']
+    }
+  },
+  {
+    path: '/clientes',
+    component: Clientes,
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin', 'mecanico']
+    }
+  },
+  {
+    path: '/usuarios',
+    component: Usuarios,
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
+    }
   },
   {
     path: '/login',
@@ -44,6 +92,14 @@ router.beforeEach(async (to, from, next) => {
     if (!authStore.isLoggedIn) {
       // Redireccionar al login si no está autenticado
       next('/login')
+      return
+    }
+
+    // Verificar permisos de rol para rutas autenticadas
+    if (to.meta.allowedRoles && !to.meta.allowedRoles.includes(authStore.userRole)) {
+      console.warn(`Acceso denegado a ${to.path} para el rol ${authStore.userRole}`)
+      // Redireccionar al dashboard si no tiene permisos
+      next('/dashboard')
       return
     }
   }

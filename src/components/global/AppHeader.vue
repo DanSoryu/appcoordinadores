@@ -1,11 +1,12 @@
 <template>
   <div>
     <!-- Header -->
-  <header class="bg-primary-500 text-primary-50 shadow-custom">
+    <header class="bg-primary-500 text-primary-50 shadow-custom">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Top row: Logo and User Menu -->
         <div class="flex justify-between items-center h-16">
           <h1 class="text-xl font-bold">MecaSoft</h1>
-          
+
           <!-- User Menu -->
           <div class="relative">
             <button 
@@ -26,11 +27,31 @@
             </div>
           </div>
         </div>
+
+        <!-- Main Navigation -->
+        <nav class="border-t border-primary-400">
+          <div class="flex space-x-8 -mb-px">
+            <router-link
+              v-for="route in mainRoutes" 
+              :key="route.path"
+              :to="route.path"
+              :class="[
+                'py-3 px-1 border-b-2 font-medium text-sm transition-colors',
+                $route.path === route.path 
+                  ? 'border-primary-200 text-primary-100' 
+                  : 'border-transparent text-primary-200 hover:text-primary-100 hover:border-primary-300'
+              ]"
+            >
+              <font-awesome-icon :icon="route.icon" class="w-4 h-4 inline mr-2" />
+              {{ route.name }}
+            </router-link>
+          </div>
+        </nav>
       </div>
     </header>
 
-    <!-- Navigation -->
-  <nav class="bg-white shadow-custom border-b">
+    <!-- Sub Navigation (Tabs) -->
+    <nav v-if="tabs.length > 0" class="bg-white shadow-custom border-b">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex space-x-8">
           <button 
@@ -53,23 +74,65 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 // State
 const showUserMenu = ref(false)
 
-// Tabs configuration
-const tabs = [
-  // { id: 'dashboard', name: 'Dashboard' },
-  // { id: 'ordenescoordinador', name: 'Órdenes' },
-  { id: 'datosrecepcion', name: 'Datos Recepción' },
-  { id: 'checklistrecepcion', name: 'CheckList Recepción' }
+// All available routes
+const allRoutes = [
+  { path: '/dashboard', name: 'Dashboard', icon: 'tachometer-alt', roles: ['admin', 'mecanico'] },
+  { path: '/recepciones', name: 'Recepciones', icon: 'clipboard-list', roles: ['admin', 'mecanico'] },
+  { path: '/diagnosticos', name: 'Diagnósticos', icon: 'stethoscope', roles: ['admin', 'mecanico'] },
+  { path: '/vehiculos', name: 'Vehículos', icon: 'car', roles: ['admin', 'mecanico'] },
+  { path: '/clientes', name: 'Clientes', icon: 'id-card', roles: ['admin', 'mecanico'] },
+  { path: '/usuarios', name: 'Usuarios', icon: 'users', roles: ['admin'] }
 ]
+
+// Main routes configuration based on user role
+const mainRoutes = computed(() => {
+  const userRole = authStore.userRole
+  return allRoutes.filter(route => route.roles.includes(userRole))
+})
+
+// Tabs configuration based on current route
+const tabs = computed(() => {
+  switch (route.path) {
+    case '/dashboard':
+      return [
+        { id: 'dashboard', name: 'Resumen General' }
+      ]
+    case '/recepciones':
+      return [
+        { id: 'datosrecepcion', name: 'Datos Recepción' },
+        { id: 'checklistrecepcion', name: 'CheckList Recepción' }
+      ]
+    case '/vehiculos':
+      return [
+        { id: 'vehiculos', name: 'Gestión de Vehículos' }
+      ]
+    case '/clientes':
+      return [
+        { id: 'clientes', name: 'Gestión de Clientes' }
+      ]
+    case '/usuarios':
+      return [
+        { id: 'usuarios', name: 'Gestión de Usuarios' }
+      ]
+    case '/diagnosticos':
+      return [
+        { id: 'diagnosticos', name: 'Lista de Diagnósticos' }
+      ]
+    default:
+      return []
+  }
+})
 
 // Props
 const props = defineProps({

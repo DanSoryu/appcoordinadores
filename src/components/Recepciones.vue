@@ -4,12 +4,18 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-      <!-- Dashboard View -->
-      <div v-if="activeTab === 'dashboard'">
-        <div class="bg-white rounded-lg shadow p-6">
-          <h2 class="text-2xl font-bold text-gray-900 mb-4">Dashboard Principal</h2>
-          <p class="text-gray-600">Bienvenido al sistema MecaSoft. Utiliza la navegación superior para acceder a las diferentes secciones.</p>
-        </div>
+      <div v-if="activeTab === 'datosrecepcion'">
+        <RecepcionTable />
+      </div>
+
+      <div v-if="activeTab === 'checklistrecepcion'">
+        <CheckListRecepcion @abrir-checklist-modal="handleAbrirChecklistModal" />
+        <CheckListFormModal 
+          v-if="showChecklistModal" 
+          :show="showChecklistModal" 
+          :checklistData="selectedChecklistData"
+          @close="showChecklistModal = false" 
+        />
       </div>
     </main>
   </div>
@@ -20,15 +26,12 @@ import { ref, computed } from 'vue'
 import CheckListFormModal from './recepcion/CheckListFormModal.vue'
 import { useAuthStore } from '@/stores/auth'
 import AppHeader from './global/AppHeader.vue'
-import OrdersTable from './OrdersTable.vue'
-import DashboardView from './DashboardView.vue'
 import CheckListRecepcion from './recepcion/CheckListRecepcionTable.vue'
 import RecepcionTable from './recepcion/RecepcionTable.vue'
-import UsuariosTable from './usuarios/UsuariosTable.vue'
 
 const authStore = useAuthStore()
 const user = computed(() => authStore.user)
-const activeTab = ref('dashboard')
+const activeTab = ref('datosrecepcion')
 
 // Control del modal checklist
 const showChecklistModal = ref(false)

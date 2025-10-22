@@ -19,7 +19,35 @@ export const useAuthStore = defineStore('auth', {
       console.log('isLoggedIn getter - hasValidToken:', hasValidToken, 'isAuthenticated:', state.isAuthenticated, 'token exists:', !!state.token, 'result:', result) // Debug
       return result
     },
-    getAuthHeader: (state) => state.token ? `Bearer ${state.token}` : null
+    getAuthHeader: (state) => state.token ? `Bearer ${state.token}` : null,
+    
+    // Getter para obtener el rol del usuario
+    userRole: (state) => state.user?.rol || 'mecanico',
+    
+    // Getter para verificar si el usuario es admin
+    isAdmin: (state) => state.user?.rol === 'admin',
+    
+    // Getter para verificar si el usuario es mecánico
+    isMecanico: (state) => state.user?.rol === 'mecanico',
+    
+    // Método para verificar permisos sobre rutas específicas
+    hasRouteAccess: (state) => (routePath) => {
+      const userRole = state.user?.rol || 'mecanico'
+      
+      // Admin tiene acceso a todas las rutas
+      if (userRole === 'admin') {
+        return true
+      }
+      
+      // Mecánico solo tiene acceso a recepciones y diagnósticos
+      if (userRole === 'mecanico') {
+        const allowedRoutes = ['/dashboard', '/recepciones', '/diagnosticos']
+        return allowedRoutes.includes(routePath)
+      }
+      
+      // Por defecto, denegar acceso
+      return false
+    }
   },
 
   actions: {
@@ -92,6 +120,7 @@ export const useAuthStore = defineStore('auth', {
           this.user = {
             id: payload.id_usuario || payload.sub,
             usuario: payload.usuario,
+            rol: payload.rol || 'mecanico', // Extraer rol del token, por defecto 'mecanico'
             copes: payload.copes || [],
           }
           
