@@ -72,7 +72,7 @@
                   <PhotoUploadAndPreview
                     id="polizaSeguroArchivo"
                     fileNamePrefix="foto_poliza"
-                    :preloadedPhoto="checklistData.polizaSeguro"
+                    :preloadedPhoto="checklistData.polizaSeguroImagen"
                     @photo-captured="(file) => handlePhotoCaptured('polizaSeguroArchivo', file)"
                   />
                 </div>
@@ -122,7 +122,7 @@
                   <PhotoUploadAndPreview
                     id="accesoriosHerramientaArchivo"
                     fileNamePrefix="foto_accesorios"
-                    :preloadedPhoto="checklistData.accesoriosHerramienta"
+                    :preloadedPhoto="checklistData.accesoriosHerramientaImagen"
                     @photo-captured="(file) => handlePhotoCaptured('accesoriosHerramientaArchivo', file)"
                   />
                 </div>
@@ -265,7 +265,7 @@
                   <PhotoUploadAndPreview
                     id="testigosEncendidosArchivo"
                     fileNamePrefix="foto_testigos"
-                    :preloadedPhoto="checklistData.testigosEncendidosArchivo"
+                    :preloadedPhoto="checklistData.testigosEncendidosArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('testigosEncendidosArchivo', file)"
                   />
                 </div>
@@ -372,7 +372,8 @@
                   <p class="text-sm text-yellow-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="segurosArchivo"
-                    :preloadedPhoto="checklistData.segurosArchivo"
+                    fileNamePrefix="foto_seguros"
+                    :preloadedPhoto="checklistData.segurosArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('segurosArchivo', file)"
                   />
                 </div>
@@ -397,7 +398,8 @@
                   <p class="text-sm text-yellow-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="cristalesArchivo"
-                    :preloadedPhoto="checklistData.cristalesArchivo"
+                    fileNamePrefix="foto_cristales_ventanas"
+                    :preloadedPhoto="checklistData.cristalesArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cristalesArchivo', file)"
                   />
                 </div>
@@ -434,7 +436,8 @@
                   <p class="text-sm text-pink-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="vestidurasArchivo"
-                    :preloadedPhoto="checklistData.vestidurasArchivo"
+                    fileNamePrefix="foto_vestiduras"
+                    :preloadedPhoto="checklistData.vestidurasArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('vestidurasArchivo', file)"
                   />
                 </div>
@@ -459,7 +462,8 @@
                   <p class="text-sm text-pink-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="cabecerasArchivo"
-                    :preloadedPhoto="checklistData.cabecerasArchivo"
+                    fileNamePrefix="foto_cabeceras"
+                    :preloadedPhoto="checklistData.cabecerasArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cabecerasArchivo', file)"
                   />
                 </div>
@@ -526,7 +530,8 @@
                   <p class="text-sm text-orange-800 font-medium mb-3">Por favor, toma una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="carroceriaLadoDerechoArchivo"
-                    :preloadedPhoto="checklistData.carroceriaLadoDerechoArchivo"
+                    fileNamePrefix="foto_carroceria_derecho"
+                    :preloadedPhoto="checklistData.carroceriaLadoDerechoArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoDerechoArchivo', file)"
                   />
                 </div>
@@ -551,7 +556,8 @@
                   <p class="text-sm text-orange-800 font-medium mb-3">Por favor, toma una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="carroceriaLadoIzquierdoArchivo"
-                    :preloadedPhoto="checklistData.carroceriaLadoIzquierdoArchivo"
+                    fileNamePrefix="foto_carroceria_izquierdo"
+                    :preloadedPhoto="checklistData.carroceriaLadoIzquierdoArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoIzquierdoArchivo', file)"
                   />
                 </div>
@@ -576,7 +582,8 @@
                   <p class="text-sm text-orange-800 font-medium mb-3">Por favor, toma una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="carroceriaLadoTraseroArchivo"
-                    :preloadedPhoto="checklistData.carroceriaLadoTraseroArchivo"
+                    fileNamePrefix="foto_carroceria_trasero"
+                    :preloadedPhoto="checklistData.carroceriaLadoTraseroArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoTraseroArchivo', file)"
                   />
                 </div>
@@ -601,7 +608,8 @@
                   <p class="text-sm text-orange-800 font-medium mb-3">Por favor, toma una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="carroceriaLadoFrontalArchivo"
-                    :preloadedPhoto="checklistData.carroceriaLadoFrontalArchivo"
+                    fileNamePrefix="foto_carroceria_frontal"
+                    :preloadedPhoto="checklistData.carroceriaLadoFrontalArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoFrontalArchivo', file)"
                   />
                 </div>
@@ -638,7 +646,8 @@
                   <p class="text-sm text-gray-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="neumaticosLadoPilotoArchivo"
-                    :preloadedPhoto="checklistData.neumaticosLadoPilotoArchivo"
+                    fileNamePrefix="foto_neumatico_piloto"
+                    :preloadedPhoto="checklistData.neumaticosLadoPilotoArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoPilotoArchivo', file)"
                   />
                 </div>
@@ -663,7 +672,8 @@
                   <p class="text-sm text-gray-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="neumaticosLadoAtrasPilotoArchivo"
-                    :preloadedPhoto="checklistData.neumaticosLadoAtrasPilotoArchivo"
+                    fileNamePrefix="foto_neumatico_atras_piloto"
+                    :preloadedPhoto="checklistData.neumaticosLadoAtrasPilotoArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoAtrasPilotoArchivo', file)"
                   />
                 </div>
@@ -688,7 +698,8 @@
                   <p class="text-sm text-gray-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="neumaticosLadoCopilotoArchivo"
-                    :preloadedPhoto="checklistData.neumaticosLadoCopilotoArchivo"
+                    fileNamePrefix="foto_neumatico_copiloto"
+                    :preloadedPhoto="checklistData.neumaticosLadoCopilotoArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoCopilotoArchivo', file)"
                   />
                 </div>
@@ -713,7 +724,8 @@
                   <p class="text-sm text-gray-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="neumaticosLadoAtrasCopilotoArchivo"
-                    :preloadedPhoto="checklistData.neumaticosLadoAtrasCopilotoArchivo"
+                    fileNamePrefix="foto_neumatico_atras_copiloto"
+                    :preloadedPhoto="checklistData.neumaticosLadoAtrasCopilotoArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoAtrasCopilotoArchivo', file)"
                   />
                 </div>
@@ -750,7 +762,8 @@
                   <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="cristalesParabrisasArchivo"
-                    :preloadedPhoto="checklistData.cristalesParabrisasArchivo"
+                    fileNamePrefix="foto_cristales_parabrisas"
+                    :preloadedPhoto="checklistData.cristalesParabrisasArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cristalesParabrisasArchivo', file)"
                   />
                 </div>
@@ -775,7 +788,8 @@
                   <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="cristalesMedallonTraseroArchivo"
-                    :preloadedPhoto="checklistData.cristalesMedallonTraseroArchivo"
+                    fileNamePrefix="foto_cristales_medallon_trasero"
+                    :preloadedPhoto="checklistData.cristalesMedallonTraseroArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cristalesMedallonTraseroArchivo', file)"
                   />
                 </div>
@@ -800,7 +814,8 @@
                   <p class="text-sm text-blue-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="cristalesLimpiadoresArchivo"
-                    :preloadedPhoto="checklistData.cristalesLimpiadoresArchivo"
+                    fileNamePrefix="foto_cristales_limpiadoras"
+                    :preloadedPhoto="checklistData.cristalesLimpiadoresArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cristalesLimpiadoresArchivo', file)"
                   />
                 </div>
@@ -837,7 +852,8 @@
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="motorTaponesArchivo"
-                    :preloadedPhoto="checklistData.motorTaponesArchivo"
+                    fileNamePrefix="foto_motor_tapones"
+                    :preloadedPhoto="checklistData.motorTaponesArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorTaponesArchivo', file)"
                   />
                 </div>
@@ -862,7 +878,8 @@
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="motorBateriaArchivo"
-                    :preloadedPhoto="checklistData.motorBateriaArchivo"
+                    fileNamePrefix="foto_motor_bateria"
+                    :preloadedPhoto="checklistData.motorBateriaArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorBateriaArchivo', file)"
                   />
                 </div>
@@ -917,7 +934,8 @@
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="motorNivelAceiteArchivo"
-                    :preloadedPhoto="checklistData.motorNivelAceiteArchivo"
+                    fileNamePrefix="foto_motor_nivel_aceite"
+                    :preloadedPhoto="checklistData.motorNivelAceiteArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorNivelAceiteArchivo', file)"
                   />
                 </div>
@@ -972,7 +990,8 @@
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="motorNivelLiquidoFrenosArchivo"
-                    :preloadedPhoto="checklistData.motorNivelLiquidoFrenosArchivo"
+                    fileNamePrefix="foto_motor_nivel_liquido_frenos"
+                    :preloadedPhoto="checklistData.motorNivelLiquidoFrenosArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorNivelLiquidoFrenosArchivo', file)"
                   />
                 </div>
@@ -1027,7 +1046,8 @@
                   <p class="text-sm text-red-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
                   <PhotoUploadAndPreview
                     id="motorNivelAnticongelanteArchivo"
-                    :preloadedPhoto="checklistData.motorNivelAnticongelanteArchivo"
+                    fileNamePrefix="foto_motor_nivel_anticongelante"
+                    :preloadedPhoto="checklistData.motorNivelAnticongelanteArchivo"${NewLine}                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorNivelAnticongelanteArchivo', file)"
                   />
                 </div>
@@ -1108,11 +1128,11 @@
                 </div>
                 <div class="mt-4 p-4 bg-teal-50 rounded-lg border border-teal-200">
                   <p class="text-sm text-teal-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="escapeSilenciadorArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.escapeSilenciadorArchivo"
-                    @file-selected="(file) => handleFileChange('escapeSilenciadorArchivo', file)"
+                    fileNamePrefix="foto_escape_silenciador"
+                    :preloadedPhoto="checklistData.escapeSilenciadorArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    @photo-captured="(file) => handlePhotoCaptured('escapeSilenciadorArchivo', file)"
                   />
                 </div>
               </div>
@@ -1134,11 +1154,11 @@
                 </div>
                 <div class="mt-4 p-4 bg-teal-50 rounded-lg border border-teal-200">
                   <p class="text-sm text-teal-800 font-medium mb-3">Por favor, sube una foto de evidencia</p>
-                  <FileUploadPreview
+                  <PhotoUploadAndPreview
                     id="escapeCatalizadorArchivo"
-                    accept=".jpeg, .jpg, .png"
-                    :preloadedFile="checklistData.escapeCatalizadorArchivo"
-                    @file-selected="(file) => handleFileChange('escapeCatalizadorArchivo', file)"
+                    fileNamePrefix="foto_escape_catalizador"
+                    :preloadedPhoto="checklistData.escapeCatalizadorArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    @photo-captured="(file) => handlePhotoCaptured('escapeCatalizadorArchivo', file)"
                   />
                 </div>
               </div>
@@ -1217,6 +1237,7 @@ import PhotoUploadAndPreview from '../global/PhotoUploadAndPreview.vue';
 import BaseButton from '../global/BaseButton.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
+import apiClient from '../../services/api.js';
 
 export default {
   name: 'CheckListFormModal',
@@ -1235,6 +1256,7 @@ export default {
       default: () => ({})
     }
   },
+  emits: ['close', 'checklist-saved'],
   setup() {
     const { executeNavigation, executeSubmit } = useSubmitButton();
     const toastStore = useToastStore();
@@ -1264,19 +1286,24 @@ export default {
         cantidadLlaves: null,
         // Poliza Seguro
         polizaSeguroArchivo: null,
+        polizaSeguroImagen: null, // Base64 para API
         // Tarjeta Circulación
         tarjetaCirculacion: null,
         // Accesorios/Herramienta
         descripcionAccesorios: '',
         accesoriosHerramientaArchivo: null,
+        accesoriosHerramientaImagen: null, // Base64 para API
         
         // --- STEP 2 ---
         // Cluster
         odometroArchivo: null,
+        odometroImagen: null, // Base64 para API
         nivelCombustible: null,
         combustibleArchivo: null,
+        combustibleImagen: null, // Base64 para API
         testigosEncendidos: [],
         testigosEncendidosArchivo: null,
+        testigosImagen: null, // Base64 para API
         
         // Tablero
         estereo: null,
@@ -1286,14 +1313,18 @@ export default {
         manijas: null,
         estadoSeguros: null,
         segurosArchivo: null,
+        segurosImagen: null, // Base64 para API
         estadoCristales: null,
         cristalesArchivo: null,
+        cristalesImagen: null, // Base64 para API
         
         // Asientos
         estadoVestiduras: null,
         vestidurasArchivo: null,
+        vestidurasImagen: null, // Base64 para API
         estadoCabeceras: null,
         cabecerasArchivo: null,
+        cabecerasImagen: null, // Base64 para API
         
         // Cinturones
         funcionalidadCinturones: null,
@@ -1302,50 +1333,68 @@ export default {
         // Carrocería
         carroceriaLadoDerecho: null,
         carroceriaLadoDerechoArchivo: null,
+        carroceriaLadoDerechoImagen: null, // Base64 para API
         carroceriaLadoIzquierdo: null,
         carroceriaLadoIzquierdoArchivo: null,
+        carroceriaLadoIzquierdoImagen: null, // Base64 para API
         carroceriaLadoTrasero: null,
         carroceriaLadoTraseroArchivo: null,
+        carroceriaLadoTraseroImagen: null, // Base64 para API
         carroceriaLadoFrontal: null,
         carroceriaLadoFrontalArchivo: null,
+        carroceriaLadoFrontalImagen: null, // Base64 para API
         
         // Neumáticos
         neumaticosLadoPiloto: null,
         neumaticosLadoPilotoArchivo: null,
+        neumaticosLadoPilotoImagen: null, // Base64 para API
         neumaticosLadoAtrasPiloto: null,
         neumaticosLadoAtrasPilotoArchivo: null,
+        neumaticosLadoAtrasPilotoImagen: null, // Base64 para API
         neumaticosLadoCopiloto: null,
         neumaticosLadoCopilotoArchivo: null,
+        neumaticosLadoCopilotoImagen: null, // Base64 para API
         neumaticosLadoAtrasCopiloto: null,
         neumaticosLadoAtrasCopilotoArchivo: null,
+        neumaticosLadoAtrasCopilotoImagen: null, // Base64 para API
         
         // Cristales
         cristalesParabrisas: null,
         cristalesParabrisasArchivo: null,
+        cristalesParabrisasImagen: null, // Base64 para API
         cristalesMedallonTrasero: null,
         cristalesMedallonTraseroArchivo: null,
+        cristalesMedallonTraseroImagen: null, // Base64 para API
         cristalesLimpiadores: null,
         cristalesLimpiadoresArchivo: null,
+        cristalesLimpiadoresImagen: null, // Base64 para API
         
         // Motor
         motorTapones: null,
         motorTaponesArchivo: null,
+        motorTaponesImagen: null, // Base64 para API
         motorBateria: null,
         motorBateriaArchivo: null,
+        motorBateriaImagen: null, // Base64 para API
         motorNivelAceite: null,
         motorNivelAceiteArchivo: null,
+        motorNivelAceiteImagen: null, // Base64 para API
         motorNivelLiquidoFrenos: null,
         motorNivelLiquidoFrenosArchivo: null,
+        motorNivelLiquidoFrenosImagen: null, // Base64 para API
         motorNivelAnticongelante: null,
         motorNivelAnticongelanteArchivo: null,
+        motorNivelAnticongelanteImagen: null, // Base64 para API
         
         // Depósito Gasolina y Escape
         depositoPuerta: null,
         depositoTapon: null,
         escapeSilenciador: null,
         escapeSilenciadorArchivo: null,
+        escapeSilenciadorImagen: null, // Base64 para API
         escapeCatalizador: null,
         escapeCatalizadorArchivo: null,
+        escapeCatalizadorImagen: null, // Base64 para API
         
         // Comentarios Generales
         comentarioGeneral: ''
@@ -1588,38 +1637,37 @@ export default {
     finalFormData() {
       const result = {
         // --- STEP 1 ---
-        // Inicializar todas las claves con null por defecto o con valores predeterminados según requerimiento
-        cantidadLlaves: 0, // Por defecto es 0 si no se proporciona
-        polizaSeguro: false, // Por defecto es false
-        polizaSeguroImagen: null, // Nuevo campo para el nombre de la imagen
-        tarjetaCirculacion: false, // Por defecto es false
-        descripcionAccesorios: '', // Nuevo campo descriptivo
-        accesoriosHerramientaImagen: null, // Nuevo campo para el nombre de la imagen
+        cantidadLlaves: 0,
+        polizaSeguro: false,
+        polizaSeguroImagen: null,
+        tarjetaCirculacion: false,
+        descripcionAccesorios: '',
+        accesoriosHerramientaImagen: null,
         
         // --- STEP 2 ---
         // Cluster
-        odometroImagen: null, // Mantener como null para imagen
+        odometroImagen: null,
         nivelCombustible: this.formData.nivelCombustible,
-        combustibleImagen: null, // Cambio de nombre a imagen
-        testigosEncendidos: this.formData.testigosEncendidos,
-        testigosImagen: null, // Cambio de nombre a imagen
+        combustibleImagen: null,
+  testigosEncendidos: Array.isArray(this.formData.testigosEncendidos) ? this.formData.testigosEncendidos : [],
+        testigosImagen: null,
         
         // Tablero
         estereo: this.uiControls.estereo === 'true' ? true : (this.uiControls.estereo === 'false' ? false : null),
-        cantidadBocinas: 0, // Por defecto es 0 si no se proporciona
+        cantidadBocinas: 0,
         
         // Puertas
         manijas: this.formData.manijas === 'true' ? true : (this.formData.manijas === 'false' ? false : null),
         estadoSeguros: this.formData.estadoSeguros,
-        segurosImagen: null, // Nuevo campo para imagen de seguros
+        segurosImagen: null,
         estadoCristales: this.formData.estadoCristales,
-        cristalesImagen: null, // Cambio de nombre a imagen
+        cristalesImagen: null,
         
         // Asientos
         estadoVestiduras: this.formData.estadoVestiduras,
-        vestidurasImagen: null, // Cambio de nombre a imagen
+        vestidurasImagen: null,
         estadoCabeceras: this.formData.estadoCabeceras,
-        cabecerasImagen: null, // Cambio de nombre a imagen
+        cabecerasImagen: null,
         
         // Cinturones
         funcionalidadCinturones: this.formData.funcionalidadCinturones,
@@ -1627,51 +1675,51 @@ export default {
         // --- STEP 3 ---
         // Carrocería
         carroceriaLadoDerecho: this.formData.carroceriaLadoDerecho,
-        carroceriaLadoDerechoImagen: null, // Cambio de nombre a imagen
+        carroceriaLadoDerechoImagen: null,
         carroceriaLadoIzquierdo: this.formData.carroceriaLadoIzquierdo,
-        carroceriaLadoIzquierdoImagen: null, // Cambio de nombre a imagen
+        carroceriaLadoIzquierdoImagen: null,
         carroceriaLadoTrasero: this.formData.carroceriaLadoTrasero,
-        carroceriaLadoTraseroImagen: null, // Cambio de nombre a imagen
+        carroceriaLadoTraseroImagen: null,
         carroceriaLadoFrontal: this.formData.carroceriaLadoFrontal,
-        carroceriaLadoFrontalImagen: null, // Cambio de nombre a imagen
+        carroceriaLadoFrontalImagen: null,
         
         // Neumáticos
         neumaticosLadoPiloto: this.formData.neumaticosLadoPiloto,
-        neumaticosLadoPilotoImagen: null, // Cambio de nombre a imagen
+        neumaticosLadoPilotoImagen: null,
         neumaticosLadoAtrasPiloto: this.formData.neumaticosLadoAtrasPiloto,
-        neumaticosLadoAtrasPilotoImagen: null, // Cambio de nombre a imagen
+        neumaticosLadoAtrasPilotoImagen: null,
         neumaticosLadoCopiloto: this.formData.neumaticosLadoCopiloto,
-        neumaticosLadoCopilotoImagen: null, // Cambio de nombre a imagen
+        neumaticosLadoCopilotoImagen: null,
         neumaticosLadoAtrasCopiloto: this.formData.neumaticosLadoAtrasCopiloto,
-        neumaticosLadoAtrasCopilotoImagen: null, // Cambio de nombre a imagen
+        neumaticosLadoAtrasCopilotoImagen: null,
         
         // Cristales
         cristalesParabrisas: this.formData.cristalesParabrisas,
-        cristalesParabrisasImagen: null, // Cambio de nombre a imagen
+        cristalesParabrisasImagen: null,
         cristalesMedallonTrasero: this.formData.cristalesMedallonTrasero,
-        cristalesMedallonTraseroImagen: null, // Cambio de nombre a imagen
+        cristalesMedallonTraseroImagen: null,
         cristalesLimpiadores: this.formData.cristalesLimpiadores,
-        cristalesLimpiadoresImagen: null, // Cambio de nombre a imagen
+        cristalesLimpiadoresImagen: null,
         
         // Motor
         motorTapones: this.formData.motorTapones,
-        motorTaponesImagen: null, // Cambio de nombre a imagen
+        motorTaponesImagen: null,
         motorBateria: this.formData.motorBateria,
-        motorBateriaImagen: null, // Cambio de nombre a imagen
+        motorBateriaImagen: null,
         motorNivelAceite: this.formData.motorNivelAceite,
-        motorNivelAceiteImagen: null, // Cambio de nombre a imagen
+        motorNivelAceiteImagen: null,
         motorNivelLiquidoFrenos: this.formData.motorNivelLiquidoFrenos,
-        motorNivelLiquidoFrenosImagen: null, // Cambio de nombre a imagen
+        motorNivelLiquidoFrenosImagen: null,
         motorNivelAnticongelante: this.formData.motorNivelAnticongelante,
-        motorNivelAnticongelanteImagen: null, // Cambio de nombre a imagen
+        motorNivelAnticongelanteImagen: null,
         
         // Depósito Gasolina y Escape
         depositoPuerta: this.formData.depositoPuerta === 'true' ? true : (this.formData.depositoPuerta === 'false' ? false : null),
         depositoTapon: this.formData.depositoTapon === 'true' ? true : (this.formData.depositoTapon === 'false' ? false : null),
         escapeSilenciador: this.formData.escapeSilenciador === 'true' ? true : (this.formData.escapeSilenciador === 'false' ? false : null),
-        escapeSilenciadorImagen: null, // Cambio de nombre a imagen
+        escapeSilenciadorImagen: null,
         escapeCatalizador: this.formData.escapeCatalizador === 'true' ? true : (this.formData.escapeCatalizador === 'false' ? false : null),
-        escapeCatalizadorImagen: null, // Cambio de nombre a imagen
+        escapeCatalizadorImagen: null,
         
         // Comentarios Generales
         comentarioGeneral: this.formData.comentarioGeneral || ''
@@ -1685,11 +1733,11 @@ export default {
         result.cantidadLlaves = 0;
       }
       
-      // Asignar polizaSeguro como true/false y guardar nombre de la imagen
+      // Asignar polizaSeguro como true/false y guardar imagen base64
       if (this.uiControls.polizaSeguro === 'true') {
         result.polizaSeguro = true;
-        if (this.formData.polizaSeguroArchivo) {
-          result.polizaSeguroImagen = this.formData.polizaSeguroArchivo.name;
+        if (this.formData.polizaSeguroImagen) {
+          result.polizaSeguroImagen = this.formData.polizaSeguroImagen;
         }
       } else {
         result.polizaSeguro = false;
@@ -1700,22 +1748,22 @@ export default {
       
       // Asignar descripcionAccesorios y accesoriosHerramientaImagen (siempre obligatorios)
       result.descripcionAccesorios = this.formData.descripcionAccesorios || '';
-      if (this.formData.accesoriosHerramientaArchivo) {
-        result.accesoriosHerramientaImagen = this.formData.accesoriosHerramientaArchivo.name;
+      if (this.formData.accesoriosHerramientaImagen) {
+        result.accesoriosHerramientaImagen = this.formData.accesoriosHerramientaImagen;
       }
       
       // --- STEP 2 ---
-      // Cluster
-      if (this.formData.odometroArchivo) {
-        result.odometroImagen = this.formData.odometroArchivo.name;
+      // Cluster - usar imágenes base64
+      if (this.formData.odometroImagen) {
+        result.odometroImagen = this.formData.odometroImagen;
       }
       
-      if (this.formData.combustibleArchivo) {
-        result.combustibleImagen = this.formData.combustibleArchivo.name;
+      if (this.formData.combustibleImagen) {
+        result.combustibleImagen = this.formData.combustibleImagen;
       }
       
-      if (this.formData.testigosEncendidosArchivo) {
-        result.testigosImagen = this.formData.testigosEncendidosArchivo.name;
+      if (this.formData.testigosImagen) {
+        result.testigosImagen = this.formData.testigosImagen;
       }
       
       // Tablero
@@ -1725,101 +1773,101 @@ export default {
         result.cantidadBocinas = 0;
       }
       
-      // Puertas - fotos siempre requeridas
-      if (this.formData.segurosArchivo) {
-        result.segurosImagen = this.formData.segurosArchivo.name;
+      // Puertas - usar imágenes base64
+      if (this.formData.segurosImagen) {
+        result.segurosImagen = this.formData.segurosImagen;
       }
       
-      if (this.formData.cristalesArchivo) {
-        result.cristalesImagen = this.formData.cristalesArchivo.name;
+      if (this.formData.cristalesImagen) {
+        result.cristalesImagen = this.formData.cristalesImagen;
       }
       
-      // Asientos - fotos siempre requeridas
-      if (this.formData.vestidurasArchivo) {
-        result.vestidurasImagen = this.formData.vestidurasArchivo.name;
+      // Asientos - usar imágenes base64
+      if (this.formData.vestidurasImagen) {
+        result.vestidurasImagen = this.formData.vestidurasImagen;
       }
       
-      if (this.formData.cabecerasArchivo) {
-        result.cabecerasImagen = this.formData.cabecerasArchivo.name;
+      if (this.formData.cabecerasImagen) {
+        result.cabecerasImagen = this.formData.cabecerasImagen;
       }
       
       // --- STEP 3 ---
-      // Carrocería
-      if (this.formData.carroceriaLadoDerecho === 'mal_estado' && this.formData.carroceriaLadoDerechoArchivo) {
-        result.carroceriaLadoDerechoImagen = this.formData.carroceriaLadoDerechoArchivo.name;
+      // Carrocería - usar imágenes base64
+      if (this.formData.carroceriaLadoDerecho === 'mal_estado' && this.formData.carroceriaLadoDerechoImagen) {
+        result.carroceriaLadoDerechoImagen = this.formData.carroceriaLadoDerechoImagen;
       }
       
-      if (this.formData.carroceriaLadoIzquierdo === 'mal_estado' && this.formData.carroceriaLadoIzquierdoArchivo) {
-        result.carroceriaLadoIzquierdoImagen = this.formData.carroceriaLadoIzquierdoArchivo.name;
+      if (this.formData.carroceriaLadoIzquierdo === 'mal_estado' && this.formData.carroceriaLadoIzquierdoImagen) {
+        result.carroceriaLadoIzquierdoImagen = this.formData.carroceriaLadoIzquierdoImagen;
       }
       
-      if (this.formData.carroceriaLadoTrasero === 'mal_estado' && this.formData.carroceriaLadoTraseroArchivo) {
-        result.carroceriaLadoTraseroImagen = this.formData.carroceriaLadoTraseroArchivo.name;
+      if (this.formData.carroceriaLadoTrasero === 'mal_estado' && this.formData.carroceriaLadoTraseroImagen) {
+        result.carroceriaLadoTraseroImagen = this.formData.carroceriaLadoTraseroImagen;
       }
       
-      if (this.formData.carroceriaLadoFrontal === 'mal_estado' && this.formData.carroceriaLadoFrontalArchivo) {
-        result.carroceriaLadoFrontalImagen = this.formData.carroceriaLadoFrontalArchivo.name;
+      if (this.formData.carroceriaLadoFrontal === 'mal_estado' && this.formData.carroceriaLadoFrontalImagen) {
+        result.carroceriaLadoFrontalImagen = this.formData.carroceriaLadoFrontalImagen;
       }
       
-      // Neumáticos
-      if (this.formData.neumaticosLadoPiloto === 'mal_estado' && this.formData.neumaticosLadoPilotoArchivo) {
-        result.neumaticosLadoPilotoImagen = this.formData.neumaticosLadoPilotoArchivo.name;
+      // Neumáticos - usar imágenes base64
+      if (this.formData.neumaticosLadoPiloto === 'mal_estado' && this.formData.neumaticosLadoPilotoImagen) {
+        result.neumaticosLadoPilotoImagen = this.formData.neumaticosLadoPilotoImagen;
       }
       
-      if (this.formData.neumaticosLadoAtrasPiloto === 'mal_estado' && this.formData.neumaticosLadoAtrasPilotoArchivo) {
-        result.neumaticosLadoAtrasPilotoImagen = this.formData.neumaticosLadoAtrasPilotoArchivo.name;
+      if (this.formData.neumaticosLadoAtrasPiloto === 'mal_estado' && this.formData.neumaticosLadoAtrasPilotoImagen) {
+        result.neumaticosLadoAtrasPilotoImagen = this.formData.neumaticosLadoAtrasPilotoImagen;
       }
       
-      if (this.formData.neumaticosLadoCopiloto === 'mal_estado' && this.formData.neumaticosLadoCopilotoArchivo) {
-        result.neumaticosLadoCopilotoImagen = this.formData.neumaticosLadoCopilotoArchivo.name;
+      if (this.formData.neumaticosLadoCopiloto === 'mal_estado' && this.formData.neumaticosLadoCopilotoImagen) {
+        result.neumaticosLadoCopilotoImagen = this.formData.neumaticosLadoCopilotoImagen;
       }
       
-      if (this.formData.neumaticosLadoAtrasCopiloto === 'mal_estado' && this.formData.neumaticosLadoAtrasCopilotoArchivo) {
-        result.neumaticosLadoAtrasCopilotoImagen = this.formData.neumaticosLadoAtrasCopilotoArchivo.name;
+      if (this.formData.neumaticosLadoAtrasCopiloto === 'mal_estado' && this.formData.neumaticosLadoAtrasCopilotoImagen) {
+        result.neumaticosLadoAtrasCopilotoImagen = this.formData.neumaticosLadoAtrasCopilotoImagen;
       }
       
-      // Cristales
-      if (this.formData.cristalesParabrisas === 'mal_estado' && this.formData.cristalesParabrisasArchivo) {
-        result.cristalesParabrisasImagen = this.formData.cristalesParabrisasArchivo.name;
+      // Cristales - usar imágenes base64
+      if (this.formData.cristalesParabrisas === 'mal_estado' && this.formData.cristalesParabrisasImagen) {
+        result.cristalesParabrisasImagen = this.formData.cristalesParabrisasImagen;
       }
       
-      if (this.formData.cristalesMedallonTrasero === 'mal_estado' && this.formData.cristalesMedallonTraseroArchivo) {
-        result.cristalesMedallonTraseroImagen = this.formData.cristalesMedallonTraseroArchivo.name;
+      if (this.formData.cristalesMedallonTrasero === 'mal_estado' && this.formData.cristalesMedallonTraseroImagen) {
+        result.cristalesMedallonTraseroImagen = this.formData.cristalesMedallonTraseroImagen;
       }
       
-      if (this.formData.cristalesLimpiadores === 'mal_estado' && this.formData.cristalesLimpiadoresArchivo) {
-        result.cristalesLimpiadoresImagen = this.formData.cristalesLimpiadoresArchivo.name;
+      if (this.formData.cristalesLimpiadores === 'mal_estado' && this.formData.cristalesLimpiadoresImagen) {
+        result.cristalesLimpiadoresImagen = this.formData.cristalesLimpiadoresImagen;
       }
       
-      // Motor
-      if (this.formData.motorTapones === 'mal_estado' && this.formData.motorTaponesArchivo) {
-        result.motorTaponesImagen = this.formData.motorTaponesArchivo.name;
+      // Motor - usar imágenes base64
+      if (this.formData.motorTapones === 'mal_estado' && this.formData.motorTaponesImagen) {
+        result.motorTaponesImagen = this.formData.motorTaponesImagen;
       }
       
-      if (this.formData.motorBateria === 'mal_estado' && this.formData.motorBateriaArchivo) {
-        result.motorBateriaImagen = this.formData.motorBateriaArchivo.name;
+      if (this.formData.motorBateria === 'mal_estado' && this.formData.motorBateriaImagen) {
+        result.motorBateriaImagen = this.formData.motorBateriaImagen;
       }
       
       // Los niveles siempre requieren evidencia independientemente del valor seleccionado
-      if (this.formData.motorNivelAceiteArchivo) {
-        result.motorNivelAceiteImagen = this.formData.motorNivelAceiteArchivo.name;
+      if (this.formData.motorNivelAceiteImagen) {
+        result.motorNivelAceiteImagen = this.formData.motorNivelAceiteImagen;
       }
       
-      if (this.formData.motorNivelLiquidoFrenosArchivo) {
-        result.motorNivelLiquidoFrenosImagen = this.formData.motorNivelLiquidoFrenosArchivo.name;
+      if (this.formData.motorNivelLiquidoFrenosImagen) {
+        result.motorNivelLiquidoFrenosImagen = this.formData.motorNivelLiquidoFrenosImagen;
       }
       
-      if (this.formData.motorNivelAnticongelanteArchivo) {
-        result.motorNivelAnticongelanteImagen = this.formData.motorNivelAnticongelanteArchivo.name;
+      if (this.formData.motorNivelAnticongelanteImagen) {
+        result.motorNivelAnticongelanteImagen = this.formData.motorNivelAnticongelanteImagen;
       }
       
-      // Depósito Gasolina y Escape - fotos siempre requeridas
-      if (this.formData.escapeSilenciadorArchivo) {
-        result.escapeSilenciadorImagen = this.formData.escapeSilenciadorArchivo.name;
+      // Depósito Gasolina y Escape - usar imágenes base64
+      if (this.formData.escapeSilenciadorImagen) {
+        result.escapeSilenciadorImagen = this.formData.escapeSilenciadorImagen;
       }
       
-      if (this.formData.escapeCatalizadorArchivo) {
-        result.escapeCatalizadorImagen = this.formData.escapeCatalizadorArchivo.name;
+      if (this.formData.escapeCatalizadorImagen) {
+        result.escapeCatalizadorImagen = this.formData.escapeCatalizadorImagen;
       }
       
       // Agregamos un log para verificar la estructura final del JSON
@@ -1856,6 +1904,23 @@ export default {
     }
   },
   methods: {
+    // Función para limpiar nombres de archivo eliminando números extras
+    cleanImageName(fileName) {
+      if (!fileName) return null;
+      
+      // Extraer la extensión del archivo
+      const extension = fileName.split('.').pop();
+      
+      // Remover la extensión temporalmente
+      const nameWithoutExtension = fileName.replace(`.${extension}`, '');
+      
+      // Remover números extras al final (patrón: _seguido de números)
+      const cleanName = nameWithoutExtension.replace(/_\d+$/, '');
+      
+      // Retornar el nombre limpio con la extensión
+      return `${cleanName}.${extension}`;
+    },
+
     loadChecklistData() {
       if (!this.checklistData || Object.keys(this.checklistData).length === 0) return;
       
@@ -1906,7 +1971,9 @@ export default {
       }
       
       if ('testigosEncendidos' in this.checklistData) {
-        this.formData.testigosEncendidos = this.checklistData.testigosEncendidos;
+        this.formData.testigosEncendidos = Array.isArray(this.checklistData.testigosEncendidos)
+          ? this.checklistData.testigosEncendidos
+          : ['NINGUNO'];
       } else {
         this.formData.testigosEncendidos = ['NINGUNO']; // Valor por defecto
       }
@@ -2153,28 +2220,19 @@ export default {
       if (!this.isStepValid) return;
       
       try {
-        // Simular envío de datos al servidor
-        await this.submitFormData();
-        
-        // Mostrar toast de éxito
-        this.toastStore.addToast({
-          message: 'Formulario enviado exitosamente',
-          type: 'success',
-          duration: 4000
+        // Usar executeSubmit para mostrar loading y manejar el estado
+        await this.executeSubmit(async () => {
+          await this.submitFormData();
         });
         
-  // Cerrar modal después del envío exitoso
-  this.$emit('close');
+        // Cerrar modal después del envío exitoso
+        this.$emit('close');
         
-        console.log('Formulario enviado exitosamente');
+        console.log('CheckList actualizado exitosamente');
       } catch (error) {
         console.error('Error al enviar formulario:', error);
-        // Mostrar toast de error
-        this.toastStore.addToast({
-          message: 'Error al enviar el formulario. Por favor, intente nuevamente.',
-          type: 'error',
-          duration: 5000
-        });
+        // El error ya fue manejado en submitFormData con toast
+        // Solo logeamos aquí para debugging
       }
     },
     
@@ -2184,22 +2242,49 @@ export default {
     },
     
     async submitFormData() {
-      // Simular envío final de todos los datos
-      console.log('Enviando formulario completo...');
+      console.log('Enviando formulario completo al API...');
       console.log('Datos finales:', JSON.stringify(this.finalFormData, null, 2));
       
-      // Simular tiempo de procesamiento del servidor
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Simular posible error ocasional (3% de probabilidad)
-      if (Math.random() < 0.03) {
-        throw new Error('Error del servidor al procesar los datos');
+      // Verificar que tenemos un ID para actualizar
+      if (!this.checklistData.id) {
+        throw new Error('No se puede actualizar el checklist: ID no encontrado');
       }
       
-      // Aquí es donde harías la llamada real a tu API
-      // const response = await api.submitChecklistForm(this.finalFormData);
-      
-      console.log('Formulario enviado correctamente al servidor');
+      try {
+        // Hacer PUT request al endpoint Laravel
+        const response = await apiClient.put(`/detalle-recepcion/${this.checklistData.id}`, this.finalFormData);
+        
+        console.log('Respuesta del servidor:', response.data);
+        
+        // Mostrar toast de éxito
+        this.toastStore.addToast({
+          message: 'CheckList actualizado exitosamente',
+          type: 'success',
+          duration: 4000
+        });
+        
+        // Emitir evento para notificar al componente padre
+        this.$emit('checklist-saved', response.data.data);
+        
+        return response.data;
+        
+      } catch (error) {
+        console.error('Error al enviar formulario:', error);
+        
+        // Re-lanzar el error para que sea manejado por handleFinalSubmit
+        if (error.response?.data?.errors) {
+          // Error de validación del servidor
+          const serverErrors = error.response.data.errors;
+          const errorMessages = Object.values(serverErrors).flat();
+          throw new Error(`Errores de validación: ${errorMessages.join(', ')}`);
+        } else if (error.response?.data?.message) {
+          // Error con mensaje específico del servidor
+          throw new Error(error.response.data.message);
+        } else {
+          // Error genérico
+          throw new Error('Error al guardar el CheckList. Por favor, intente nuevamente.');
+        }
+      }
     },
     
     nextStep() {
@@ -2235,55 +2320,95 @@ export default {
     },
     
     // Método para manejar las fotografías capturadas
-    handlePhotoCaptured(field, file) {
+    handlePhotoCaptured(field, photoData) {
       console.log(`=== INICIO handlePhotoCaptured ===`);
       console.log(`Field: ${field}`);
-      console.log(`File:`, file);
-      console.log(`Photo name:`, file ? file.name : 'null');
+      console.log(`PhotoData:`, photoData);
       
-      // Usar el mismo flujo que handleFileChange para mantener consistencia
-      this.formData[field] = file;
+      // Si es el nuevo formato con base64, usar esos datos
+      if (photoData && typeof photoData === 'object' && photoData.base64) {
+        console.log(`Guardando imagen base64 para campo: ${field}`);
+        console.log(`Nombre del archivo: ${photoData.fileName}`);
+        
+        // Guardar el archivo para la vista previa (mantener compatibilidad)
+        this.formData[field] = photoData.file;
+        
+        // Guardar la imagen base64 para enviar al API
+        // Mapear el nombre del campo al formato que espera el API
+        const base64FieldName = this.mapFieldToBase64(field);
+        if (base64FieldName) {
+          this.formData[base64FieldName] = photoData.base64;
+          console.log(`Imagen base64 guardada en: ${base64FieldName}`);
+        }
+        
+      } else {
+        // Compatibilidad con el formato anterior (solo file)
+        console.log(`Guardando archivo (formato legacy) para campo: ${field}`);
+        this.formData[field] = photoData;
+      }
       
       console.log(`FormData[${field}] después de asignación:`, this.formData[field]);
-      console.log(`¿Foto tiene name?:`, this.formData[field] ? this.formData[field].name : 'No tiene name');
+      console.log('=== FIN handlePhotoCaptured ===');
+    },
+    
+    // Mapear nombres de campos de archivo a nombres de base64 que espera el API
+    mapFieldToBase64(fieldName) {
+      const mapping = {
+        'polizaSeguroArchivo': 'polizaSeguroImagen',
+        'accesoriosHerramientaArchivo': 'accesoriosHerramientaImagen',
+        'odometroArchivo': 'odometroImagen',
+        'combustibleArchivo': 'combustibleImagen',
+        'testigosEncendidosArchivo': 'testigosImagen',
+        'segurosArchivo': 'segurosImagen',
+        'cristalesArchivo': 'cristalesImagen',
+        'vestidurasArchivo': 'vestidurasImagen',
+        'cabecerasArchivo': 'cabecerasImagen',
+        'carroceriaLadoDerechoArchivo': 'carroceriaLadoDerechoImagen',
+        'carroceriaLadoIzquierdoArchivo': 'carroceriaLadoIzquierdoImagen',
+        'carroceriaLadoTraseroArchivo': 'carroceriaLadoTraseroImagen',
+        'carroceriaLadoFrontalArchivo': 'carroceriaLadoFrontalImagen',
+        'neumaticosLadoPilotoArchivo': 'neumaticosLadoPilotoImagen',
+        'neumaticosLadoAtrasPilotoArchivo': 'neumaticosLadoAtrasPilotoImagen',
+        'neumaticosLadoCopilotoArchivo': 'neumaticosLadoCopilotoImagen',
+        'neumaticosLadoAtrasCopilotoArchivo': 'neumaticosLadoAtrasCopilotoImagen',
+        'cristalesParabrisasArchivo': 'cristalesParabrisasImagen',
+        'cristalesMedallonTraseroArchivo': 'cristalesMedallonTraseroImagen',
+        'cristalesLimpiadoresArchivo': 'cristalesLimpiadoresImagen',
+        'motorTaponesArchivo': 'motorTaponesImagen',
+        'motorBateriaArchivo': 'motorBateriaImagen',
+        'motorNivelAceiteArchivo': 'motorNivelAceiteImagen',
+        'motorNivelLiquidoFrenosArchivo': 'motorNivelLiquidoFrenosImagen',
+        'motorNivelAnticongelanteArchivo': 'motorNivelAnticongelanteImagen',
+        'escapeSilenciadorArchivo': 'escapeSilenciadorImagen',
+        'escapeCatalizadorArchivo': 'escapeCatalizadorImagen'
+      };
       
-      // Log del estado actual de UI Controls
-      console.log('UI Controls actuales:', this.uiControls);
-      
-      // Calcular inmediatamente el finalFormData
-      const currentFinalFormData = this.finalFormData;
-      console.log('Final Form Data calculado inmediatamente:', JSON.stringify(currentFinalFormData, null, 2));
-      
-      // Forzar recálculo del computed en nextTick
-      this.$nextTick(() => {
-        console.log('Final Form Data en nextTick:', JSON.stringify(this.finalFormData, null, 2));
-        console.log(`=== FIN handlePhotoCaptured ===`);
-      });
+      return mapping[fieldName] || null;
     },
     
     // Método para manejar la exclusión mutua entre "NINGUNO" y los demás testigos
     handleTestigoChange(testigo) {
-      // Si se seleccionó "NINGUNO", deseleccionar todos los demás
-      if (testigo === 'NINGUNO' && this.formData.testigosEncendidos.includes('NINGUNO')) {
-        this.formData.testigosEncendidos = ['NINGUNO'];
-        console.log('Se seleccionó NINGUNO, se deseleccionaron los demás testigos');
-      } 
-      // Si se seleccionó otro testigo y "NINGUNO" estaba seleccionado, deseleccionar "NINGUNO"
-      else if (testigo !== 'NINGUNO' && this.formData.testigosEncendidos.includes(testigo) && 
-               this.formData.testigosEncendidos.includes('NINGUNO')) {
-        const index = this.formData.testigosEncendidos.indexOf('NINGUNO');
-        if (index !== -1) {
-          this.formData.testigosEncendidos.splice(index, 1);
-          console.log('Se deseleccionó NINGUNO porque se seleccionó otro testigo');
-        }
+      // Forzar que testigosEncendidos sea array
+      if (!Array.isArray(this.formData.testigosEncendidos)) {
+        this.formData.testigosEncendidos = [];
       }
-      
+      // Si se selecciona "NINGUNO"
+      if (testigo === 'NINGUNO') {
+        if (this.formData.testigosEncendidos.includes('NINGUNO')) {
+          // Solo "NINGUNO" debe estar seleccionado
+          this.formData.testigosEncendidos = ['NINGUNO'];
+        } else {
+          // Si se deselecciona "NINGUNO", dejar el resto como está
+          this.formData.testigosEncendidos = this.formData.testigosEncendidos.filter(t => t !== 'NINGUNO');
+        }
+      } else {
+        // Si se selecciona cualquier otro testigo, quitar "NINGUNO" si está presente
+        this.formData.testigosEncendidos = this.formData.testigosEncendidos.filter(t => t !== 'NINGUNO');
+      }
       // Si no hay testigos seleccionados, seleccionar automáticamente "NINGUNO"
       if (this.formData.testigosEncendidos.length === 0) {
-        this.formData.testigosEncendidos.push('NINGUNO');
-        console.log('No hay testigos seleccionados, se selecciona NINGUNO automáticamente');
+        this.formData.testigosEncendidos = ['NINGUNO'];
       }
-      
       // Nota: La foto de testigos es ahora siempre requerida, independientemente de la selección
     },
     

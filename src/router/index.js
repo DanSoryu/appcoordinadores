@@ -89,11 +89,11 @@ router.beforeEach(async (to, from, next) => {
 
   // Verificar si la ruta requiere autenticación
   if (to.meta.requiresAuth) {
-    if (!authStore.isLoggedIn) {
-      // Redireccionar al login si no está autenticado
-      next('/login')
-      return
-    }
+      if (!authStore.isLoggedIn) {
+        // Recargar la página y redireccionar al login si no está autenticado
+        window.location.href = '/login';
+        return;
+      }
 
     // Verificar permisos de rol para rutas autenticadas
     if (to.meta.allowedRoles && !to.meta.allowedRoles.includes(authStore.userRole)) {

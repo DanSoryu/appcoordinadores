@@ -41,7 +41,9 @@ import {
   faCircle,
   faMicrochip,
   faCommentAlt,
-  faStethoscope
+  faStethoscope,
+  faClock,
+  faCamera
 } from '@fortawesome/free-solid-svg-icons'
 
 // Agregar iconos a la librería
@@ -77,7 +79,9 @@ library.add(
   faCircle,
   faMicrochip,
   faCommentAlt,
-  faStethoscope
+  faStethoscope,
+  faClock,
+  faCamera
 )
 
 const app = createApp(App)

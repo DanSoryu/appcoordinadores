@@ -24,7 +24,7 @@
     <div v-if="photoPreview || (isPreloadedPhoto && photoName)" class="preview-container" @click="openPhotoModal">
       <div class="w-full flex flex-col items-center">
         <img :src="photoUrl" alt="Vista previa" class="preview-image mb-2 cursor-pointer" />
-        <div v-if="photoName" class="photo-name text-sm text-gray-700 text-center">{{ photoName }}</div>
+        <div v-if="photoName" class="photo-name text-sm text-gray-700 text-center">{{ displayPhotoName }}</div>
         <div v-if="isPreloadedPhoto" class="text-xs text-blue-600 mt-1">(Fotografía existente)</div>
       </div>
     </div>
@@ -103,17 +103,42 @@ export default {
         return `https://api.ejemplo.com/fotos/${this.photoName}`;
       }
       return this.photoPreview;
+    },
+    
+    // Computed para mostrar el nombre limpio en la vista previa
+    displayPhotoName() {
+      if (!this.photoName) return '';
+      return this.cleanImageName(this.photoName);
     }
   },
   methods: {
+    // Función para limpiar nombres de archivo eliminando números extras
+    cleanImageName(fileName) {
+      if (!fileName || typeof fileName !== 'string') return '';
+      
+      // Extraer la extensión del archivo
+      const extension = fileName.split('.').pop();
+      
+      // Remover la extensión temporalmente
+      const nameWithoutExtension = fileName.replace(`.${extension}`, '');
+      
+      // Remover números extras al final (patrón: _seguido de números)
+      const cleanName = nameWithoutExtension.replace(/_\d+$/, '');
+      
+      // Retornar el nombre limpio con la extensión
+      return `${cleanName}.${extension}`;
+    },
+
     loadPreloadedPhoto() {
-      if (this.preloadedPhoto) {
+      if (this.preloadedPhoto && typeof this.preloadedPhoto === 'string') {
         this.photoName = this.preloadedPhoto;
         this.isPreloadedPhoto = true;
         this.photoPreview = null;
         console.log('Fotografía pre-cargada:', this.preloadedPhoto);
       } else {
         this.isPreloadedPhoto = false;
+        this.photoName = '';
+        this.photoPreview = null;
       }
     },
     
@@ -181,12 +206,21 @@ export default {
       this.photoName = `${this.fileNamePrefix}_${timestamp}.jpg`;
       this.isPreloadedPhoto = false;
       
-      // Convertir el canvas a un blob para emitirlo
+      // Obtener la imagen en formato base64 para el API
+      const base64Image = canvas.toDataURL('image/jpeg', 0.9);
+      
+      // Convertir el canvas a un blob para mantener compatibilidad con FileUploadPreview
       canvas.toBlob((blob) => {
         if (blob) {
-          // Crear un objeto File a partir del Blob para mantener compatibilidad con FileUploadPreview
+          // Crear un objeto File a partir del Blob para mantener compatibilidad
           const file = new File([blob], this.photoName, { type: 'image/jpeg' });
-          this.$emit('photo-captured', file);
+          
+          // Emitir tanto el archivo como el base64 para máxima flexibilidad
+          this.$emit('photo-captured', {
+            file: file,
+            base64: base64Image,
+            fileName: this.photoName
+          });
         }
       }, 'image/jpeg', 0.9);
       
