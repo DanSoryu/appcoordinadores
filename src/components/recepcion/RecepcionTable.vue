@@ -14,7 +14,7 @@
     </div>
 
     <div class="bg-white p-4 rounded-lg shadow mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Búsqueda General</label>
           <input 
@@ -52,20 +52,6 @@
             Máximo fecha actual
           </span>
         </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Taller</label>
-          <select 
-            v-model="tallerFilter"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">Todos los talleres</option>
-            <option value="Taller Principal">Taller Principal</option>
-            <option value="Taller Norte">Taller Norte</option>
-            <option value="Taller Sur">Taller Sur</option>
-            <option value="Taller Este">Taller Este</option>
-          </select>
-        </div>
       </div>
     </div>
 
@@ -86,21 +72,23 @@
               <tr class="divide-x divide-gray-200">
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lugar</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kilometraje</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehículo</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entregado por</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="item in paginatedData" :key="item.id" class="hover:bg-gray-50 divide-x divide-gray-200">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.id }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fechaRecepcion }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.lugarRecepcion }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.tallerRecepcion }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_recepcion }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.kilometraje?.toLocaleString() }} km</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.taller_recepcion }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ item.vehiculo.numeroControl }} - {{ item.vehiculo.nombre }}
+                  {{ item.numero_serie }} - {{ item.marca }} {{ item.modelo }} {{ item.año }}
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.entregado_por }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
                   <!-- Botones de acciones -->
                   <button 
@@ -114,12 +102,6 @@
                     class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Editar
-                  </button>
-                  <button 
-                    @click="eliminarRecepcion(item)" 
-                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  >
-                    Eliminar
                   </button>
                 </td>
               </tr>
@@ -231,15 +213,19 @@
               </div>
               <div class="space-y-1">
                 <p class="text-sm font-medium text-gray-500">Fecha de Recepción</p>
-                <p class="font-semibold">{{ currentRecepcion.fechaRecepcion }}</p>
+                <p class="font-semibold">{{ currentRecepcion.fecha_recepcion }}</p>
               </div>
               <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">Lugar de Recepción</p>
-                <p class="font-semibold">{{ currentRecepcion.lugarRecepcion }}</p>
+                <p class="text-sm font-medium text-gray-500">Kilometraje</p>
+                <p class="font-semibold">{{ currentRecepcion.kilometraje?.toLocaleString() }} km</p>
               </div>
               <div class="space-y-1">
                 <p class="text-sm font-medium text-gray-500">Taller de Recepción</p>
-                <p class="font-semibold">{{ currentRecepcion.tallerRecepcion }}</p>
+                <p class="font-semibold">{{ currentRecepcion.taller_recepcion }}</p>
+              </div>
+              <div class="space-y-1">
+                <p class="text-sm font-medium text-gray-500">Entregado por</p>
+                <p class="font-semibold">{{ currentRecepcion.entregado_por }}</p>
               </div>
             </div>
             
@@ -248,84 +234,16 @@
               <div class="bg-gray-50 p-4 rounded-lg">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Número de Control</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.numeroControl }}</p>
+                    <p class="text-sm font-medium text-gray-500">Número Económico</p>
+                    <p class="font-semibold">{{ currentRecepcion.numero_economico }}</p>
                   </div>
                   <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Nombre del Vehículo</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.nombre }}</p>
+                    <p class="text-sm font-medium text-gray-500">Número de Serie</p>
+                    <p class="font-semibold">{{ currentRecepcion.numero_serie }}</p>
                   </div>
                   <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">VIN</p>
-                    <p class="font-semibold text-xs">{{ currentRecepcion.vehiculo.vin }}</p>
-                  </div>
-                  <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Marca</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.marca }}</p>
-                  </div>
-                  <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Modelo</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.modelo }}</p>
-                  </div>
-                  <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Año</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.anio }}</p>
-                  </div>
-                  <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Placas</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.placas }}</p>
-                  </div>
-                  <div class="space-y-1">
-                    <p class="text-sm font-medium text-gray-500">Kilometraje</p>
-                    <p class="font-semibold">{{ currentRecepcion.vehiculo.kilometraje?.toLocaleString() }} km</p>
-                  </div>
-                </div>
-                
-                <!-- Últimos Servicios -->
-                <div class="mt-4">
-                  <h5 class="text-md font-semibold text-gray-700 mb-2">Últimos Servicios</h5>
-                  <div v-if="currentRecepcion.vehiculo.ultimosServicios && currentRecepcion.vehiculo.ultimosServicios.length > 0" class="space-y-2">
-                    <div 
-                      v-for="(servicio, index) in currentRecepcion.vehiculo.ultimosServicios" 
-                      :key="index"
-                      class="flex items-center justify-between bg-white p-3 rounded border border-gray-200"
-                    >
-                      <div class="flex items-center space-x-3">
-                        <div class="flex-shrink-0">
-                          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                          </svg>
-                        </div>
-                        <div>
-                          <p class="font-medium text-gray-900">{{ servicio.fecha }}</p>
-                          <p class="text-sm text-gray-500">{{ servicio.descripcion }}</p>
-                        </div>
-                      </div>
-                      <div class="text-right">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          {{ servicio.kilometraje?.toLocaleString() }} km
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div v-else class="text-sm text-gray-500 bg-gray-100 p-3 rounded">
-                    No hay registros de servicios disponibles
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="mt-6">
-              <h4 class="text-lg font-bold text-gray-800 mb-3">Asignaciones de Personal</h4>
-              <div class="bg-blue-50 p-4 rounded-lg">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="space-y-1">
-                    <p class="text-sm font-medium text-blue-600">Persona Asignación Anterior</p>
-                    <p class="font-semibold text-blue-800">{{ currentRecepcion.vehiculo.personaAsignacionAnterior }}</p>
-                  </div>
-                  <div class="space-y-1">
-                    <p class="text-sm font-medium text-green-600">Persona Asignación Actual</p>
-                    <p class="font-semibold text-green-800">{{ currentRecepcion.vehiculo.personaAsignacionActual }}</p>
+                    <p class="text-sm font-medium text-gray-500">Cliente</p>
+                    <p class="font-semibold">{{ currentRecepcion.cliente_responsable_automotriz }} - {{ currentRecepcion.cliente_supervisor }}</p>
                   </div>
                 </div>
               </div>
@@ -338,8 +256,9 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useToastStore } from '../../stores/toast.js'
+import apiClient from '../../services/api.js'
 import DatosRecepcionFormModal from './DatosRecepcionFormModal.vue'
 
 export default {
@@ -352,123 +271,8 @@ export default {
     const isLoading = ref(false)
     const error = ref(null)
     
-    // Datos de recepción con información completa del vehículo
-    const recepciones = ref([
-      {
-        id: 1,
-        fechaRecepcion: '2025-09-15',
-        lugarRecepcion: 'Sucursal Centro',
-        tallerRecepcion: 'Taller Principal',
-        vehiculo: {
-          numeroControl: 'ECO001',
-          nombre: 'Honda Civic',
-          vin: '1HGBH41JXMN109186',
-          marca: 'Honda',
-          modelo: 'Civic',
-          anio: '2021',
-          placas: 'ABC-123',
-          kilometraje: 45000,
-          personaAsignacionAnterior: 'Carlos Mendoza',
-          personaAsignacionActual: 'Ana López',
-          ultimosServicios: [
-            { fecha: '2025-08-15', descripcion: 'Mantenimiento preventivo completo', kilometraje: 43500 },
-            { fecha: '2025-06-20', descripcion: 'Cambio de aceite y filtros', kilometraje: 41200 },
-            { fecha: '2025-04-10', descripcion: 'Revisión de frenos y suspension', kilometraje: 38800 }
-          ]
-        }
-      },
-      {
-        id: 2,
-        fechaRecepcion: '2025-09-16',
-        lugarRecepcion: 'Sucursal Norte',
-        tallerRecepcion: 'Taller Norte',
-        vehiculo: {
-          numeroControl: 'ECO002',
-          nombre: 'Chevrolet Malibu',
-          vin: '1G1JC524817123456',
-          marca: 'Chevrolet',
-          modelo: 'Malibu',
-          anio: '2020',
-          placas: 'DEF-456',
-          kilometraje: 38500,
-          personaAsignacionAnterior: 'María González',
-          personaAsignacionActual: 'Roberto Díaz',
-          ultimosServicios: [
-            { fecha: '2025-09-05', descripcion: 'Inspección anual completa', kilometraje: 38000 },
-            { fecha: '2025-07-12', descripcion: 'Cambio de llantas delanteras', kilometraje: 36200 },
-            { fecha: '2025-05-18', descripcion: 'Reparación sistema eléctrico', kilometraje: 34500 }
-          ]
-        }
-      },
-      {
-        id: 3,
-        fechaRecepcion: '2025-09-17',
-        lugarRecepcion: 'Sucursal Sur',
-        tallerRecepcion: 'Taller Sur',
-        vehiculo: {
-          numeroControl: 'ECO003',
-          nombre: 'Mercedes-Benz C-Class',
-          vin: 'WDBRF40J03A123456',
-          marca: 'Mercedes-Benz',
-          modelo: 'C-Class',
-          anio: '2019',
-          placas: 'GHI-789',
-          kilometraje: 52000,
-          personaAsignacionAnterior: 'Luis Martínez',
-          personaAsignacionActual: 'Sandra Pérez',
-          ultimosServicios: [
-            { fecha: '2025-09-01', descripcion: 'Servicio Mercedes-Benz Premium', kilometraje: 51500 },
-            { fecha: '2025-06-15', descripcion: 'Cambio de aceite sintético', kilometraje: 49200 },
-            { fecha: '2025-04-05', descripcion: 'Revisión de transmisión automática', kilometraje: 47800 },
-            { fecha: '2025-01-20', descripcion: 'Mantenimiento de aire acondicionado', kilometraje: 45600 }
-          ]
-        }
-      },
-      {
-        id: 4,
-        fechaRecepcion: '2025-09-18',
-        lugarRecepcion: 'Sucursal Este',
-        tallerRecepcion: 'Taller Este',
-        vehiculo: {
-          numeroControl: 'ECO004',
-          nombre: 'Honda Odyssey',
-          vin: '5FNRL38779B123456',
-          marca: 'Honda',
-          modelo: 'Odyssey',
-          anio: '2022',
-          placas: 'JKL-012',
-          kilometraje: 25000,
-          personaAsignacionAnterior: 'Pedro Ruiz',
-          personaAsignacionActual: 'Carmen Vega',
-          ultimosServicios: [
-            { fecha: '2025-08-30', descripcion: 'Primer servicio de garantía', kilometraje: 24500 },
-            { fecha: '2025-05-22', descripcion: 'Inspección de 20,000 km', kilometraje: 20000 }
-          ]
-        }
-      },
-      {
-        id: 5,
-        fechaRecepcion: '2025-09-19',
-        lugarRecepcion: 'Sucursal Oeste',
-        tallerRecepcion: 'Taller Principal',
-        vehiculo: {
-          numeroControl: 'ECO005',
-          nombre: 'Ford Escape',
-          vin: '1FMCU0F75KUA12345',
-          marca: 'Ford',
-          modelo: 'Escape',
-          anio: '2023',
-          placas: 'MNO-345',
-          kilometraje: 15000,
-          personaAsignacionAnterior: 'José Ramírez',
-          personaAsignacionActual: 'Elena Castro',
-          ultimosServicios: [
-            { fecha: '2025-09-10', descripcion: 'Servicio de 15,000 km', kilometraje: 15000 },
-            { fecha: '2025-06-01', descripción: 'Primer cambio de aceite', kilometraje: 10000 }
-          ]
-        }
-      }
-    ])
+    // Datos de recepción desde API
+    const recepciones = ref([])
 
     // Modales
     const showRecepcionModal = ref(false)
@@ -480,12 +284,11 @@ export default {
     const searchQuery = ref('')
     const dateFrom = ref('')
     const dateTo = ref('')
-    const tallerFilter = ref('')
 
     // Paginación
     const currentPage = ref(1)
     const itemsPerPage = 10
-    const totalItems = ref(recepciones.value.length)
+    const totalItems = ref(0)
     const totalPages = computed(() => Math.ceil(filteredData.value.length / itemsPerPage))
 
     // Fechas límite
@@ -519,17 +322,12 @@ export default {
 
       // Filtrar por fecha desde
       if (dateFrom.value) {
-        result = result.filter(item => item.fechaRecepcion >= dateFrom.value)
+        result = result.filter(item => item.fecha_recepcion >= dateFrom.value)
       }
 
       // Filtrar por fecha hasta
       if (dateTo.value) {
-        result = result.filter(item => item.fechaRecepcion <= dateTo.value)
-      }
-
-      // Filtrar por taller
-      if (tallerFilter.value) {
-        result = result.filter(item => item.tallerRecepcion === tallerFilter.value)
+        result = result.filter(item => item.fecha_recepcion <= dateTo.value)
       }
 
       // Filtrar por búsqueda general
@@ -538,11 +336,12 @@ export default {
         result = result.filter(item => {
           return (
             item.id.toString().includes(search) ||
-            item.fechaRecepcion.toLowerCase().includes(search) ||
-            item.lugarRecepcion.toLowerCase().includes(search) ||
-            item.tallerRecepcion.toLowerCase().includes(search) ||
-            item.vehiculo.numeroControl.toLowerCase().includes(search) ||
-            item.vehiculo.nombre.toLowerCase().includes(search)
+            item.fecha_recepcion.toLowerCase().includes(search) ||
+            item.taller_recepcion.toLowerCase().includes(search) ||
+            item.numero_economico.toLowerCase().includes(search) ||
+            item.numero_serie.toLowerCase().includes(search) ||
+            item.cliente_nombre.toLowerCase().includes(search) ||
+            item.entregado_por.toLowerCase().includes(search)
           )
         })
       }
@@ -615,6 +414,46 @@ export default {
       currentPage.value = page
     }
 
+    // Cargar recepciones desde la API
+    const cargarRecepciones = async () => {
+      isLoading.value = true
+      error.value = null
+      
+      try {
+        // Cargar recepciones y vehículos en paralelo
+        const [recepcionResponse, vehiculosResponse] = await Promise.all([
+          apiClient.get('/recepcion'),
+          apiClient.get('/vehiculos')
+        ])
+        
+        const recepcionesData = recepcionResponse.data
+        const vehiculosData = vehiculosResponse.data
+        
+        // Combinar datos de recepción con datos de vehículos
+        recepciones.value = recepcionesData.map(recepcion => {
+          const vehiculo = vehiculosData.find(v => v.id === recepcion.vehiculo_id)
+          return {
+            ...recepcion,
+            marca: vehiculo?.marca || 'N/A',
+            modelo: vehiculo?.modelo || 'N/A',
+            año: vehiculo?.año || 'N/A'
+          }
+        })
+        
+        console.log('Recepciones con datos de vehículos:', recepciones.value)
+      } catch (err) {
+        error.value = 'Error al cargar las recepciones'
+        console.error('Error al cargar recepciones:', err)
+        toastStore.addToast({
+          message: 'Error al cargar las recepciones',
+          type: 'error',
+          duration: 5000
+        })
+      } finally {
+        isLoading.value = false
+      }
+    }
+
     // Acciones de la tabla
     const abrirModalNuevaRecepcion = () => {
       recepcionToEdit.value = null
@@ -629,10 +468,12 @@ export default {
     const editarRecepcion = (item) => {
       // Preparar el objeto para edición
       const recepcionForEdit = {
-        fechaRecepcion: item.fechaRecepcion,
-        lugarRecepcion: item.lugarRecepcion,
-        tallerRecepcion: item.tallerRecepcion,
-        vehiculo: item.vehiculo?.numeroControl || ''
+        id: item.id,
+        fecha_recepcion: item.fecha_recepcion,
+        kilometraje: item.kilometraje,
+        taller_recepcion: item.taller_recepcion,
+        entregado_por: item.entregado_por,
+        vehiculo_id: item.vehiculo_id
       }
       
       // Asignar datos al objeto de edición
@@ -642,74 +483,31 @@ export default {
       showRecepcionModal.value = true
     }
 
-    const eliminarRecepcion = (item) => {
-      // Aquí se puede implementar la eliminación
-      if (confirm(`¿Estás seguro de eliminar la recepción #${item.id}?`)) {
-        recepciones.value = recepciones.value.filter(recepcion => recepcion.id !== item.id)
-        
+    const handleRecepcionGuardada = async (nuevaRecepcion) => {
+      if (recepcionToEdit.value) {
+        // Actualizar recepción existente
+        const index = recepciones.value.findIndex(r => r.id === nuevaRecepcion.id)
+        if (index !== -1) {
+          recepciones.value[index] = nuevaRecepcion
+        }
         toastStore.addToast({
-          message: 'Recepción eliminada correctamente',
+          message: 'Recepción actualizada correctamente',
           type: 'success',
           duration: 3000
         })
-      }
-    }
-
-    const handleRecepcionGuardada = (nuevaRecepcion) => {
-      // Encontrar el vehículo seleccionado
-      const vehiculoSeleccionado = {
-        numeroControl: nuevaRecepcion.vehiculo,
-        nombre: nuevaRecepcion.nombreVehiculo || 'Vehículo sin especificar'
-      }
-      
-      // Verificar si es una edición o una nueva recepción
-      if (recepcionToEdit.value) {
-        // Edición: buscar la recepción existente por fecha, lugar y taller
-        const index = recepciones.value.findIndex(r => 
-          r.fechaRecepcion === recepcionToEdit.value.fechaRecepcion && 
-          r.lugarRecepcion === recepcionToEdit.value.lugarRecepcion &&
-          r.tallerRecepcion === recepcionToEdit.value.tallerRecepcion
-        );
-        
-        if (index !== -1) {
-          // Actualizar la recepción existente
-          recepciones.value[index] = {
-            ...recepciones.value[index],
-            fechaRecepcion: nuevaRecepcion.fechaRecepcion,
-            lugarRecepcion: nuevaRecepcion.lugarRecepcion,
-            tallerRecepcion: nuevaRecepcion.tallerRecepcion,
-            vehiculo: vehiculoSeleccionado
-          };
-          
-          toastStore.addToast({
-            message: 'Recepción actualizada correctamente',
-            type: 'success',
-            duration: 3000
-          });
-        }
       } else {
-        // Nueva recepción: crear un nuevo ID
-        const newId = recepciones.value.length > 0 ? Math.max(...recepciones.value.map(r => r.id)) + 1 : 1;
-        
-        // Agregar la nueva recepción
-        recepciones.value.push({
-          id: newId,
-          fechaRecepcion: nuevaRecepcion.fechaRecepcion,
-          lugarRecepcion: nuevaRecepcion.lugarRecepcion,
-          tallerRecepcion: nuevaRecepcion.tallerRecepcion,
-          vehiculo: vehiculoSeleccionado
-        });
-        
+        // Para recepciones nuevas, recargar la lista desde el servidor
+        await cargarRecepciones()
         toastStore.addToast({
           message: 'Recepción guardada correctamente',
           type: 'success',
           duration: 3000
-        });
+        })
       }
       
       // Limpiar y cerrar el modal
-      recepcionToEdit.value = null;
-      showRecepcionModal.value = false;
+      recepcionToEdit.value = null
+      showRecepcionModal.value = false
     }
 
     // Reset de filtros
@@ -717,13 +515,17 @@ export default {
       searchQuery.value = ''
       dateFrom.value = ''
       dateTo.value = ''
-      tallerFilter.value = ''
       currentPage.value = 1
     }
 
     // Watchers para filtros
-    watch([searchQuery, tallerFilter], () => {
+    watch([searchQuery], () => {
       currentPage.value = 1
+    })
+
+    // Cargar datos al montar el componente
+    onMounted(() => {
+      cargarRecepciones()
     })
 
     return {
@@ -733,7 +535,6 @@ export default {
       searchQuery,
       dateFrom,
       dateTo,
-      tallerFilter,
       currentPage,
       totalItems,
       totalPages,
@@ -753,9 +554,9 @@ export default {
       abrirModalNuevaRecepcion,
       verDetalles,
       editarRecepcion,
-      eliminarRecepcion,
       handleRecepcionGuardada,
-      resetFiltros
+      resetFiltros,
+      cargarRecepciones
     }
   }
 }

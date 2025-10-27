@@ -17,44 +17,51 @@
 						</div>
 						<div class="space-y-4">
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Nombre</label>
-								<input v-model="formData.nombre" class="input mb-2 w-full" placeholder="Nombre" />
-							</div>
-							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Teléfono</label>
-								<input v-model="formData.telefono" class="input mb-2 w-full" placeholder="Teléfono" />
-							</div>
-							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Domicilio</label>
-								<input v-model="formData.domicilio" class="input mb-2 w-full" placeholder="Domicilio" />
-							</div>
-							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Calle</label>
-								<input v-model="formData.calle" class="input mb-2 w-full" placeholder="Calle" />
-							</div>
-							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">No Exterior/interior</label>
-								<input v-model="formData.numeroExtInt" class="input mb-2 w-full" placeholder="No Exterior/interior" />
-							</div>
-							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Colonia</label>
-								<input v-model="formData.colonia" class="input mb-2 w-full" placeholder="Colonia" />
-							</div>
-							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">C.P. (Código Postal)</label>
-								<input v-model="formData.cp" class="input mb-2 w-full" placeholder="Código Postal" />
-							</div>
-							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Delegación/Municipio</label>
-								<input v-model="formData.delegacionMunicipio" class="input mb-2 w-full" placeholder="Delegación/Municipio" />
-							</div>
-							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Estado</label>
-								<input v-model="formData.estado" class="input mb-2 w-full" placeholder="Estado" />
+								<input 
+									v-model="formData.telefono" 
+									class="input mb-2 w-full" 
+									placeholder="Número de teléfono" 
+									maxlength="14"
+									@input="formatTelefono"
+								/>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Correo Electrónico</label>
-								<input v-model="formData.email" class="input mb-2 w-full" placeholder="Correo Electrónico" />
+								<input 
+									v-model="formData.correo" 
+									type="email" 
+									class="input mb-2 w-full" 
+									placeholder="Correo electrónico"
+									@input="formatCorreo('correo')"
+								/>
+							</div>
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">Responsable Automotriz</label>
+								<input v-model="formData.responsable_automotriz" class="input mb-2 w-full" placeholder="Nombre del responsable automotriz" />
+							</div>
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">Supervisor *</label>
+								<input v-model="formData.supervisor" class="input mb-2 w-full" placeholder="Nombre del supervisor" required />
+							</div>
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">Correo del Supervisor</label>
+								<input 
+									v-model="formData.correo_supervisor" 
+									type="email" 
+									class="input mb-2 w-full" 
+									placeholder="Correo electrónico del supervisor"
+									@input="formatCorreo('correo_supervisor')"
+								/>
+							</div>
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">COPE *</label>
+								<select v-model="formData.cope_id" class="input mb-2 w-full" required>
+									<option value="">Seleccione una COPE</option>
+									<option v-for="cope in copesWithDetails" :key="cope.id" :value="cope.id">
+										{{ cope.displayName }}
+									</option>
+								</select>
 							</div>
 						</div>
 					</div>
@@ -80,6 +87,7 @@
 import BaseButton from '../global/BaseButton.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
+import apiClient from '../../services/api.js';
 
 export default {
 	name: 'ClientesFormModal',
@@ -108,21 +116,22 @@ export default {
 	data() {
 		return {
 			formData: {
-				nombre: '',
 				telefono: '',
-				domicilio: '',
-				calle: '',
-				numeroExtInt: '',
-				colonia: '',
-				cp: '',
-				delegacionMunicipio: '',
-				estado: '',
-				email: ''
-			}
+				correo: '',
+				responsable_automotriz: '',
+				supervisor: '',
+				correo_supervisor: '',
+				cope_id: ''
+			},
+			copes: [],
+			areas: [],
+			divisiones: [],
+			copesWithDetails: [] // Para mostrar división-área-cope concatenado
 		};
 	},
 	created() {
 		this.loadClienteData();
+		this.loadCopesData();
 	},
 	watch: {
 		clienteData: {
@@ -141,49 +150,65 @@ export default {
 	},
 	computed: {
 		isStepValid() {
-			// Todos los campos requeridos deben estar completos
+			// Campos requeridos: supervisor y cope_id
 			return (
-				this.formData.nombre && this.formData.nombre.trim() !== '' &&
-				this.formData.telefono && this.formData.telefono.trim() !== '' &&
-				this.formData.domicilio && this.formData.domicilio.trim() !== '' &&
-				this.formData.calle && this.formData.calle.trim() !== '' &&
-				this.formData.numeroExtInt && this.formData.numeroExtInt.trim() !== '' &&
-				this.formData.colonia && this.formData.colonia.trim() !== '' &&
-				this.formData.cp && this.formData.cp.trim() !== '' &&
-				this.formData.delegacionMunicipio && this.formData.delegacionMunicipio.trim() !== '' &&
-				this.formData.estado && this.formData.estado.trim() !== '' &&
-				this.formData.email && this.formData.email.trim() !== ''
+				this.formData.supervisor && this.formData.supervisor.trim() !== '' &&
+				this.formData.cope_id && this.formData.cope_id !== ''
 			);
 		},
 		finalFormData() {
 			// Devuelve solo los datos relevantes
 			return {
-				nombre: this.formData.nombre,
-				telefono: this.formData.telefono,
-				domicilio: this.formData.domicilio,
-				calle: this.formData.calle,
-				numeroExtInt: this.formData.numeroExtInt,
-				colonia: this.formData.colonia,
-				cp: this.formData.cp,
-				delegacionMunicipio: this.formData.delegacionMunicipio,
-				estado: this.formData.estado,
-				email: this.formData.email
+				telefono: this.formData.telefono || null,
+				correo: this.formData.correo || null,
+				responsable_automotriz: this.formData.responsable_automotriz || null,
+				supervisor: this.formData.supervisor,
+				correo_supervisor: this.formData.correo_supervisor || null,
+				cope_id: parseInt(this.formData.cope_id)
 			};
 		}
 	},
 	methods: {
+		async loadCopesData() {
+			try {
+				// Cargar copes, áreas y divisiones
+				const [copesResponse, areasResponse, divisionesResponse] = await Promise.all([
+					apiClient.get('/copes'),
+					apiClient.get('/areas'),
+					apiClient.get('/divisiones')
+				]);
+
+				this.copes = copesResponse.data;
+				this.areas = areasResponse.data;
+				this.divisiones = divisionesResponse.data;
+
+				// Crear array con información concatenada
+				this.copesWithDetails = this.copes.map(cope => {
+					const area = this.areas.find(a => a.id === cope.area_id);
+					const division = area ? this.divisiones.find(d => d.id === area.division_id) : null;
+					
+					return {
+						...cope,
+						displayName: `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}`
+					};
+				});
+			} catch (error) {
+				console.error('Error al cargar datos:', error);
+				this.toastStore.addToast({
+					message: 'Error al cargar los datos de COPEs',
+					type: 'error',
+					duration: 5000
+				});
+			}
+		},
 		loadClienteData() {
 			if (!this.clienteData || Object.keys(this.clienteData).length === 0) return;
-			this.formData.nombre = this.clienteData.nombre || '';
 			this.formData.telefono = this.clienteData.telefono || '';
-			this.formData.domicilio = this.clienteData.domicilio || '';
-			this.formData.calle = this.clienteData.calle || '';
-			this.formData.numeroExtInt = this.clienteData.numeroExtInt || '';
-			this.formData.colonia = this.clienteData.colonia || '';
-			this.formData.cp = this.clienteData.cp || '';
-			this.formData.delegacionMunicipio = this.clienteData.delegacionMunicipio || '';
-			this.formData.estado = this.clienteData.estado || '';
-			this.formData.email = this.clienteData.email || '';
+			this.formData.correo = this.clienteData.correo || '';
+			this.formData.responsable_automotriz = this.clienteData.responsable_automotriz || '';
+			this.formData.supervisor = this.clienteData.supervisor || '';
+			this.formData.correo_supervisor = this.clienteData.correo_supervisor || '';
+			this.formData.cope_id = this.clienteData.cope_id || '';
 		},
 			async handleFinalSubmit() {
 				if (!this.isStepValid) return;
@@ -191,53 +216,113 @@ export default {
 					await this.saveCurrentStepData();
 					
 					// Preparar los datos del cliente para emitir
-					const nuevoCliente = {
-						id: Date.now().toString(), // Generamos un ID único basado en timestamp
-						nombre: this.formData.nombre,
+					const clienteGuardado = {
+						id: this.clienteData?.id || null,
 						...this.finalFormData
 					};
 					
 					// Emitir el evento con los datos del cliente
-					this.$emit('cliente-guardado', nuevoCliente);
+					this.$emit('cliente-guardado', clienteGuardado);
 					
 					this.toastStore.addToast({
-						message: 'Datos del cliente guardados correctamente',
+						message: `Cliente ${this.clienteData?.id ? 'actualizado' : 'creado'} correctamente`,
 						type: 'success',
 						duration: 3500
 					});
 					
 					this.$emit('close');
 					this.resetForm();
-					console.log('Datos del cliente enviados:', JSON.stringify(nuevoCliente, null, 2));
+					console.log('Datos del cliente enviados:', JSON.stringify(clienteGuardado, null, 2));
 				} catch (error) {
 					console.error('Error al guardar datos:', error);
-					this.toastStore.addToast({
-						message: 'Error al guardar los datos. Por favor, intente nuevamente.',
-						type: 'error',
-						duration: 5000
-					});
+					
+					// Manejar errores específicos del servidor
+					if (error.response?.data?.error) {
+						const serverErrors = error.response.data.error;
+						let errorMessage = 'Error de validación:';
+						
+						if (typeof serverErrors === 'object') {
+							Object.keys(serverErrors).forEach(field => {
+								errorMessage += `\n${field}: ${serverErrors[field][0]}`;
+							});
+						} else if (typeof serverErrors === 'string') {
+							errorMessage = serverErrors;
+						}
+						
+						this.toastStore.addToast({
+							message: errorMessage,
+							type: 'error',
+							duration: 7000
+						});
+					} else {
+						this.toastStore.addToast({
+							message: 'Error al guardar los datos. Por favor, intente nuevamente.',
+							type: 'error',
+							duration: 5000
+						});
+					}
 				}
 			},
 
 			resetForm() {
 				this.formData = {
-					nombre: '',
 					telefono: '',
-					domicilio: '',
-					calle: '',
-					numeroExtInt: '',
-					colonia: '',
-					cp: '',
-					delegacionMunicipio: '',
-					estado: '',
-					email: ''
+					correo: '',
+					responsable_automotriz: '',
+					supervisor: '',
+					correo_supervisor: '',
+					cope_id: ''
 				};
 			},
+		formatTelefono(event) {
+			// Obtener el valor actual
+			let value = event.target.value;
+			
+			// Remover todos los caracteres excepto números y el símbolo +
+			value = value.replace(/[^0-9+]/g, '');
+			
+			// Asegurar que el + solo esté al inicio
+			if (value.includes('+')) {
+				const plusCount = (value.match(/\+/g) || []).length;
+				if (plusCount > 1) {
+					// Si hay múltiples +, mantener solo el primero
+					value = '+' + value.replace(/\+/g, '');
+				}
+				// Si el + no está al inicio, moverlo al inicio
+				if (value.indexOf('+') !== 0) {
+					value = '+' + value.replace(/\+/g, '');
+				}
+			}
+			
+			// Limitar a 14 caracteres
+			if (value.length > 14) {
+				value = value.substring(0, 14);
+			}
+			
+			// Actualizar el valor
+			this.formData.telefono = value;
+			event.target.value = value;
+		},
+		formatCorreo(field) {
+			// Convertir a minúsculas
+			if (this.formData[field]) {
+				this.formData[field] = this.formData[field].toLowerCase();
+			}
+		},
 		async saveCurrentStepData() {
-			// Simular guardado de datos
 			console.log('Guardando datos del cliente...');
 			console.log('Datos actuales:', JSON.stringify(this.finalFormData, null, 2));
-			await new Promise(resolve => setTimeout(resolve, 500));
+			
+			if (this.clienteData?.id) {
+				// Actualizar cliente existente
+				const response = await apiClient.put(`/clientes/${this.clienteData.id}`, this.finalFormData);
+				console.log('Cliente actualizado:', response.data);
+			} else {
+				// Crear nuevo cliente
+				const response = await apiClient.post('/clientes', this.finalFormData);
+				console.log('Cliente creado:', response.data);
+			}
+			
 			console.log('Datos del cliente guardados correctamente');
 		}
 	}

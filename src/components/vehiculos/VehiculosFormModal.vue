@@ -18,37 +18,76 @@
 						<div class="space-y-4">
 								<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 									<label class="block mb-2 font-semibold text-gray-700">Cliente</label>
-									<select v-model="formData.cliente" class="input mb-2 w-full">
+									<select v-model="formData.cliente_id" class="input mb-2 w-full">
 										<option value="">Selecciona un cliente</option>
 										<option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
-											{{ cliente.nombre }}
+                  							{{ cliente.responsable_automotriz }} - {{ cliente.supervisor }}
 										</option>
 									</select>
 									<!-- Eliminado botón de registrar cliente -->
 								</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Marca</label>
-								<input v-model="formData.marca" class="input mb-2 w-full" placeholder="Marca" />
+								<select v-model="formData.marca" class="input mb-2 w-full">
+									<option value="">Selecciona una marca</option>
+									<option v-for="marca in marcas" :key="marca" :value="marca">
+										{{ marca }}
+									</option>
+								</select>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Tipo/Versión</label>
-								<input v-model="formData.tipoVersion" class="input mb-2 w-full" placeholder="Tipo/Versión" />
+								<label class="block mb-2 font-semibold text-gray-700">Modelo</label>
+								<input 
+									v-model="formData.modelo" 
+									@input="formatModelo"
+									class="input mb-2 w-full" 
+									placeholder="Modelo" 
+									maxlength="30"
+								/>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Color</label>
-								<input v-model="formData.color" class="input mb-2 w-full" placeholder="Color" />
+								<label class="block mb-2 font-semibold text-gray-700">Placas</label>
+								<input 
+									v-model="formData.placas" 
+									@input="formatPlacas"
+									class="input mb-2 w-full" 
+									placeholder="Placas" 
+									maxlength="12"
+								/>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Año/Modelo</label>
-								<input v-model="formData.anioModelo" class="input mb-2 w-full" placeholder="Año/Modelo" />
+								<label class="block mb-2 font-semibold text-gray-700">Año</label>
+								<select v-model="formData.año" class="input mb-2 w-full">
+									<option value="">Selecciona un año</option>
+									<option v-for="año in años" :key="año" :value="año">
+										{{ año }}
+									</option>
+								</select>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Número de Serie</label>
-								<input v-model="formData.numeroSerie" class="input mb-2 w-full" placeholder="Número de Serie" />
+								<label class="block mb-2 font-semibold text-gray-700">VIN</label>
+								<input 
+									v-model="formData.numero_serie" 
+									@input="formatNumeroSerie"
+									class="input mb-2 w-full" 
+									placeholder="VIN - 17 caracteres alfanuméricos" 
+									pattern="[A-Za-z0-9]{17}"
+									title="Debe contener exactamente 17 caracteres alfanuméricos, sin espacios"
+									maxlength="17"
+								/>
+								<div class="text-xs text-gray-500 mt-1">
+									{{ formData.numero_serie.length }}/17 caracteres
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Número Económico</label>
-								<input v-model="formData.numeroEconomico" class="input mb-2 w-full" placeholder="Número Económico" />
+								<input 
+									v-model="formData.numero_economico" 
+									@input="formatNumeroEconomico"
+									class="input mb-2 w-full" 
+									placeholder="Número Económico" 
+									maxlength="30"
+								/>
 							</div>
 						</div>
 					</div>
@@ -76,6 +115,7 @@ import BaseButton from '../global/BaseButton.vue';
 import ClientesFormModal from '../clientes/ClientesFormModal.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
+import apiClient from '../../services/api.js';
 
 export default {
 	name: 'VehiculosFormModal',
@@ -105,24 +145,26 @@ export default {
 	data() {
 		return {
 					formData: {
-						cliente: '',
+						cliente_id: '',
 						marca: '',
-						tipoVersion: '',
-						color: '',
-						anioModelo: '',
-						numeroSerie: '',
-						numeroEconomico: ''
+						modelo: '',
+						placas: '',
+						año: '',
+						numero_serie: '',
+						numero_economico: ''
 					},
-								clientes: [
-									{ id: '1', nombre: 'Juan Pérez' },
-									{ id: '2', nombre: 'María López' },
-									{ id: '3', nombre: 'Carlos Sánchez' },
-									{ id: '4', nombre: 'Ana Torres' }
-								]
+								clientes: [],
+								marcas: [
+									'Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan', 'Hyundai', 'Kia',
+									'Volkswagen', 'Jeep', 'Dodge'
+								],
+								años: []
 		};
 	},
 	created() {
 		this.loadVehiculoData();
+		this.loadClientes();
+		this.generateYears();
 	},
 	watch: {
 		vehiculoData: {
@@ -143,37 +185,114 @@ export default {
 			isStepValid() {
 				// Todos los campos requeridos deben estar completos
 				return (
-					this.formData.cliente && this.formData.cliente !== '' &&
+					this.formData.cliente_id && this.formData.cliente_id !== '' &&
 					this.formData.marca && this.formData.marca.trim() !== '' &&
-					this.formData.tipoVersion && this.formData.tipoVersion.trim() !== '' &&
-					this.formData.color && this.formData.color.trim() !== '' &&
-					this.formData.anioModelo && this.formData.anioModelo.trim() !== '' &&
-					this.formData.numeroSerie && this.formData.numeroSerie.trim() !== '' &&
-					this.formData.numeroEconomico && this.formData.numeroEconomico.trim() !== ''
+					this.formData.modelo && this.formData.modelo.trim() !== '' &&
+					this.formData.placas && this.formData.placas.trim() !== '' &&
+					this.formData.año && this.formData.año !== '' &&
+					this.formData.numero_serie && this.formData.numero_serie.trim() !== '' && this.formData.numero_serie.length === 17 &&
+					this.formData.numero_economico && this.formData.numero_economico.trim() !== ''
 				);
 			},
 			finalFormData() {
 				// Devuelve solo los datos relevantes
 				return {
-					cliente: this.formData.cliente,
+					cliente_id: parseInt(this.formData.cliente_id),
 					marca: this.formData.marca,
-					tipoVersion: this.formData.tipoVersion,
-					color: this.formData.color,
-					anioModelo: this.formData.anioModelo,
-					numeroSerie: this.formData.numeroSerie,
-					numeroEconomico: this.formData.numeroEconomico
+					modelo: this.formData.modelo,
+					placas: this.formData.placas,
+					año: parseInt(this.formData.año),
+					numero_serie: this.formData.numero_serie,
+					numero_economico: this.formData.numero_economico
 				};
 			}
 	},
 	methods: {
+		generateYears() {
+			const currentYear = new Date().getFullYear();
+			for (let year = 2000; year <= currentYear; year++) {
+				this.años.push(year);
+			}
+		},
+		validatePlacas(value) {
+			// Máximo 12 caracteres
+			if (value.length > 12) {
+				return false;
+			}
+			return true;
+		},
+		validateModelo(value) {
+			// Máximo 30 caracteres
+			if (value.length > 30) {
+				return false;
+			}
+			return true;
+		},
+		validateNumeroEconomico(value) {
+			// Máximo 30 caracteres
+			if (value.length > 30) {
+				return false;
+			}
+			return true;
+		},
+		validateNumeroSerie(value) {
+			// Exactamente 17 caracteres alfanuméricos, sin espacios
+			const regex = /^[A-Za-z0-9]{17}$/;
+			return regex.test(value);
+		},
+		formatPlacas(event) {
+			const value = event.target.value;
+			if (value.length <= 12) {
+				this.formData.placas = value;
+			} else {
+				event.target.value = this.formData.placas;
+			}
+		},
+		formatModelo(event) {
+			const value = event.target.value;
+			if (value.length <= 30) {
+				this.formData.modelo = value;
+			} else {
+				event.target.value = this.formData.modelo;
+			}
+		},
+		formatNumeroEconomico(event) {
+			const value = event.target.value;
+			if (value.length <= 30) {
+				this.formData.numero_economico = value;
+			} else {
+				event.target.value = this.formData.numero_economico;
+			}
+		},
+		formatNumeroSerie(event) {
+			const value = event.target.value;
+			// Remover espacios y caracteres especiales, máximo 17 caracteres
+			const cleanValue = value.replace(/[^A-Za-z0-9]/g, '').substring(0, 17);
+			this.formData.numero_serie = cleanValue;
+			event.target.value = cleanValue;
+		},
 		loadVehiculoData() {
 			if (!this.vehiculoData || Object.keys(this.vehiculoData).length === 0) return;
 			this.formData.marca = this.vehiculoData.marca || '';
-			this.formData.tipoVersion = this.vehiculoData.tipoVersion || '';
-			this.formData.color = this.vehiculoData.color || '';
-			this.formData.anioModelo = this.vehiculoData.anioModelo || '';
-			this.formData.numeroSerie = this.vehiculoData.numeroSerie || '';
-			this.formData.numeroEconomico = this.vehiculoData.numeroEconomico || '';
+			this.formData.modelo = this.vehiculoData.modelo || '';
+			this.formData.placas = this.vehiculoData.placas || '';
+			this.formData.año = this.vehiculoData.año || '';
+			this.formData.numero_serie = this.vehiculoData.numero_serie || '';
+			this.formData.numero_economico = this.vehiculoData.numero_economico || '';
+			this.formData.cliente_id = this.vehiculoData.cliente_id || '';
+		},
+		async loadClientes() {
+			try {
+				const response = await apiClient.get('/clientes');
+				this.clientes = response.data;
+			} catch (error) {
+				console.error('Error al cargar clientes:', error);
+				this.toastStore.addToast({
+					message: 'Error al cargar la lista de clientes',
+					type: 'error',
+					duration: 5000
+				});
+			}
 		},
 			async handleFinalSubmit() {
 				if (!this.isStepValid) return;
@@ -181,50 +300,81 @@ export default {
 					await this.saveCurrentStepData();
 					
 					// Preparar los datos del vehículo para emitir
-					const nuevoVehiculo = {
-						numeroControl: this.formData.numeroSerie, // Usando numeroSerie como numeroControl
-						nombre: `${this.formData.marca} ${this.formData.tipoVersion}`,
+					const vehiculoGuardado = {
+						id: this.vehiculoData?.id || null,
 						...this.finalFormData
 					};
 					
 					// Emitir el evento con los datos del vehículo
-					this.$emit('vehiculo-guardado', nuevoVehiculo);
+					this.$emit('vehiculo-guardado', vehiculoGuardado);
 					
 					this.toastStore.addToast({
-						message: 'Datos del vehículo guardados correctamente',
+						message: `Vehículo ${this.vehiculoData?.id ? 'actualizado' : 'creado'} correctamente`,
 						type: 'success',
 						duration: 3500
 					});
 					
 					this.$emit('close');
 					this.resetForm();
-					console.log('Datos del vehículo enviados:', JSON.stringify(nuevoVehiculo, null, 2));
+					console.log('Datos del vehículo enviados:', JSON.stringify(vehiculoGuardado, null, 2));
 				} catch (error) {
 					console.error('Error al guardar datos:', error);
-					this.toastStore.addToast({
-						message: 'Error al guardar los datos. Por favor, intente nuevamente.',
-						type: 'error',
-						duration: 5000
-					});
+					
+					// Manejar errores específicos del servidor
+					if (error.response?.data?.error) {
+						const serverErrors = error.response.data.error;
+						let errorMessage = 'Error de validación:';
+						
+						if (typeof serverErrors === 'object') {
+							Object.keys(serverErrors).forEach(field => {
+								if (serverErrors[field] && Array.isArray(serverErrors[field])) {
+									errorMessage += `\n${field}: ${serverErrors[field][0]}`;
+								}
+							});
+						} else if (typeof serverErrors === 'string') {
+							errorMessage = serverErrors;
+						}
+						
+						this.toastStore.addToast({
+							message: errorMessage,
+							type: 'error',
+							duration: 7000
+						});
+					} else {
+						this.toastStore.addToast({
+							message: 'Error al guardar los datos. Por favor, intente nuevamente.',
+							type: 'error',
+							duration: 5000
+						});
+					}
 				}
 			},
 
 			resetForm() {
 				this.formData = {
-					cliente: '',
+					cliente_id: '',
 					marca: '',
-					tipoVersion: '',
-					color: '',
-					anioModelo: '',
-					numeroSerie: '',
-					numeroEconomico: ''
+					modelo: '',
+					placas: '',
+					año: '',
+					numero_serie: '',
+					numero_economico: ''
 				};
 			},
 		async saveCurrentStepData() {
-			// Simular guardado de datos
 			console.log('Guardando datos del vehículo...');
 			console.log('Datos actuales:', JSON.stringify(this.finalFormData, null, 2));
-			await new Promise(resolve => setTimeout(resolve, 500));
+			
+			if (this.vehiculoData?.id) {
+				// Actualizar vehículo existente
+				const response = await apiClient.put(`/vehiculos/${this.vehiculoData.id}`, this.finalFormData);
+				console.log('Vehículo actualizado:', response.data);
+			} else {
+				// Crear nuevo vehículo
+				const response = await apiClient.post('/vehiculos', this.finalFormData);
+				console.log('Vehículo creado:', response.data);
+			}
+			
 			console.log('Datos del vehículo guardados correctamente');
 		},
 		// Eliminados métodos de cliente

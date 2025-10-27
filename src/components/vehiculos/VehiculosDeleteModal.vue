@@ -34,13 +34,13 @@
             </div>
             <div class="ml-3">
               <div class="text-sm font-medium text-gray-900">
-                {{ vehiculo.marca }} {{ vehiculo.tipoVersion }}
+                {{ vehiculo.marca }} {{ vehiculo.modelo }}
               </div>
               <div class="text-sm text-gray-500">
-                Placa: {{ vehiculo.numeroEconomico }}
+                Número Económico: {{ vehiculo.numero_economico }}
               </div>
               <div class="text-sm text-gray-500">
-                Cliente: {{ vehiculo.cliente }}
+                Cliente: {{ vehiculo.cliente_nombre }}
               </div>
             </div>
           </div>
@@ -87,6 +87,7 @@
 import BaseButton from '../global/BaseButton.vue'
 import { useSubmitButton } from '../../composables/useSubmitButton.js'
 import { useToastStore } from '../../stores/toast.js'
+import apiClient from '../../services/api.js'
 
 export default {
   name: 'VehiculosDeleteModal',
@@ -113,8 +114,8 @@ export default {
       
       try {
         await executeSubmit(async () => {
-          // Simular delay de eliminación (en lugar de llamada a API)
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // Llamar a la API para eliminar el vehículo
+          await apiClient.delete(`/vehiculos/${props.vehiculo.id}`);
           
           console.log('Vehículo eliminado:', props.vehiculo);
           
@@ -124,11 +125,26 @@ export default {
       } catch (error) {
         console.error('Error al eliminar vehículo:', error);
         
-        toastStore.addToast({
-          message: 'Error al eliminar el vehículo. Por favor, intente nuevamente.',
-          type: 'error',
-          duration: 5000
-        });
+        // Manejar errores específicos
+        if (error.response?.status === 404) {
+          toastStore.addToast({
+            message: 'El vehículo no fue encontrado',
+            type: 'error',
+            duration: 5000
+          });
+        } else if (error.response?.data?.error) {
+          toastStore.addToast({
+            message: error.response.data.error,
+            type: 'error',
+            duration: 5000
+          });
+        } else {
+          toastStore.addToast({
+            message: 'Error al eliminar el vehículo. Por favor, intente nuevamente.',
+            type: 'error',
+            duration: 5000
+          });
+        }
       }
     };
 

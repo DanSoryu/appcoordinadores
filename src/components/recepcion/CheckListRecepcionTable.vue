@@ -119,26 +119,18 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
-                  <!-- Botón Ver - Siempre visible -->
+                  <!-- Botón Ver - Solo cuando está completado -->
                   <button 
+                    v-if="isCompleted(item)"
                     @click="verDetalles(item)"
                     class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     Ver
                   </button>
                   
-                  <!-- Botón Editar - Solo para admin cuando está completado -->
+                  <!-- Botón Completar - Solo cuando está pendiente -->
                   <button 
-                    v-if="shouldShowEditButton(item)"
-                    @click="$emit('abrir-checklist-modal', item)"
-                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                  >
-                    Editar
-                  </button>
-                  
-                  <!-- Botón Completar - Solo cuando no está completado -->
-                  <button 
-                    v-if="shouldShowCompleteButton(item)"
+                    v-if="!isCompleted(item)"
                     @click="$emit('abrir-checklist-modal', item)"
                     :disabled="!canCompleteChecklist(item)"
                     :title="!canCompleteChecklist(item) ? 'Debe completar primero el checklist más antiguo pendiente' : 'Completar checklist'"
@@ -252,149 +244,547 @@
         
         <!-- Contenido del modal -->
         <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 80px);">
-          <div v-if="currentChecklistItem" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">ID</p>
-                <p class="font-semibold">{{ currentChecklistItem.id }}</p>
-              </div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">Estado</p>
-                <p class="font-semibold">{{ isCompleted(currentChecklistItem) ? 'Completado' : 'Pendiente' }}</p>
-              </div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">Cantidad de Llaves</p>
-                <p class="font-semibold">{{ currentChecklistItem.cantidadLlaves || 'No especificado' }}</p>
-              </div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">Tarjeta de Circulación</p>
-                <p class="font-semibold">{{ currentChecklistItem.tarjetaCirculacion ? 'SI' : 'NO' }}</p>
-              </div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">Póliza de Seguro</p>
-                <p class="font-semibold">{{ currentChecklistItem.polizaSeguro ? 'SI' : 'NO' }}</p>
-              </div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">Nivel de Combustible</p>
-                <p class="font-semibold">{{ currentChecklistItem.nivelCombustible || 'No especificado' }}</p>
-              </div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">Estereo</p>
-                <p class="font-semibold">{{ currentChecklistItem.estereo !== null ? (currentChecklistItem.estereo ? 'SI' : 'NO') : 'No especificado' }}</p>
-              </div>
-              <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">Cantidad de Bocinas</p>
-                <p class="font-semibold">{{ currentChecklistItem.cantidadBocinas || 'No especificado' }}</p>
+          <div v-if="currentChecklistItem" class="space-y-6">
+            
+            <!-- Información General -->
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-blue-800 mb-3">Información General</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">ID</p>
+                  <p class="font-semibold">{{ currentChecklistItem.id }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Estado</p>
+                  <span :class="[
+                    'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                    isCompleted(currentChecklistItem) ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  ]">
+                    {{ isCompleted(currentChecklistItem) ? 'Completado' : 'Pendiente' }}
+                  </span>
+                </div>
               </div>
             </div>
-            
-            <div class="mt-4" v-if="currentChecklistItem.descripcionAccesorios">
-              <p class="text-sm font-medium text-gray-500">Descripción de Accesorios</p>
-              <p class="mt-1 text-gray-800">{{ currentChecklistItem.descripcionAccesorios }}</p>
-            </div>
-            
-            <div class="mt-4" v-if="currentChecklistItem.comentarioGeneral">
-              <p class="text-sm font-medium text-gray-500">Comentarios Generales</p>
-              <p class="mt-1 text-gray-800">{{ currentChecklistItem.comentarioGeneral }}</p>
-            </div>
-            
-            <!-- Sección de Testigos Encendidos -->
-            <div class="mt-4" v-if="currentChecklistItem.testigosEncendidos && currentChecklistItem.testigosEncendidos.length > 0">
-              <p class="text-sm font-medium text-gray-500">Testigos Encendidos</p>
-              <div class="mt-1 flex flex-wrap gap-2">
-                <span 
-                  v-for="testigo in currentChecklistItem.testigosEncendidos" 
-                  :key="testigo"
-                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800"
-                >
-                  {{ testigo }}
-                </span>
+
+            <!-- Recepción - Llaves -->
+            <div class="bg-emerald-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-emerald-800 mb-3">Recepción - Llaves</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Cantidad de Llaves</p>
+                  <p class="font-semibold">{{ currentChecklistItem.cantidadLlaves || 'No especificado' }}</p>
+                </div>
               </div>
             </div>
-            
-            <!-- Sección de imágenes/archivos -->
-            <div class="mt-6">
-              <h4 class="text-lg font-bold text-gray-800 mb-3">Imágenes del Checklist</h4>
-              <div class="bg-gray-50 p-4 rounded-lg">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <!-- Póliza de Seguro -->
-                  <div v-if="currentChecklistItem.polizaSeguroImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Póliza de Seguro</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.polizaSeguroImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
-                  
-                  <!-- Accesorios y Herramientas -->
-                  <div v-if="currentChecklistItem.accesoriosHerramientaImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Accesorios y Herramientas</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.accesoriosHerramientaImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
-                  
-                  <!-- Odómetro -->
-                  <div v-if="currentChecklistItem.odometroImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Odómetro</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.odometroImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
-                  
-                  <!-- Combustible -->
-                  <div v-if="currentChecklistItem.combustibleImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Combustible</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.combustibleImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
-                  
-                  <!-- Testigos -->
-                  <div v-if="currentChecklistItem.testigosImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Testigos</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.testigosImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
-                  
-                  <!-- Seguros -->
-                  <div v-if="currentChecklistItem.segurosImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Seguros</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.segurosImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
-                  
-                  <!-- Cristales -->
-                  <div v-if="currentChecklistItem.cristalesImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Cristales</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.cristalesImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
-                  
-                  <!-- Vestiduras -->
-                  <div v-if="currentChecklistItem.vestidurasImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Vestiduras</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.vestidurasImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
-                  
-                  <!-- Cabeceras -->
-                  <div v-if="currentChecklistItem.cabecerasImagen" class="space-y-2">
-                    <p class="text-sm font-medium text-gray-500">Cabeceras</p>
-                    <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" @click="verArchivo(currentChecklistItem.cabecerasImagen)">
-                      Ver Imagen
-                    </button>
-                  </div>
+
+            <!-- Documentos -->
+            <div class="bg-sky-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-sky-800 mb-3">Documentos</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Tarjeta de Circulación</p>
+                  <p class="font-semibold">{{ currentChecklistItem.tarjetaCirculacion ? 'SI' : 'NO' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Póliza de Seguro</p>
+                  <p class="font-semibold">{{ currentChecklistItem.polizaSeguro ? 'SI' : 'NO' }}</p>
+                </div>
+              </div>
+              
+              <!-- Póliza de Seguro Imagen -->
+              <div v-if="currentChecklistItem.polizaSeguroImagen" class="mt-4">
+                <p class="text-sm font-medium text-gray-500 mb-2">Imagen Póliza de Seguro</p>
+                <a :href="getImageUrl(currentChecklistItem.polizaSeguroImagen)" target="_blank" class="block">
+                  <img :src="getImageUrl(currentChecklistItem.polizaSeguroImagen)" 
+                       alt="Póliza de Seguro" 
+                       class="w-32 h-24 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                </a>
+              </div>
+            </div>
+
+            <!-- Accesorios/Herramienta -->
+            <div class="bg-green-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-green-800 mb-3">Accesorios/Herramienta</h4>
+              
+              <!-- Descripción de Accesorios -->
+              <div v-if="currentChecklistItem.descripcionAccesorios" class="mb-4">
+                <p class="text-sm font-medium text-gray-500">Descripción de Accesorios</p>
+                <p class="mt-1 text-gray-800 bg-white p-2 rounded border">{{ currentChecklistItem.descripcionAccesorios }}</p>
+              </div>
+              
+              <!-- Accesorios Imagen -->
+              <div v-if="currentChecklistItem.accesoriosHerramientaImagen">
+                <p class="text-sm font-medium text-gray-500 mb-2">Imagen Accesorios y Herramientas</p>
+                <a :href="getImageUrl(currentChecklistItem.accesoriosHerramientaImagen)" target="_blank" class="block">
+                  <img :src="getImageUrl(currentChecklistItem.accesoriosHerramientaImagen)" 
+                       alt="Accesorios y Herramientas" 
+                       class="w-32 h-24 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                </a>
+              </div>
+            </div>
+
+            <!-- Cluster -->
+            <div class="bg-yellow-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-yellow-800 mb-3">Cluster</h4>
+              
+              <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Nivel de Combustible</p>
+                  <p class="font-semibold">{{ currentChecklistItem.nivelCombustible || 'No especificado' }}</p>
+                </div>
+              </div>
+              
+              <!-- Odómetro y Combustible -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div v-if="currentChecklistItem.odometroImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Odómetro</p>
+                  <a :href="getImageUrl(currentChecklistItem.odometroImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.odometroImagen)" 
+                         alt="Odómetro" 
+                         class="w-32 h-24 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
                 </div>
                 
-                <!-- Mostrar mensaje si no hay imágenes -->
-                <div v-if="!hasAnyImages(currentChecklistItem)" class="text-center py-4 text-gray-500">
-                  No hay imágenes disponibles para este checklist.
+                <div v-if="currentChecklistItem.combustibleImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Combustible</p>
+                  <a :href="getImageUrl(currentChecklistItem.combustibleImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.combustibleImagen)" 
+                         alt="Combustible" 
+                         class="w-32 h-24 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
                 </div>
               </div>
+              
+              <!-- Testigos Encendidos -->
+              <div v-if="currentChecklistItem.testigosEncendidos && currentChecklistItem.testigosEncendidos.length > 0" class="mb-4">
+                <p class="text-sm font-medium text-gray-500 mb-2">Testigos Encendidos</p>
+                <div class="flex flex-wrap gap-2">
+                  <span 
+                    v-for="testigo in currentChecklistItem.testigosEncendidos" 
+                    :key="testigo"
+                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800"
+                  >
+                    {{ testigo }}
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Testigos Imagen -->
+              <div v-if="currentChecklistItem.testigosImagen">
+                <p class="text-sm font-medium text-gray-500 mb-2">Imagen Testigos</p>
+                <a :href="getImageUrl(currentChecklistItem.testigosImagen)" target="_blank" class="block">
+                  <img :src="getImageUrl(currentChecklistItem.testigosImagen)" 
+                       alt="Testigos" 
+                       class="w-32 h-24 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                </a>
+              </div>
+            </div>
+
+            <!-- Tablero -->
+            <div class="bg-amber-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-amber-800 mb-3">Tablero</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Estereo</p>
+                  <p class="font-semibold">{{ currentChecklistItem.estereo !== null ? (currentChecklistItem.estereo ? 'SI' : 'NO') : 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Cantidad de Bocinas</p>
+                  <p class="font-semibold">{{ currentChecklistItem.cantidadBocinas || 'No especificado' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Puertas -->
+            <div class="bg-teal-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-teal-800 mb-3">Puertas</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Manijas</p>
+                  <p class="font-semibold">{{ currentChecklistItem.manijas !== null ? (currentChecklistItem.manijas ? 'SI' : 'NO') : 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Estado Seguros</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.estadoSeguros?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Estado Cristales de Puertas</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.estadoCristales?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+              </div>
+              
+              <!-- Imágenes de Puertas -->
+              <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
+                <div v-if="currentChecklistItem.segurosImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Seguros</p>
+                  <a :href="getImageUrl(currentChecklistItem.segurosImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.segurosImagen)" 
+                         alt="Seguros" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.cristalesImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Cristales de Puertas</p>
+                  <a :href="getImageUrl(currentChecklistItem.cristalesImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.cristalesImagen)" 
+                         alt="Cristales de Puertas" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Asientos -->
+            <div class="bg-purple-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-purple-800 mb-3">Asientos</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Estado Vestiduras</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.estadoVestiduras?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Estado Cabeceras</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.estadoCabeceras?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+              </div>
+              
+              <!-- Imágenes de Asientos -->
+              <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
+                <div v-if="currentChecklistItem.vestidurasImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Vestiduras</p>
+                  <a :href="getImageUrl(currentChecklistItem.vestidurasImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.vestidurasImagen)" 
+                         alt="Vestiduras" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.cabecerasImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Cabeceras</p>
+                  <a :href="getImageUrl(currentChecklistItem.cabecerasImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.cabecerasImagen)" 
+                         alt="Cabeceras" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cinturones de Seguridad -->
+            <div class="bg-rose-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-rose-800 mb-3">Cinturones de Seguridad</h4>
+              <div class="grid grid-cols-1 gap-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Funcionalidad Cinturones</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.funcionalidadCinturones?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Carrocería -->
+            <div class="bg-red-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-red-800 mb-3">Carrocería</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Lado Derecho</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.carroceriaLadoDerecho?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Lado Izquierdo</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.carroceriaLadoIzquierdo?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Lado Trasero</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.carroceriaLadoTrasero?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Lado Frontal</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.carroceriaLadoFrontal?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+              </div>
+              
+              <!-- Imágenes de Carrocería -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div v-if="currentChecklistItem.carroceriaLadoDerechoImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Lado Derecho</p>
+                  <a :href="getImageUrl(currentChecklistItem.carroceriaLadoDerechoImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.carroceriaLadoDerechoImagen)" 
+                         alt="Carrocería Lado Derecho" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.carroceriaLadoIzquierdoImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Lado Izquierdo</p>
+                  <a :href="getImageUrl(currentChecklistItem.carroceriaLadoIzquierdoImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.carroceriaLadoIzquierdoImagen)" 
+                         alt="Carrocería Lado Izquierdo" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.carroceriaLadoTraseroImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Lado Trasero</p>
+                  <a :href="getImageUrl(currentChecklistItem.carroceriaLadoTraseroImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.carroceriaLadoTraseroImagen)" 
+                         alt="Carrocería Lado Trasero" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.carroceriaLadoFrontalImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Lado Frontal</p>
+                  <a :href="getImageUrl(currentChecklistItem.carroceriaLadoFrontalImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.carroceriaLadoFrontalImagen)" 
+                         alt="Carrocería Lado Frontal" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Neumáticos -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-gray-800 mb-3">Neumáticos</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Lado Piloto</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.neumaticosLadoPiloto?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Atrás Piloto</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.neumaticosLadoAtrasPiloto?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Lado Copiloto</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.neumaticosLadoCopiloto?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Atrás Copiloto</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.neumaticosLadoAtrasCopiloto?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+              </div>
+              
+              <!-- Imágenes de Neumáticos -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div v-if="currentChecklistItem.neumaticosLadoPilotoImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Lado Piloto</p>
+                  <a :href="getImageUrl(currentChecklistItem.neumaticosLadoPilotoImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.neumaticosLadoPilotoImagen)" 
+                         alt="Neumático Lado Piloto" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.neumaticosLadoAtrasPilotoImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Atrás Piloto</p>
+                  <a :href="getImageUrl(currentChecklistItem.neumaticosLadoAtrasPilotoImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.neumaticosLadoAtrasPilotoImagen)" 
+                         alt="Neumático Atrás Piloto" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.neumaticosLadoCopilotoImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Lado Copiloto</p>
+                  <a :href="getImageUrl(currentChecklistItem.neumaticosLadoCopilotoImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.neumaticosLadoCopilotoImagen)" 
+                         alt="Neumático Lado Copiloto" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.neumaticosLadoAtrasCopilotoImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Atrás Copiloto</p>
+                  <a :href="getImageUrl(currentChecklistItem.neumaticosLadoAtrasCopilotoImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.neumaticosLadoAtrasCopilotoImagen)" 
+                         alt="Neumático Atrás Copiloto" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cristales del Vehículo -->
+            <div class="bg-cyan-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-cyan-800 mb-3">Cristales del Vehículo</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Parabrisas</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.cristalesParabrisas?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Medallón Trasero</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.cristalesMedallonTrasero?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Limpiaparabrisas</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.cristalesLimpiadores?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+              </div>
+              
+              <!-- Imágenes de Cristales -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div v-if="currentChecklistItem.cristalesParabrisasImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Parabrisas</p>
+                  <a :href="getImageUrl(currentChecklistItem.cristalesParabrisasImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.cristalesParabrisasImagen)" 
+                         alt="Cristales Parabrisas" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.cristalesMedallonTraseroImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Medallón Trasero</p>
+                  <a :href="getImageUrl(currentChecklistItem.cristalesMedallonTraseroImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.cristalesMedallonTraseroImagen)" 
+                         alt="Cristales Medallón Trasero" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.cristalesLimpiadoresImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Limpiaparabrisas</p>
+                  <a :href="getImageUrl(currentChecklistItem.cristalesLimpiadoresImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.cristalesLimpiadoresImagen)" 
+                         alt="Cristales Limpiaparabrisas" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Motor -->
+            <div class="bg-orange-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-orange-800 mb-3">Motor</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Tapones</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.motorTapones?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Batería</p>
+                  <p class="font-semibold capitalize">{{ currentChecklistItem.motorBateria?.replace('_', ' ') || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Nivel de Aceite</p>
+                  <p class="font-semibold">{{ currentChecklistItem.motorNivelAceite || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Nivel Líquido Frenos</p>
+                  <p class="font-semibold">{{ currentChecklistItem.motorNivelLiquidoFrenos || 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Nivel Anticongelante</p>
+                  <p class="font-semibold">{{ currentChecklistItem.motorNivelAnticongelante || 'No especificado' }}</p>
+                </div>
+              </div>
+              
+              <!-- Imágenes del Motor -->
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div v-if="currentChecklistItem.motorTaponesImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Tapones</p>
+                  <a :href="getImageUrl(currentChecklistItem.motorTaponesImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.motorTaponesImagen)" 
+                         alt="Motor Tapones" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.motorBateriaImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Batería</p>
+                  <a :href="getImageUrl(currentChecklistItem.motorBateriaImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.motorBateriaImagen)" 
+                         alt="Motor Batería" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.motorNivelAceiteImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Nivel Aceite</p>
+                  <a :href="getImageUrl(currentChecklistItem.motorNivelAceiteImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.motorNivelAceiteImagen)" 
+                         alt="Motor Nivel Aceite" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.motorNivelLiquidoFrenosImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Líquido Frenos</p>
+                  <a :href="getImageUrl(currentChecklistItem.motorNivelLiquidoFrenosImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.motorNivelLiquidoFrenosImagen)" 
+                         alt="Motor Nivel Líquido Frenos" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.motorNivelAnticongelanteImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Anticongelante</p>
+                  <a :href="getImageUrl(currentChecklistItem.motorNivelAnticongelanteImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.motorNivelAnticongelanteImagen)" 
+                         alt="Motor Nivel Anticongelante" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Depósito y Sistema de Escape -->
+            <div class="bg-indigo-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-indigo-800 mb-3">Depósito Gasolina</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Depósito Puerta</p>
+                  <p class="font-semibold">{{ currentChecklistItem.depositoPuerta !== null ? (currentChecklistItem.depositoPuerta ? 'SI' : 'NO') : 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Depósito Tapón</p>
+                  <p class="font-semibold">{{ currentChecklistItem.depositoTapon !== null ? (currentChecklistItem.depositoTapon ? 'SI' : 'NO') : 'No especificado' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Escape -->
+            <div class="bg-slate-50 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-slate-800 mb-3">Escape</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Escape Silenciador</p>
+                  <p class="font-semibold">{{ currentChecklistItem.escapeSilenciador !== null ? (currentChecklistItem.escapeSilenciador ? 'SI' : 'NO') : 'No especificado' }}</p>
+                </div>
+                <div class="space-y-1">
+                  <p class="text-sm font-medium text-gray-500">Escape Catalizador</p>
+                  <p class="font-semibold">{{ currentChecklistItem.escapeCatalizador !== null ? (currentChecklistItem.escapeCatalizador ? 'SI' : 'NO') : 'No especificado' }}</p>
+                </div>
+              </div>
+              
+              <!-- Imágenes del Escape -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div v-if="currentChecklistItem.escapeSilenciadorImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Escape Silenciador</p>
+                  <a :href="getImageUrl(currentChecklistItem.escapeSilenciadorImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.escapeSilenciadorImagen)" 
+                         alt="Escape Silenciador" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+                
+                <div v-if="currentChecklistItem.escapeCatalizadorImagen">
+                  <p class="text-sm font-medium text-gray-500 mb-2">Escape Catalizador</p>
+                  <a :href="getImageUrl(currentChecklistItem.escapeCatalizadorImagen)" target="_blank" class="block">
+                    <img :src="getImageUrl(currentChecklistItem.escapeCatalizadorImagen)" 
+                         alt="Escape Catalizador" 
+                         class="w-full h-20 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comentarios Generales -->
+            <div v-if="currentChecklistItem.comentarioGeneral" class="bg-gray-100 p-4 rounded-lg">
+              <h4 class="text-lg font-bold text-gray-800 mb-3">Comentarios Generales</h4>
+              <p class="text-gray-800 bg-white p-3 rounded border">{{ currentChecklistItem.comentarioGeneral }}</p>
             </div>
             
             <!-- Información de fechas -->
@@ -601,12 +991,12 @@ export default {
       showDetallesModal.value = true;
     };
 
-    // Ver archivo - construir URL completa para las imágenes
+    // Ver archivo - construir URL completa para las imágenes (mantenido para compatibilidad)
     const verArchivo = (nombreArchivo) => {
       if (!nombreArchivo) return;
       
       // Construir URL de la imagen
-      const imageUrl = `https://api.ejemplo.com/Mecasoft/detalles_ordenes/${nombreArchivo}`;
+      const imageUrl = getImageUrl(nombreArchivo);
       
       // Abrir en nueva ventana/pestaña
       window.open(imageUrl, '_blank');
@@ -640,6 +1030,12 @@ export default {
       ];
       
       return imageFields.some(field => item[field] && item[field] !== null);
+    };
+
+    // Helper para obtener la URL completa de una imagen
+    const getImageUrl = (imageName) => {
+      if (!imageName) return null;
+      return `http://127.0.0.1:8000/Mecasoft/detalles_ordenes/${imageName}`;
     };
 
     // Helper para formatear fechas
@@ -684,21 +1080,6 @@ export default {
       return item.id === oldestPending.id;
     };
 
-    // Función para verificar si se puede editar (solo admin y completado)
-    const canEditChecklist = (item) => {
-      return authStore.isAdmin && isCompleted(item);
-    };
-
-    // Función para verificar si se debe mostrar botón de editar
-    const shouldShowEditButton = (item) => {
-      return authStore.isAdmin && isCompleted(item);
-    };
-
-    // Función para verificar si se debe mostrar botón de completar
-    const shouldShowCompleteButton = (item) => {
-      return !isCompleted(item);
-    };
-
     // Watchers para filtros
     watch([terminadoFilter], () => {
       // Recargar datos cuando cambie el filtro de estado (se envía al backend)
@@ -740,12 +1121,10 @@ export default {
       hasAnyImages,
       formatDate,
       cargarChecklistData,
+      getImageUrl,
       // Nuevas funciones para manejo de roles y orden
       getOldestPendingChecklist,
-      canCompleteChecklist,
-      canEditChecklist,
-      shouldShowEditButton,
-      shouldShowCompleteButton
+      canCompleteChecklist
     };
   }
 };

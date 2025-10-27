@@ -87,11 +87,11 @@ const showUserMenu = ref(false)
 
 // All available routes
 const allRoutes = [
-  { path: '/dashboard', name: 'Dashboard', icon: 'tachometer-alt', roles: ['admin', 'mecanico'] },
+  { path: '/dashboard', name: 'Dashboard', icon: 'tachometer-alt', roles: ['admin'] },
   { path: '/recepciones', name: 'Recepciones', icon: 'clipboard-list', roles: ['admin', 'mecanico'] },
-  { path: '/diagnosticos', name: 'Diagnósticos', icon: 'stethoscope', roles: ['admin', 'mecanico'] },
-  { path: '/vehiculos', name: 'Vehículos', icon: 'car', roles: ['admin', 'mecanico'] },
-  { path: '/clientes', name: 'Clientes', icon: 'id-card', roles: ['admin', 'mecanico'] },
+  { path: '/diagnosticos', name: 'Diagnósticos', icon: 'stethoscope', roles: ['admin'] },
+  { path: '/vehiculos', name: 'Vehículos', icon: 'car', roles: ['admin'] },
+  { path: '/clientes', name: 'Clientes', icon: 'id-card', roles: ['admin'] },
   { path: '/usuarios', name: 'Usuarios', icon: 'users', roles: ['admin'] }
 ]
 

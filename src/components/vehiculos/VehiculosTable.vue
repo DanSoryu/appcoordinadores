@@ -80,19 +80,19 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Placa
+                  Numero Económico
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Vehículo
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Cliente
+                  Cliente Supervisor
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Año
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Color
+                  Placas
                 </th>
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Acciones
@@ -102,7 +102,7 @@
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="vehiculo in paginatedData" :key="vehiculo.id" class="hover:bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {{ vehiculo.numeroEconomico }}
+                  {{ vehiculo.numero_economico }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
@@ -113,23 +113,23 @@
                     </div>
                     <div class="ml-3">
                       <div class="text-sm font-medium text-gray-900">
-                        {{ vehiculo.marca }} {{ vehiculo.tipoVersion }}
+                        {{ vehiculo.marca }} {{ vehiculo.modelo }}
                       </div>
                       <div class="text-sm text-gray-500">
-                        Serie: {{ vehiculo.numeroSerie }}
+                        VIN: {{ vehiculo.numero_serie }}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ vehiculo.cliente }}
+                  {{ vehiculo.cliente_responsable_automotriz }} - {{ vehiculo.cliente_supervisor }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ vehiculo.anioModelo }}
+                  {{ vehiculo.año }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                    {{ vehiculo.color }}
+                    {{ vehiculo.placas }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
@@ -266,35 +266,35 @@
               <div class="h-16 w-16 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-3">
                 <font-awesome-icon icon="car" class="text-white text-2xl" />
               </div>
-              <h4 class="text-xl font-bold text-gray-900">{{ currentVehiculo.marca }} {{ currentVehiculo.tipoVersion }}</h4>
-              <p class="text-gray-600">{{ currentVehiculo.numeroEconomico }}</p>
+              <h4 class="text-xl font-bold text-gray-900">{{ currentVehiculo.marca }} {{ currentVehiculo.modelo }}</h4>
+              <p class="text-gray-600">{{ currentVehiculo.numero_economico }}</p>
             </div>
             
             <div class="bg-gray-50 p-4 rounded-lg">
               <div class="grid grid-cols-1 gap-4">
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Placa/Número Económico</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.numeroEconomico }}</p>
+                  <label class="text-sm font-medium text-gray-500">Número Económico</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.numero_economico }}</p>
                 </div>
                 <div>
                   <label class="text-sm font-medium text-gray-500">Marca y Modelo</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.marca }} {{ currentVehiculo.tipoVersion }}</p>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.marca }} {{ currentVehiculo.modelo }}</p>
                 </div>
                 <div>
                   <label class="text-sm font-medium text-gray-500">Cliente</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.cliente }}</p>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.cliente_nombre }}</p>
                 </div>
                 <div>
                   <label class="text-sm font-medium text-gray-500">Año</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.anioModelo }}</p>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.año }}</p>
                 </div>
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Color</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.color }}</p>
+                  <label class="text-sm font-medium text-gray-500">Placas</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.placas }}</p>
                 </div>
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Número de Serie</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.numeroSerie }}</p>
+                  <label class="text-sm font-medium text-gray-500">VIN</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.numero_serie }}</p>
                 </div>
               </div>
             </div>
@@ -317,6 +317,7 @@
 <script>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToastStore } from '../../stores/toast.js'
+import apiClient from '../../services/api.js'
 import VehiculosFormModal from './VehiculosFormModal.vue'
 import VehiculosDeleteModal from './VehiculosDeleteModal.vue'
 
@@ -331,129 +332,8 @@ export default {
     const isLoading = ref(false)
     const error = ref(null)
     
-    // Datos de vehículos (mockup)
-    const vehiculos = ref([
-      {
-        id: 1,
-        numeroEconomico: 'ABC-123',
-        marca: 'Toyota',
-        tipoVersion: 'Corolla LE',
-        cliente: 'Juan Pérez',
-        anioModelo: '2023',
-        color: 'Blanco',
-        numeroSerie: 'JT2BF22K5X0123456'
-      },
-      {
-        id: 2,
-        numeroEconomico: 'DEF-456',
-        marca: 'Honda',
-        tipoVersion: 'Civic LX',
-        cliente: 'María López',
-        anioModelo: '2022',
-        color: 'Negro',
-        numeroSerie: '2HGFC2F59NH123456'
-      },
-      {
-        id: 3,
-        numeroEconomico: 'GHI-789',
-        marca: 'Ford',
-        tipoVersion: 'F-150 XLT',
-        cliente: 'Carlos Sánchez',
-        anioModelo: '2024',
-        color: 'Azul',
-        numeroSerie: '1FTEW1E50NFB12345'
-      },
-      {
-        id: 4,
-        numeroEconomico: 'JKL-012',
-        marca: 'Chevrolet',
-        tipoVersion: 'Silverado LT',
-        cliente: 'Ana Torres',
-        anioModelo: '2023',
-        color: 'Rojo',
-        numeroSerie: '1GCUYDED0NZ123456'
-      },
-      {
-        id: 5,
-        numeroEconomico: 'MNO-345',
-        marca: 'Nissan',
-        tipoVersion: 'Altima SR',
-        cliente: 'Luis García',
-        anioModelo: '2022',
-        color: 'Gris',
-        numeroSerie: '1N4BL4BV4NC123456'
-      },
-      {
-        id: 6,
-        numeroEconomico: 'PQR-678',
-        marca: 'Toyota',
-        tipoVersion: 'Camry XLE',
-        cliente: 'Patricia Ruiz',
-        anioModelo: '2024',
-        color: 'Plata',
-        numeroSerie: '4T1C11AK8NU123456'
-      },
-      {
-        id: 7,
-        numeroEconomico: 'STU-901',
-        marca: 'Honda',
-        tipoVersion: 'Accord Sport',
-        cliente: 'Roberto Mendoza',
-        anioModelo: '2023',
-        color: 'Verde',
-        numeroSerie: '1HGCV1F30NA123456'
-      },
-      {
-        id: 8,
-        numeroEconomico: 'VWX-234',
-        marca: 'Ford',
-        tipoVersion: 'Escape SE',
-        cliente: 'Carmen Jiménez',
-        anioModelo: '2022',
-        color: 'Amarillo',
-        numeroSerie: '1FMCU9GD5NUA12345'
-      },
-      {
-        id: 9,
-        numeroEconomico: 'YZA-567',
-        marca: 'Chevrolet',
-        tipoVersion: 'Equinox LT',
-        cliente: 'Fernando Castro',
-        anioModelo: '2024',
-        color: 'Naranja',
-        numeroSerie: '2GNAXMEV0N6123456'
-      },
-      {
-        id: 10,
-        numeroEconomico: 'BCD-890',
-        marca: 'Nissan',
-        tipoVersion: 'Sentra SV',
-        cliente: 'Elena Vargas',
-        anioModelo: '2023',
-        color: 'Morado',
-        numeroSerie: '3N1AB8CV5NY123456'
-      },
-      {
-        id: 11,
-        numeroEconomico: 'EFG-123',
-        marca: 'Toyota',
-        tipoVersion: 'RAV4 LE',
-        cliente: 'Miguel Herrera',
-        anioModelo: '2022',
-        color: 'Café',
-        numeroSerie: '2T3F1RFV8NC123456'
-      },
-      {
-        id: 12,
-        numeroEconomico: 'HIJ-456',
-        marca: 'Honda',
-        tipoVersion: 'CR-V EX',
-        cliente: 'Sofía Morales',
-        anioModelo: '2024',
-        color: 'Rosa',
-        numeroSerie: '7FARW2H60NE123456'
-      }
-    ])
+    // Datos de vehículos desde API
+    const vehiculos = ref([])
 
     // Modales
     const showVehiculoModal = ref(false)
@@ -485,7 +365,7 @@ export default {
 
       // Filtrar por año
       if (anioFilter.value) {
-        result = result.filter(item => item.anioModelo === anioFilter.value)
+        result = result.filter(item => item.año === anioFilter.value)
       }
 
       // Filtrar por búsqueda general
@@ -493,11 +373,11 @@ export default {
         const search = searchQuery.value.toLowerCase()
         result = result.filter(item => {
           return item.marca.toLowerCase().includes(search) ||
-                 item.tipoVersion.toLowerCase().includes(search) ||
-                 item.numeroEconomico.toLowerCase().includes(search) ||
-                 item.cliente.toLowerCase().includes(search) ||
-                 item.color.toLowerCase().includes(search) ||
-                 item.numeroSerie.toLowerCase().includes(search)
+                 item.modelo.toLowerCase().includes(search) ||
+                 item.numero_economico.toLowerCase().includes(search) ||
+                 item.cliente_nombre.toLowerCase().includes(search) ||
+                 item.placas.toLowerCase().includes(search) ||
+                 item.numero_serie.toLowerCase().includes(search)
         })
       }
 
@@ -569,15 +449,14 @@ export default {
       currentPage.value = page
     }
 
-    // Simular carga de datos
+    // Cargar vehículos desde la API
     const cargarVehiculos = async () => {
       isLoading.value = true
       error.value = null
       
       try {
-        // Simular delay de carga
-        await new Promise(resolve => setTimeout(resolve, 500))
-        // Los datos ya están cargados en el ref
+        const response = await apiClient.get('/vehiculos')
+        vehiculos.value = response.data
       } catch (err) {
         error.value = 'Error al cargar los vehículos'
         console.error('Error al cargar vehículos:', err)
@@ -612,12 +491,12 @@ export default {
       showDeleteModal.value = true
     }
 
-    const handleVehiculoGuardado = (vehiculo) => {
+    const handleVehiculoGuardado = async (vehiculo) => {
       if (vehiculoToEdit.value) {
         // Actualizar vehículo existente
-        const index = vehiculos.value.findIndex(v => v.id === vehiculoToEdit.value.id)
+        const index = vehiculos.value.findIndex(v => v.id === vehiculo.id)
         if (index !== -1) {
-          vehiculos.value[index] = { ...vehiculoToEdit.value, ...vehiculo }
+          vehiculos.value[index] = vehiculo
         }
         toastStore.addToast({
           message: 'Vehículo actualizado exitosamente',
@@ -625,12 +504,8 @@ export default {
           duration: 3000
         })
       } else {
-        // Agregar nuevo vehículo
-        const nuevoVehiculo = {
-          ...vehiculo,
-          id: Math.max(...vehiculos.value.map(v => v.id)) + 1
-        }
-        vehiculos.value.push(nuevoVehiculo)
+        // Para vehículos nuevos, recargar la lista desde el servidor para obtener datos actualizados
+        await cargarVehiculos()
         toastStore.addToast({
           message: 'Vehículo creado exitosamente',
           type: 'success',

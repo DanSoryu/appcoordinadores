@@ -30,19 +30,22 @@
             <div class="flex-shrink-0 h-10 w-10">
               <div class="h-10 w-10 rounded-full bg-red-500 flex items-center justify-center">
                 <span class="text-white text-sm font-bold">
-                  {{ cliente.nombre.charAt(0).toUpperCase() }}
+                  #{{ cliente.id }}
                 </span>
               </div>
             </div>
             <div class="ml-3">
               <div class="text-sm font-medium text-gray-900">
-                {{ cliente.nombre }}
+                Cliente #{{ cliente.id }}
               </div>
               <div class="text-sm text-gray-500">
-                {{ cliente.telefono }}
+                Supervisor: {{ cliente.supervisor || 'Sin supervisor' }}
               </div>
               <div class="text-sm text-gray-500">
-                {{ cliente.email }}
+                {{ cliente.telefono || 'Sin teléfono' }}
+              </div>
+              <div class="text-sm text-gray-500">
+                {{ cliente.correo || 'Sin correo' }}
               </div>
             </div>
           </div>
@@ -89,6 +92,7 @@
 import BaseButton from '../global/BaseButton.vue'
 import { useSubmitButton } from '../../composables/useSubmitButton.js'
 import { useToastStore } from '../../stores/toast.js'
+import apiClient from '../../services/api.js'
 
 export default {
   name: 'ClientesDeleteModal',
@@ -115,8 +119,8 @@ export default {
       
       try {
         await executeSubmit(async () => {
-          // Simular delay de eliminación (en lugar de llamada a API)
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // Llamar a la API para eliminar el cliente
+          await apiClient.delete(`/clientes/${props.cliente.id}`);
           
           console.log('Cliente eliminado:', props.cliente);
           
@@ -126,11 +130,26 @@ export default {
       } catch (error) {
         console.error('Error al eliminar cliente:', error);
         
-        toastStore.addToast({
-          message: 'Error al eliminar el cliente. Por favor, intente nuevamente.',
-          type: 'error',
-          duration: 5000
-        });
+        // Manejar errores específicos
+        if (error.response?.status === 404) {
+          toastStore.addToast({
+            message: 'El cliente no fue encontrado',
+            type: 'error',
+            duration: 5000
+          });
+        } else if (error.response?.data?.error) {
+          toastStore.addToast({
+            message: error.response.data.error,
+            type: 'error',
+            duration: 5000
+          });
+        } else {
+          toastStore.addToast({
+            message: 'Error al eliminar el cliente. Por favor, intente nuevamente.',
+            type: 'error',
+            duration: 5000
+          });
+        }
       }
     };
 

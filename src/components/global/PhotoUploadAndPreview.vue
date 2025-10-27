@@ -100,7 +100,7 @@ export default {
   computed: {
     photoUrl() {
       if (this.isPreloadedPhoto && this.photoName) {
-        return `https://api.ejemplo.com/fotos/${this.photoName}`;
+        return `http://127.0.0.1:8000/Mecasoft/detalles_ordenes/${this.photoName}`;
       }
       return this.photoPreview;
     },

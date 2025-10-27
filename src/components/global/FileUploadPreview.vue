@@ -75,7 +75,7 @@ export default {
     },
     imageUrl() {
       if (this.isPreloadedFile && this.fileName && this.isImage) {
-        return `https://api.ejemplo.com/fotos/${this.fileName}`;
+        return `http://127.0.0.1:8000/Mecasoft/detalles_ordenes/${this.fileName}`;
       }
       return this.preview;
     }

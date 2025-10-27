@@ -15,7 +15,7 @@
 
     <!-- Filtros -->
     <div class="bg-white p-4 rounded-lg shadow mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Buscar Cliente
@@ -23,42 +23,23 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Buscar por nombre, teléfono, email..."
+            placeholder="Buscar por ID, teléfono, correo, responsable, supervisor..."
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
         </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Estado
+            COPE
           </label>
           <select
-            v-model="estadoFilter"
+            v-model="copeFilter"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Todos los estados</option>
-            <option value="Ciudad de México">Ciudad de México</option>
-            <option value="Estado de México">Estado de México</option>
-            <option value="Jalisco">Jalisco</option>
-            <option value="Nuevo León">Nuevo León</option>
-            <option value="Puebla">Puebla</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Municipio
-          </label>
-          <select
-            v-model="municipioFilter"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todos los municipios</option>
-            <option value="Benito Juárez">Benito Juárez</option>
-            <option value="Miguel Hidalgo">Miguel Hidalgo</option>
-            <option value="Cuauhtémoc">Cuauhtémoc</option>
-            <option value="Tlalnepantla">Tlalnepantla</option>
-            <option value="Naucalpan">Naucalpan</option>
+            <option value="">Todas las COPEs</option>
+            <option v-for="cope in copesWithDetails" :key="cope.id" :value="cope.id">
+              {{ cope.displayName }}
+            </option>
           </select>
         </div>
       </div>
@@ -80,16 +61,19 @@
             <thead class="bg-gray-50">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Cliente
+                  ID Cliente
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Contacto
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Dirección
+                  Responsable Automotriz
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Estado
+                  Supervisor
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Division - Area - COPE
                 </th>
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Acciones
@@ -103,33 +87,27 @@
                     <div class="flex-shrink-0 h-8 w-8">
                       <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center">
                         <span class="text-white text-sm font-medium">
-                          {{ cliente.nombre.charAt(0).toUpperCase() }}
+                          {{ cliente.id }}
                         </span>
-                      </div>
-                    </div>
-                    <div class="ml-3">
-                      <div class="text-sm font-medium text-gray-900">
-                        {{ cliente.nombre }}
-                      </div>
-                      <div class="text-sm text-gray-500">
-                        ID: {{ cliente.id }}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ cliente.telefono }}</div>
-                  <div class="text-sm text-gray-500">{{ cliente.email }}</div>
+                  <div class="text-sm text-gray-900">{{ cliente.telefono || 'N/A' }}</div>
+                  <div class="text-sm text-gray-500">{{ cliente.correo || 'N/A' }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{{ cliente.calle }} {{ cliente.numeroExtInt }}</div>
-                  <div class="text-sm text-gray-500">{{ cliente.colonia }}, C.P. {{ cliente.cp }}</div>
+                  <div class="text-sm text-gray-900">{{ cliente.responsable_automotriz || 'N/A' }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">{{ cliente.supervisor || 'N/A' }}</div>
+                  <div class="text-sm text-gray-500">{{ cliente.correo_supervisor || 'N/A' }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                    {{ cliente.estado }}
+                    {{ getCopeDisplayName(cliente.cope_id) }}
                   </span>
-                  <div class="text-sm text-gray-500 mt-1">{{ cliente.delegacionMunicipio }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                   <div class="flex justify-center space-x-2">
@@ -264,40 +242,42 @@
             <div class="text-center mb-6">
               <div class="h-16 w-16 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-3">
                 <span class="text-white text-2xl font-bold">
-                  {{ currentCliente.nombre.charAt(0).toUpperCase() }}
+                  {{ currentCliente.id }}
                 </span>
               </div>
-              <h4 class="text-xl font-bold text-gray-900">{{ currentCliente.nombre }}</h4>
-              <p class="text-gray-600">{{ currentCliente.email }}</p>
+              <h4 class="text-xl font-bold text-gray-900">Cliente #{{ currentCliente.id }}</h4>
+              <p class="text-gray-600">{{ currentCliente.correo || 'Sin correo' }}</p>
             </div>
             
             <div class="bg-gray-50 p-4 rounded-lg">
               <div class="grid grid-cols-1 gap-4">
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Nombre Completo</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.nombre }}</p>
+                  <label class="text-sm font-medium text-gray-500">ID Cliente</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.id }}</p>
                 </div>
                 <div>
                   <label class="text-sm font-medium text-gray-500">Teléfono</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.telefono }}</p>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.telefono || 'N/A' }}</p>
                 </div>
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Email</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.email }}</p>
+                  <label class="text-sm font-medium text-gray-500">Correo Electrónico</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.correo || 'N/A' }}</p>
                 </div>
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Dirección Completa</label>
-                  <p class="text-sm text-gray-900 font-semibold">
-                    {{ currentCliente.calle }} {{ currentCliente.numeroExtInt }}, 
-                    {{ currentCliente.colonia }}, 
-                    {{ currentCliente.delegacionMunicipio }}, 
-                    {{ currentCliente.estado }}, 
-                    C.P. {{ currentCliente.cp }}
-                  </p>
+                  <label class="text-sm font-medium text-gray-500">Responsable Automotriz</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.responsable_automotriz || 'N/A' }}</p>
                 </div>
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Domicilio</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.domicilio }}</p>
+                  <label class="text-sm font-medium text-gray-500">Supervisor</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.supervisor || 'N/A' }}</p>
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-gray-500">Correo Supervisor</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentCliente.correo_supervisor || 'N/A' }}</p>
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-gray-500">COPE</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ getCopeDisplayName(currentCliente.cope_id) }}</p>
                 </div>
               </div>
             </div>
@@ -320,6 +300,7 @@
 <script>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToastStore } from '../../stores/toast.js'
+import apiClient from '../../services/api.js'
 import ClientesFormModal from './ClientesFormModal.vue'
 import ClientesDeleteModal from './ClientesDeleteModal.vue'
 
@@ -334,165 +315,14 @@ export default {
     const isLoading = ref(false)
     const error = ref(null)
     
-    // Datos de clientes (mockup)
-    const clientes = ref([
-      {
-        id: 1,
-        nombre: 'Juan Pérez García',
-        telefono: '55-1234-5678',
-        domicilio: 'Avenida Insurgentes Sur 1234',
-        calle: 'Avenida Insurgentes Sur',
-        numeroExtInt: '1234',
-        colonia: 'Del Valle',
-        cp: '03100',
-        delegacionMunicipio: 'Benito Juárez',
-        estado: 'Ciudad de México',
-        email: 'juan.perez@email.com'
-      },
-      {
-        id: 2,
-        nombre: 'María López Rodríguez',
-        telefono: '55-9876-5432',
-        domicilio: 'Calle Reforma 567',
-        calle: 'Calle Reforma',
-        numeroExtInt: '567',
-        colonia: 'Juárez',
-        cp: '06600',
-        delegacionMunicipio: 'Cuauhtémoc',
-        estado: 'Ciudad de México',
-        email: 'maria.lopez@email.com'
-      },
-      {
-        id: 3,
-        nombre: 'Carlos Sánchez Mendoza',
-        telefono: '55-5555-1111',
-        domicilio: 'Periférico Norte 890',
-        calle: 'Periférico Norte',
-        numeroExtInt: '890',
-        colonia: 'Lomas Verdes',
-        cp: '53120',
-        delegacionMunicipio: 'Naucalpan',
-        estado: 'Estado de México',
-        email: 'carlos.sanchez@email.com'
-      },
-      {
-        id: 4,
-        nombre: 'Ana Torres Silva',
-        telefono: '55-7777-8888',
-        domicilio: 'Avenida Universidad 321',
-        calle: 'Avenida Universidad',
-        numeroExtInt: '321',
-        colonia: 'Copilco',
-        cp: '04360',
-        delegacionMunicipio: 'Coyoacán',
-        estado: 'Ciudad de México',
-        email: 'ana.torres@email.com'
-      },
-      {
-        id: 5,
-        nombre: 'Luis García Hernández',
-        telefono: '55-2222-3333',
-        domicilio: 'Calzada de Tlalpan 456',
-        calle: 'Calzada de Tlalpan',
-        numeroExtInt: '456',
-        colonia: 'Portales',
-        cp: '03300',
-        delegacionMunicipio: 'Benito Juárez',
-        estado: 'Ciudad de México',
-        email: 'luis.garcia@email.com'
-      },
-      {
-        id: 6,
-        nombre: 'Patricia Ruiz Jiménez',
-        telefono: '55-4444-6666',
-        domicilio: 'Boulevard Manuel Ávila Camacho 789',
-        calle: 'Boulevard Manuel Ávila Camacho',
-        numeroExtInt: '789',
-        colonia: 'Lomas de Sotelo',
-        cp: '53390',
-        delegacionMunicipio: 'Naucalpan',
-        estado: 'Estado de México',
-        email: 'patricia.ruiz@email.com'
-      },
-      {
-        id: 7,
-        nombre: 'Roberto Mendoza Castro',
-        telefono: '55-8888-9999',
-        domicilio: 'Avenida Chapultepec 654',
-        calle: 'Avenida Chapultepec',
-        numeroExtInt: '654',
-        colonia: 'Roma Norte',
-        cp: '06700',
-        delegacionMunicipio: 'Cuauhtémoc',
-        estado: 'Ciudad de México',
-        email: 'roberto.mendoza@email.com'
-      },
-      {
-        id: 8,
-        nombre: 'Carmen Jiménez Morales',
-        telefono: '55-1111-2222',
-        domicilio: 'Viaducto Miguel Alemán 147',
-        calle: 'Viaducto Miguel Alemán',
-        numeroExtInt: '147',
-        colonia: 'Escandón',
-        cp: '11800',
-        delegacionMunicipio: 'Miguel Hidalgo',
-        estado: 'Ciudad de México',
-        email: 'carmen.jimenez@email.com'
-      },
-      {
-        id: 9,
-        nombre: 'Fernando Castro López',
-        telefono: '55-3333-4444',
-        domicilio: 'Avenida Constituyentes 258',
-        calle: 'Avenida Constituyentes',
-        numeroExtInt: '258',
-        colonia: 'San Miguel Chapultepec',
-        cp: '11850',
-        delegacionMunicipio: 'Miguel Hidalgo',
-        estado: 'Ciudad de México',
-        email: 'fernando.castro@email.com'
-      },
-      {
-        id: 10,
-        nombre: 'Elena Vargas Herrera',
-        telefono: '55-6666-7777',
-        domicilio: 'Gustavo Baz 369',
-        calle: 'Gustavo Baz',
-        numeroExtInt: '369',
-        colonia: 'Centro',
-        cp: '54000',
-        delegacionMunicipio: 'Tlalnepantla',
-        estado: 'Estado de México',
-        email: 'elena.vargas@email.com'
-      },
-      {
-        id: 11,
-        nombre: 'Miguel Herrera Ruiz',
-        telefono: '55-5555-6666',
-        domicilio: 'Eje Central Lázaro Cárdenas 741',
-        calle: 'Eje Central Lázaro Cárdenas',
-        numeroExtInt: '741',
-        colonia: 'Centro',
-        cp: '06000',
-        delegacionMunicipio: 'Cuauhtémoc',
-        estado: 'Ciudad de México',
-        email: 'miguel.herrera@email.com'
-      },
-      {
-        id: 12,
-        nombre: 'Sofía Morales Vázquez',
-        telefono: '55-9999-0000',
-        domicilio: 'Avenida Revolución 852',
-        calle: 'Avenida Revolución',
-        numeroExtInt: '852',
-        colonia: 'Mixcoac',
-        cp: '03910',
-        delegacionMunicipio: 'Benito Juárez',
-        estado: 'Ciudad de México',
-        email: 'sofia.morales@email.com'
-      }
-    ])
+    // Datos de clientes desde API
+    const clientes = ref([])
+    
+    // Datos para COPEs con nombres completos
+    const copes = ref([])
+    const areas = ref([])
+    const divisiones = ref([])
+    const copesWithDetails = ref([])
 
     // Modales
     const showClienteModal = ref(false)
@@ -504,8 +334,7 @@ export default {
 
     // Filtros
     const searchQuery = ref('')
-    const estadoFilter = ref('')
-    const municipioFilter = ref('')
+    const copeFilter = ref('')
 
     // Paginación
     const currentPage = ref(1)
@@ -517,27 +346,21 @@ export default {
     const filteredData = computed(() => {
       let result = clientes.value
 
-      // Filtrar por estado
-      if (estadoFilter.value) {
-        result = result.filter(item => item.estado === estadoFilter.value)
-      }
-
-      // Filtrar por municipio
-      if (municipioFilter.value) {
-        result = result.filter(item => item.delegacionMunicipio === municipioFilter.value)
+      // Filtrar por cope (si implementamos este filtro)
+      if (copeFilter.value) {
+        result = result.filter(item => item.cope_id === copeFilter.value)
       }
 
       // Filtrar por búsqueda general
       if (searchQuery.value) {
         const search = searchQuery.value.toLowerCase()
         result = result.filter(item => {
-          return item.nombre.toLowerCase().includes(search) ||
-                 item.telefono.toLowerCase().includes(search) ||
-                 item.email.toLowerCase().includes(search) ||
-                 item.calle.toLowerCase().includes(search) ||
-                 item.colonia.toLowerCase().includes(search) ||
-                 item.delegacionMunicipio.toLowerCase().includes(search) ||
-                 item.estado.toLowerCase().includes(search)
+          return (item.telefono && item.telefono.toLowerCase().includes(search)) ||
+                 (item.correo && item.correo.toLowerCase().includes(search)) ||
+                 (item.responsable_automotriz && item.responsable_automotriz.toLowerCase().includes(search)) ||
+                 (item.supervisor && item.supervisor.toLowerCase().includes(search)) ||
+                 (item.correo_supervisor && item.correo_supervisor.toLowerCase().includes(search)) ||
+                 item.id.toString().includes(search)
         })
       }
 
@@ -609,15 +432,14 @@ export default {
       currentPage.value = page
     }
 
-    // Simular carga de datos
+    // Cargar clientes desde la API
     const cargarClientes = async () => {
       isLoading.value = true
       error.value = null
       
       try {
-        // Simular delay de carga
-        await new Promise(resolve => setTimeout(resolve, 500))
-        // Los datos ya están cargados en el ref
+        const response = await apiClient.get('/clientes')
+        clientes.value = response.data
       } catch (err) {
         error.value = 'Error al cargar los clientes'
         console.error('Error al cargar clientes:', err)
@@ -629,6 +451,41 @@ export default {
       } finally {
         isLoading.value = false
       }
+    }
+
+    // Cargar datos de COPEs para mostrar nombres
+    const cargarCopesData = async () => {
+      try {
+        // Cargar copes, áreas y divisiones
+        const [copesResponse, areasResponse, divisionesResponse] = await Promise.all([
+          apiClient.get('/copes'),
+          apiClient.get('/areas'),
+          apiClient.get('/divisiones')
+        ])
+
+        copes.value = copesResponse.data
+        areas.value = areasResponse.data
+        divisiones.value = divisionesResponse.data
+
+        // Crear array con información concatenada
+        copesWithDetails.value = copes.value.map(cope => {
+          const area = areas.value.find(a => a.id === cope.area_id)
+          const division = area ? divisiones.value.find(d => d.id === area.division_id) : null
+          
+          return {
+            ...cope,
+            displayName: `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}`
+          }
+        })
+      } catch (error) {
+        console.error('Error al cargar datos de COPEs:', error)
+      }
+    }
+
+    // Función para obtener el nombre del COPE por ID
+    const getCopeDisplayName = (copeId) => {
+      const cope = copesWithDetails.value.find(c => c.id === copeId)
+      return cope ? cope.displayName : `COPE ID: ${copeId}`
     }
 
     // Acciones de la tabla
@@ -652,12 +509,12 @@ export default {
       showDeleteModal.value = true
     }
 
-    const handleClienteGuardado = (cliente) => {
+    const handleClienteGuardado = async (cliente) => {
       if (clienteToEdit.value) {
         // Actualizar cliente existente
-        const index = clientes.value.findIndex(c => c.id === clienteToEdit.value.id)
+        const index = clientes.value.findIndex(c => c.id === cliente.id)
         if (index !== -1) {
-          clientes.value[index] = { ...clienteToEdit.value, ...cliente }
+          clientes.value[index] = cliente
         }
         toastStore.addToast({
           message: 'Cliente actualizado exitosamente',
@@ -665,12 +522,8 @@ export default {
           duration: 3000
         })
       } else {
-        // Agregar nuevo cliente
-        const nuevoCliente = {
-          ...cliente,
-          id: Math.max(...clientes.value.map(c => c.id)) + 1
-        }
-        clientes.value.push(nuevoCliente)
+        // Para clientes nuevos, recargar la lista desde el servidor para obtener datos actualizados
+        await cargarClientes()
         toastStore.addToast({
           message: 'Cliente creado exitosamente',
           type: 'success',
@@ -695,13 +548,14 @@ export default {
     }
 
     // Watchers para filtros
-    watch([searchQuery, estadoFilter, municipioFilter], () => {
+    watch([searchQuery, copeFilter], () => {
       currentPage.value = 1
     })
 
     // Cargar datos al montar el componente
     onMounted(() => {
       cargarClientes()
+      cargarCopesData()
     })
 
     return {
@@ -709,8 +563,7 @@ export default {
       isLoading,
       error,
       searchQuery,
-      estadoFilter,
-      municipioFilter,
+      copeFilter,
       currentPage,
       totalItems,
       totalPages,
@@ -733,7 +586,8 @@ export default {
       eliminarCliente,
       handleClienteGuardado,
       handleClienteEliminado,
-      cargarClientes
+      cargarClientes,
+      getCopeDisplayName
     }
   }
 }

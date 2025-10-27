@@ -148,7 +148,7 @@
                 <PhotoUploadAndPreview
                   id="odometroArchivo"
                   fileNamePrefix="foto_odometro"
-                  :preloadedPhoto="checklistData.odometroArchivo"
+                  :preloadedPhoto="checklistData.odometroImagen"
                   @photo-captured="(file) => handlePhotoCaptured('odometroArchivo', file)"
                 />
               </div>
@@ -205,7 +205,7 @@
                   <PhotoUploadAndPreview
                     id="combustibleArchivo"
                     fileNamePrefix="foto_combustible"
-                    :preloadedPhoto="checklistData.combustibleArchivo"
+                    :preloadedPhoto="checklistData.combustibleImagen"
                     @photo-captured="(file) => handlePhotoCaptured('combustibleArchivo', file)"
                   />
                 </div>
@@ -265,7 +265,8 @@
                   <PhotoUploadAndPreview
                     id="testigosEncendidosArchivo"
                     fileNamePrefix="foto_testigos"
-                    :preloadedPhoto="checklistData.testigosEncendidosArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.testigosImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('testigosEncendidosArchivo', file)"
                   />
                 </div>
@@ -373,7 +374,8 @@
                   <PhotoUploadAndPreview
                     id="segurosArchivo"
                     fileNamePrefix="foto_seguros"
-                    :preloadedPhoto="checklistData.segurosArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.segurosImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('segurosArchivo', file)"
                   />
                 </div>
@@ -399,7 +401,8 @@
                   <PhotoUploadAndPreview
                     id="cristalesArchivo"
                     fileNamePrefix="foto_cristales_ventanas"
-                    :preloadedPhoto="checklistData.cristalesArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.cristalesImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cristalesArchivo', file)"
                   />
                 </div>
@@ -437,7 +440,8 @@
                   <PhotoUploadAndPreview
                     id="vestidurasArchivo"
                     fileNamePrefix="foto_vestiduras"
-                    :preloadedPhoto="checklistData.vestidurasArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.vestidurasImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('vestidurasArchivo', file)"
                   />
                 </div>
@@ -463,7 +467,8 @@
                   <PhotoUploadAndPreview
                     id="cabecerasArchivo"
                     fileNamePrefix="foto_cabeceras"
-                    :preloadedPhoto="checklistData.cabecerasArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.cabecerasImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cabecerasArchivo', file)"
                   />
                 </div>
@@ -531,7 +536,8 @@
                   <PhotoUploadAndPreview
                     id="carroceriaLadoDerechoArchivo"
                     fileNamePrefix="foto_carroceria_derecho"
-                    :preloadedPhoto="checklistData.carroceriaLadoDerechoArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.carroceriaLadoDerechoImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoDerechoArchivo', file)"
                   />
                 </div>
@@ -557,7 +563,8 @@
                   <PhotoUploadAndPreview
                     id="carroceriaLadoIzquierdoArchivo"
                     fileNamePrefix="foto_carroceria_izquierdo"
-                    :preloadedPhoto="checklistData.carroceriaLadoIzquierdoArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.carroceriaLadoIzquierdoImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoIzquierdoArchivo', file)"
                   />
                 </div>
@@ -583,7 +590,8 @@
                   <PhotoUploadAndPreview
                     id="carroceriaLadoTraseroArchivo"
                     fileNamePrefix="foto_carroceria_trasero"
-                    :preloadedPhoto="checklistData.carroceriaLadoTraseroArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.carroceriaLadoTraseroImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoTraseroArchivo', file)"
                   />
                 </div>
@@ -609,7 +617,8 @@
                   <PhotoUploadAndPreview
                     id="carroceriaLadoFrontalArchivo"
                     fileNamePrefix="foto_carroceria_frontal"
-                    :preloadedPhoto="checklistData.carroceriaLadoFrontalArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.carroceriaLadoFrontalImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('carroceriaLadoFrontalArchivo', file)"
                   />
                 </div>
@@ -647,7 +656,8 @@
                   <PhotoUploadAndPreview
                     id="neumaticosLadoPilotoArchivo"
                     fileNamePrefix="foto_neumatico_piloto"
-                    :preloadedPhoto="checklistData.neumaticosLadoPilotoArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.neumaticosLadoPilotoImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoPilotoArchivo', file)"
                   />
                 </div>
@@ -673,7 +683,8 @@
                   <PhotoUploadAndPreview
                     id="neumaticosLadoAtrasPilotoArchivo"
                     fileNamePrefix="foto_neumatico_atras_piloto"
-                    :preloadedPhoto="checklistData.neumaticosLadoAtrasPilotoArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.neumaticosLadoAtrasPilotoImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoAtrasPilotoArchivo', file)"
                   />
                 </div>
@@ -699,7 +710,8 @@
                   <PhotoUploadAndPreview
                     id="neumaticosLadoCopilotoArchivo"
                     fileNamePrefix="foto_neumatico_copiloto"
-                    :preloadedPhoto="checklistData.neumaticosLadoCopilotoArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.neumaticosLadoCopilotoImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoCopilotoArchivo', file)"
                   />
                 </div>
@@ -725,7 +737,8 @@
                   <PhotoUploadAndPreview
                     id="neumaticosLadoAtrasCopilotoArchivo"
                     fileNamePrefix="foto_neumatico_atras_copiloto"
-                    :preloadedPhoto="checklistData.neumaticosLadoAtrasCopilotoArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.neumaticosLadoAtrasCopilotoImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('neumaticosLadoAtrasCopilotoArchivo', file)"
                   />
                 </div>
@@ -763,7 +776,8 @@
                   <PhotoUploadAndPreview
                     id="cristalesParabrisasArchivo"
                     fileNamePrefix="foto_cristales_parabrisas"
-                    :preloadedPhoto="checklistData.cristalesParabrisasArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.cristalesParabrisasImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cristalesParabrisasArchivo', file)"
                   />
                 </div>
@@ -789,7 +803,8 @@
                   <PhotoUploadAndPreview
                     id="cristalesMedallonTraseroArchivo"
                     fileNamePrefix="foto_cristales_medallon_trasero"
-                    :preloadedPhoto="checklistData.cristalesMedallonTraseroArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.cristalesMedallonTraseroImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cristalesMedallonTraseroArchivo', file)"
                   />
                 </div>
@@ -815,7 +830,8 @@
                   <PhotoUploadAndPreview
                     id="cristalesLimpiadoresArchivo"
                     fileNamePrefix="foto_cristales_limpiadoras"
-                    :preloadedPhoto="checklistData.cristalesLimpiadoresArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.cristalesLimpiadoresImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('cristalesLimpiadoresArchivo', file)"
                   />
                 </div>
@@ -853,7 +869,8 @@
                   <PhotoUploadAndPreview
                     id="motorTaponesArchivo"
                     fileNamePrefix="foto_motor_tapones"
-                    :preloadedPhoto="checklistData.motorTaponesArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.motorTaponesImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorTaponesArchivo', file)"
                   />
                 </div>
@@ -879,7 +896,8 @@
                   <PhotoUploadAndPreview
                     id="motorBateriaArchivo"
                     fileNamePrefix="foto_motor_bateria"
-                    :preloadedPhoto="checklistData.motorBateriaArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.motorBateriaImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorBateriaArchivo', file)"
                   />
                 </div>
@@ -935,7 +953,8 @@
                   <PhotoUploadAndPreview
                     id="motorNivelAceiteArchivo"
                     fileNamePrefix="foto_motor_nivel_aceite"
-                    :preloadedPhoto="checklistData.motorNivelAceiteArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.motorNivelAceiteImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorNivelAceiteArchivo', file)"
                   />
                 </div>
@@ -991,7 +1010,8 @@
                   <PhotoUploadAndPreview
                     id="motorNivelLiquidoFrenosArchivo"
                     fileNamePrefix="foto_motor_nivel_liquido_frenos"
-                    :preloadedPhoto="checklistData.motorNivelLiquidoFrenosArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.motorNivelLiquidoFrenosImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorNivelLiquidoFrenosArchivo', file)"
                   />
                 </div>
@@ -1047,7 +1067,8 @@
                   <PhotoUploadAndPreview
                     id="motorNivelAnticongelanteArchivo"
                     fileNamePrefix="foto_motor_nivel_anticongelante"
-                    :preloadedPhoto="checklistData.motorNivelAnticongelanteArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.motorNivelAnticongelanteImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('motorNivelAnticongelanteArchivo', file)"
                   />
                 </div>
@@ -1131,7 +1152,8 @@
                   <PhotoUploadAndPreview
                     id="escapeSilenciadorArchivo"
                     fileNamePrefix="foto_escape_silenciador"
-                    :preloadedPhoto="checklistData.escapeSilenciadorArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.escapeSilenciadorImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('escapeSilenciadorArchivo', file)"
                   />
                 </div>
@@ -1157,7 +1179,8 @@
                   <PhotoUploadAndPreview
                     id="escapeCatalizadorArchivo"
                     fileNamePrefix="foto_escape_catalizador"
-                    :preloadedPhoto="checklistData.escapeCatalizadorArchivo"${NewLine}                    :checklistId="checklistData.id"
+                    :preloadedPhoto="checklistData.escapeCatalizadorImagen"
+                    :checklistId="checklistData.id"
                     @photo-captured="(file) => handlePhotoCaptured('escapeCatalizadorArchivo', file)"
                   />
                 </div>
@@ -1188,40 +1211,32 @@
             </div>
           </div>
         </div>
-        <div class="flex justify-between mt-8">
-          <BaseButton 
-            type="button" 
-            variant="secondary" 
-            :disabled="currentStep === 1"
-            :onClick="handlePrevStep"
-          >
-            <div class="flex items-center gap-2">
-              <font-awesome-icon icon="chevron-left" class="w-4 h-4" />
-              Anterior
-            </div>
-          </BaseButton>
-          <BaseButton 
-            v-if="currentStep < 3" 
-            type="button" 
-            variant="primary"
-            :onClick="handleNextStep"
-          >
-            <div class="flex items-center gap-2">
-              Siguiente
-              <font-awesome-icon icon="chevron-right" class="w-4 h-4" />
-            </div>
-          </BaseButton>
-          <BaseButton 
-            v-if="currentStep === 3" 
-            type="submit" 
-            variant="success"
-            :disabled="!isStepValid"
-            :onClick="handleFinalSubmit"
-            custom-loading-text="Enviando formulario"
-            :min-delay="2500"
-          >
-            Guardar
-          </BaseButton>
+        <div class="mt-8">
+          <div v-if="currentStep < 3" class="flex justify-center">
+            <BaseButton 
+              type="button" 
+              variant="primary"
+              :disabled="!isStepValid"
+              :onClick="handleNextStep"
+            >
+              <div class="flex items-center gap-2">
+                Siguiente
+                <font-awesome-icon icon="chevron-right" class="w-4 h-4" />
+              </div>
+            </BaseButton>
+          </div>
+          <div v-if="currentStep === 3" class="flex justify-center">
+            <BaseButton 
+              type="submit" 
+              variant="success"
+              :disabled="!isStepValid"
+              :onClick="handleFinalSubmit"
+              custom-loading-text="Enviando formulario"
+              :min-delay="2500"
+            >
+              Guardar
+            </BaseButton>
+          </div>
         </div>
         <div class="mt-6 flex justify-center gap-2">
           <span v-for="step in 3" :key="step" :class="[ 'h-3 w-3 rounded-full', currentStep === step ? 'bg-blue-500' : 'bg-gray-300' ]"></span>
@@ -1958,16 +1973,16 @@ export default {
       
       // --- STEP 2 ---
       // Cluster - Solo configurar si existe en los datos de prueba
-      if ('odometroArchivo' in this.checklistData && this.checklistData.odometroArchivo) {
-        this.formData.odometroArchivo = { name: this.checklistData.odometroArchivo };
+      if ('odometroImagen' in this.checklistData && this.checklistData.odometroImagen) {
+        this.formData.odometroArchivo = { name: this.checklistData.odometroImagen };
       }
       
       if ('nivelCombustible' in this.checklistData) {
         this.formData.nivelCombustible = this.checklistData.nivelCombustible;
       }
       
-      if ('combustibleArchivo' in this.checklistData && this.checklistData.combustibleArchivo) {
-        this.formData.combustibleArchivo = { name: this.checklistData.combustibleArchivo };
+      if ('combustibleImagen' in this.checklistData && this.checklistData.combustibleImagen) {
+        this.formData.combustibleArchivo = { name: this.checklistData.combustibleImagen };
       }
       
       if ('testigosEncendidos' in this.checklistData) {
@@ -1978,8 +1993,8 @@ export default {
         this.formData.testigosEncendidos = ['NINGUNO']; // Valor por defecto
       }
       
-      if ('testigosEncendidosArchivo' in this.checklistData && this.checklistData.testigosEncendidosArchivo) {
-        this.formData.testigosEncendidosArchivo = { name: this.checklistData.testigosEncendidosArchivo };
+      if ('testigosImagen' in this.checklistData && this.checklistData.testigosImagen) {
+        this.formData.testigosEncendidosArchivo = { name: this.checklistData.testigosImagen };
       }
       
       // Tablero - Solo configurar si existe en los datos de prueba
@@ -2002,16 +2017,16 @@ export default {
         this.formData.estadoSeguros = this.checklistData.estadoSeguros;
       }
       
-      if ('segurosArchivo' in this.checklistData && this.checklistData.segurosArchivo) {
-        this.formData.segurosArchivo = { name: this.checklistData.segurosArchivo };
+      if ('segurosImagen' in this.checklistData && this.checklistData.segurosImagen) {
+        this.formData.segurosArchivo = { name: this.checklistData.segurosImagen };
       }
       
       if ('estadoCristales' in this.checklistData) {
         this.formData.estadoCristales = this.checklistData.estadoCristales;
       }
       
-      if ('cristalesArchivo' in this.checklistData && this.checklistData.cristalesArchivo) {
-        this.formData.cristalesArchivo = { name: this.checklistData.cristalesArchivo };
+      if ('cristalesImagen' in this.checklistData && this.checklistData.cristalesImagen) {
+        this.formData.cristalesArchivo = { name: this.checklistData.cristalesImagen };
       }
       
       // Asientos - Solo configurar si existe en los datos de prueba
@@ -2019,16 +2034,16 @@ export default {
         this.formData.estadoVestiduras = this.checklistData.estadoVestiduras;
       }
       
-      if ('vestidurasArchivo' in this.checklistData && this.checklistData.vestidurasArchivo) {
-        this.formData.vestidurasArchivo = { name: this.checklistData.vestidurasArchivo };
+      if ('vestidurasImagen' in this.checklistData && this.checklistData.vestidurasImagen) {
+        this.formData.vestidurasArchivo = { name: this.checklistData.vestidurasImagen };
       }
       
       if ('estadoCabeceras' in this.checklistData) {
         this.formData.estadoCabeceras = this.checklistData.estadoCabeceras;
       }
       
-      if ('cabecerasArchivo' in this.checklistData && this.checklistData.cabecerasArchivo) {
-        this.formData.cabecerasArchivo = { name: this.checklistData.cabecerasArchivo };
+      if ('cabecerasImagen' in this.checklistData && this.checklistData.cabecerasImagen) {
+        this.formData.cabecerasArchivo = { name: this.checklistData.cabecerasImagen };
       }
       
       // Cinturones - Solo configurar si existe en los datos de prueba
@@ -2042,32 +2057,32 @@ export default {
         this.formData.carroceriaLadoDerecho = this.checklistData.carroceriaLadoDerecho;
       }
       
-      if ('carroceriaLadoDerechoArchivo' in this.checklistData && this.checklistData.carroceriaLadoDerechoArchivo) {
-        this.formData.carroceriaLadoDerechoArchivo = { name: this.checklistData.carroceriaLadoDerechoArchivo };
+      if ('carroceriaLadoDerechoImagen' in this.checklistData && this.checklistData.carroceriaLadoDerechoImagen) {
+        this.formData.carroceriaLadoDerechoArchivo = { name: this.checklistData.carroceriaLadoDerechoImagen };
       }
       
       if ('carroceriaLadoIzquierdo' in this.checklistData) {
         this.formData.carroceriaLadoIzquierdo = this.checklistData.carroceriaLadoIzquierdo;
       }
       
-      if ('carroceriaLadoIzquierdoArchivo' in this.checklistData && this.checklistData.carroceriaLadoIzquierdoArchivo) {
-        this.formData.carroceriaLadoIzquierdoArchivo = { name: this.checklistData.carroceriaLadoIzquierdoArchivo };
+      if ('carroceriaLadoIzquierdoImagen' in this.checklistData && this.checklistData.carroceriaLadoIzquierdoImagen) {
+        this.formData.carroceriaLadoIzquierdoArchivo = { name: this.checklistData.carroceriaLadoIzquierdoImagen };
       }
       
       if ('carroceriaLadoTrasero' in this.checklistData) {
         this.formData.carroceriaLadoTrasero = this.checklistData.carroceriaLadoTrasero;
       }
       
-      if ('carroceriaLadoTraseroArchivo' in this.checklistData && this.checklistData.carroceriaLadoTraseroArchivo) {
-        this.formData.carroceriaLadoTraseroArchivo = { name: this.checklistData.carroceriaLadoTraseroArchivo };
+      if ('carroceriaLadoTraseroImagen' in this.checklistData && this.checklistData.carroceriaLadoTraseroImagen) {
+        this.formData.carroceriaLadoTraseroArchivo = { name: this.checklistData.carroceriaLadoTraseroImagen };
       }
       
       if ('carroceriaLadoFrontal' in this.checklistData) {
         this.formData.carroceriaLadoFrontal = this.checklistData.carroceriaLadoFrontal;
       }
       
-      if ('carroceriaLadoFrontalArchivo' in this.checklistData && this.checklistData.carroceriaLadoFrontalArchivo) {
-        this.formData.carroceriaLadoFrontalArchivo = { name: this.checklistData.carroceriaLadoFrontalArchivo };
+      if ('carroceriaLadoFrontalImagen' in this.checklistData && this.checklistData.carroceriaLadoFrontalImagen) {
+        this.formData.carroceriaLadoFrontalArchivo = { name: this.checklistData.carroceriaLadoFrontalImagen };
       }
       
       // Neumáticos - Solo configurar si existe en los datos de prueba
@@ -2075,31 +2090,31 @@ export default {
         this.formData.neumaticosLadoPiloto = this.checklistData.neumaticosLadoPiloto;
       }
       
-      if ('neumaticosLadoPilotoArchivo' in this.checklistData && this.checklistData.neumaticosLadoPilotoArchivo) {
-        this.formData.neumaticosLadoPilotoArchivo = { name: this.checklistData.neumaticosLadoPilotoArchivo };
+      if ('neumaticosLadoPilotoImagen' in this.checklistData && this.checklistData.neumaticosLadoPilotoImagen) {
+        this.formData.neumaticosLadoPilotoArchivo = { name: this.checklistData.neumaticosLadoPilotoImagen };
       }
       
       if ('neumaticosLadoAtrasPiloto' in this.checklistData) {
         this.formData.neumaticosLadoAtrasPiloto = this.checklistData.neumaticosLadoAtrasPiloto;
       }
       
-      if ('neumaticosLadoAtrasPilotoArchivo' in this.checklistData && this.checklistData.neumaticosLadoAtrasPilotoArchivo) {
-        this.formData.neumaticosLadoAtrasPilotoArchivo = { name: this.checklistData.neumaticosLadoAtrasPilotoArchivo };
+      if ('neumaticosLadoAtrasPilotoImagen' in this.checklistData && this.checklistData.neumaticosLadoAtrasPilotoImagen) {
+        this.formData.neumaticosLadoAtrasPilotoArchivo = { name: this.checklistData.neumaticosLadoAtrasPilotoImagen };
       }
       
       if ('neumaticosLadoCopiloto' in this.checklistData) {
         this.formData.neumaticosLadoCopiloto = this.checklistData.neumaticosLadoCopiloto;
       }
       
-      if ('neumaticosLadoCopilotoArchivo' in this.checklistData && this.checklistData.neumaticosLadoCopilotoArchivo) {
-        this.formData.neumaticosLadoCopilotoArchivo = { name: this.checklistData.neumaticosLadoCopilotoArchivo };
+      if ('neumaticosLadoCopilotoImagen' in this.checklistData && this.checklistData.neumaticosLadoCopilotoImagen) {
+        this.formData.neumaticosLadoCopilotoArchivo = { name: this.checklistData.neumaticosLadoCopilotoImagen };
       }
       if ('neumaticosLadoAtrasCopiloto' in this.checklistData) {
         this.formData.neumaticosLadoAtrasCopiloto = this.checklistData.neumaticosLadoAtrasCopiloto;
       }
       
-      if ('neumaticosLadoAtrasCopilotoArchivo' in this.checklistData && this.checklistData.neumaticosLadoAtrasCopilotoArchivo) {
-        this.formData.neumaticosLadoAtrasCopilotoArchivo = { name: this.checklistData.neumaticosLadoAtrasCopilotoArchivo };
+      if ('neumaticosLadoAtrasCopilotoImagen' in this.checklistData && this.checklistData.neumaticosLadoAtrasCopilotoImagen) {
+        this.formData.neumaticosLadoAtrasCopilotoArchivo = { name: this.checklistData.neumaticosLadoAtrasCopilotoImagen };
       }
       
       // Cristales - Solo configurar si existe en los datos de prueba
@@ -2107,24 +2122,24 @@ export default {
         this.formData.cristalesParabrisas = this.checklistData.cristalesParabrisas;
       }
       
-      if ('cristalesParabrisasArchivo' in this.checklistData && this.checklistData.cristalesParabrisasArchivo) {
-        this.formData.cristalesParabrisasArchivo = { name: this.checklistData.cristalesParabrisasArchivo };
+      if ('cristalesParabrisasImagen' in this.checklistData && this.checklistData.cristalesParabrisasImagen) {
+        this.formData.cristalesParabrisasArchivo = { name: this.checklistData.cristalesParabrisasImagen };
       }
       
       if ('cristalesMedallonTrasero' in this.checklistData) {
         this.formData.cristalesMedallonTrasero = this.checklistData.cristalesMedallonTrasero;
       }
       
-      if ('cristalesMedallonTraseroArchivo' in this.checklistData && this.checklistData.cristalesMedallonTraseroArchivo) {
-        this.formData.cristalesMedallonTraseroArchivo = { name: this.checklistData.cristalesMedallonTraseroArchivo };
+      if ('cristalesMedallonTraseroImagen' in this.checklistData && this.checklistData.cristalesMedallonTraseroImagen) {
+        this.formData.cristalesMedallonTraseroArchivo = { name: this.checklistData.cristalesMedallonTraseroImagen };
       }
       
       if ('cristalesLimpiadores' in this.checklistData) {
         this.formData.cristalesLimpiadores = this.checklistData.cristalesLimpiadores;
       }
       
-      if ('cristalesLimpiadoresArchivo' in this.checklistData && this.checklistData.cristalesLimpiadoresArchivo) {
-        this.formData.cristalesLimpiadoresArchivo = { name: this.checklistData.cristalesLimpiadoresArchivo };
+      if ('cristalesLimpiadoresImagen' in this.checklistData && this.checklistData.cristalesLimpiadoresImagen) {
+        this.formData.cristalesLimpiadoresArchivo = { name: this.checklistData.cristalesLimpiadoresImagen };
       }
       
       // Motor - Solo configurar si existe en los datos de prueba
@@ -2132,39 +2147,39 @@ export default {
         this.formData.motorTapones = this.checklistData.motorTapones;
       }
       
-      if ('motorTaponesArchivo' in this.checklistData && this.checklistData.motorTaponesArchivo) {
-        this.formData.motorTaponesArchivo = { name: this.checklistData.motorTaponesArchivo };
+      if ('motorTaponesImagen' in this.checklistData && this.checklistData.motorTaponesImagen) {
+        this.formData.motorTaponesArchivo = { name: this.checklistData.motorTaponesImagen };
       }
       
       if ('motorBateria' in this.checklistData) {
         this.formData.motorBateria = this.checklistData.motorBateria;
       }
       
-      if ('motorBateriaArchivo' in this.checklistData && this.checklistData.motorBateriaArchivo) {
-        this.formData.motorBateriaArchivo = { name: this.checklistData.motorBateriaArchivo };
+      if ('motorBateriaImagen' in this.checklistData && this.checklistData.motorBateriaImagen) {
+        this.formData.motorBateriaArchivo = { name: this.checklistData.motorBateriaImagen };
       }
       
       if ('motorNivelAceite' in this.checklistData) {
         this.formData.motorNivelAceite = this.checklistData.motorNivelAceite;
       }
       
-      if ('motorNivelAceiteArchivo' in this.checklistData && this.checklistData.motorNivelAceiteArchivo) {
-        this.formData.motorNivelAceiteArchivo = { name: this.checklistData.motorNivelAceiteArchivo };
+      if ('motorNivelAceiteImagen' in this.checklistData && this.checklistData.motorNivelAceiteImagen) {
+        this.formData.motorNivelAceiteArchivo = { name: this.checklistData.motorNivelAceiteImagen };
       }
       
       if ('motorNivelLiquidoFrenos' in this.checklistData) {
         this.formData.motorNivelLiquidoFrenos = this.checklistData.motorNivelLiquidoFrenos;
       }
       
-      if ('motorNivelLiquidoFrenosArchivo' in this.checklistData && this.checklistData.motorNivelLiquidoFrenosArchivo) {
-        this.formData.motorNivelLiquidoFrenosArchivo = { name: this.checklistData.motorNivelLiquidoFrenosArchivo };
+      if ('motorNivelLiquidoFrenosImagen' in this.checklistData && this.checklistData.motorNivelLiquidoFrenosImagen) {
+        this.formData.motorNivelLiquidoFrenosArchivo = { name: this.checklistData.motorNivelLiquidoFrenosImagen };
       }
       if ('motorNivelAnticongelante' in this.checklistData) {
         this.formData.motorNivelAnticongelante = this.checklistData.motorNivelAnticongelante;
       }
       
-      if ('motorNivelAnticongelanteArchivo' in this.checklistData && this.checklistData.motorNivelAnticongelanteArchivo) {
-        this.formData.motorNivelAnticongelanteArchivo = { name: this.checklistData.motorNivelAnticongelanteArchivo };
+      if ('motorNivelAnticongelanteImagen' in this.checklistData && this.checklistData.motorNivelAnticongelanteImagen) {
+        this.formData.motorNivelAnticongelanteArchivo = { name: this.checklistData.motorNivelAnticongelanteImagen };
       }
       
       // Depósito Gasolina y Escape - Solo configurar si existe en los datos de prueba
@@ -2180,16 +2195,16 @@ export default {
         this.formData.escapeSilenciador = String(this.checklistData.escapeSilenciador);
       }
       
-      if ('escapeSilenciadorArchivo' in this.checklistData && this.checklistData.escapeSilenciadorArchivo) {
-        this.formData.escapeSilenciadorArchivo = { name: this.checklistData.escapeSilenciadorArchivo };
+      if ('escapeSilenciadorImagen' in this.checklistData && this.checklistData.escapeSilenciadorImagen) {
+        this.formData.escapeSilenciadorArchivo = { name: this.checklistData.escapeSilenciadorImagen };
       }
       
       if ('escapeCatalizador' in this.checklistData) {
         this.formData.escapeCatalizador = String(this.checklistData.escapeCatalizador);
       }
       
-      if ('escapeCatalizadorArchivo' in this.checklistData && this.checklistData.escapeCatalizadorArchivo) {
-        this.formData.escapeCatalizadorArchivo = { name: this.checklistData.escapeCatalizadorArchivo };
+      if ('escapeCatalizadorImagen' in this.checklistData && this.checklistData.escapeCatalizadorImagen) {
+        this.formData.escapeCatalizadorArchivo = { name: this.checklistData.escapeCatalizadorImagen };
       }
       
       // Comentarios Generales - Solo configurar si existe en los datos de prueba
