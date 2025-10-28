@@ -308,12 +308,6 @@ export default {
 					// Emitir el evento con los datos del vehículo
 					this.$emit('vehiculo-guardado', vehiculoGuardado);
 					
-					this.toastStore.addToast({
-						message: `Vehículo ${this.vehiculoData?.id ? 'actualizado' : 'creado'} correctamente`,
-						type: 'success',
-						duration: 3500
-					});
-					
 					this.$emit('close');
 					this.resetForm();
 					console.log('Datos del vehículo enviados:', JSON.stringify(vehiculoGuardado, null, 2));

@@ -224,12 +224,6 @@ export default {
 					// Emitir el evento con los datos del cliente
 					this.$emit('cliente-guardado', clienteGuardado);
 					
-					this.toastStore.addToast({
-						message: `Cliente ${this.clienteData?.id ? 'actualizado' : 'creado'} correctamente`,
-						type: 'success',
-						duration: 3500
-					});
-					
 					this.$emit('close');
 					this.resetForm();
 					console.log('Datos del cliente enviados:', JSON.stringify(clienteGuardado, null, 2));
