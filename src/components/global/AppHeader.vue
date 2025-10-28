@@ -23,8 +23,8 @@
               <font-awesome-icon icon="chevron-down" class="w-4 h-4" />
             </button>
             
-            <!-- Dropdown Menu -->
-            <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-custom shadow-custom-lg py-1 z-50">
+            <!-- Dropdown Menu para pantallas grandes -->
+            <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-custom shadow-custom-lg py-1 z-50 hidden sm:block">
               <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
                 <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
                 Cerrar Sesión
@@ -52,25 +52,23 @@
             </router-link>
           </div>
         </nav>
-        <!-- Dropdown Menu for mobile -->
-        <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-custom shadow-custom-lg py-1 z-50">
-          <div class="block sm:hidden">
-            <router-link
-              v-for="route in mainRoutes"
-              :key="route.path"
-              :to="route.path"
-              class="block px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors"
-              @click="showUserMenu = false"
-            >
-              <font-awesome-icon :icon="route.icon" class="w-4 h-4 inline mr-2" />
-              {{ route.name }}
-            </router-link>
-            <hr class="my-1" />
-            <button v-if="showUserMenu" @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
-              <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
-              Cerrar Sesión
-            </button>
-          </div>
+        <!-- Dropdown Menu para móviles -->
+        <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-custom shadow-custom-lg py-1 z-50 block sm:hidden">
+          <router-link
+            v-for="route in mainRoutes"
+            :key="route.path"
+            :to="route.path"
+            class="block px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors"
+            @click="showUserMenu = false"
+          >
+            <font-awesome-icon :icon="route.icon" class="w-4 h-4 inline mr-2" />
+            {{ route.name }}
+          </router-link>
+          <hr class="my-1" />
+          <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
+            <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
+            Cerrar Sesión
+          </button>
         </div>
       </div>
     </header>
