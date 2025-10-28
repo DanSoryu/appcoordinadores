@@ -13,9 +13,9 @@
               @click="showUserMenu = !showUserMenu"
               class="flex items-center space-x-3 hover:bg-primary-600 px-3 py-2 rounded-custom transition-colors"
             >
-              <font-awesome-icon icon="user" class="w-6 h-6" />
+              <font-awesome-icon :icon="getCurrentModuleIcon()" class="w-6 h-6" />
               <span class="font-medium">
-                <span class="block sm:hidden">{{ getCurrentTabName() }}</span>
+                <span class="block sm:hidden">{{ getCurrentModuleName() }}</span>
                 <span class="hidden sm:block">{{ user.usuario }}</span>
               </span>
               <font-awesome-icon icon="chevron-down" class="w-4 h-4" />
@@ -64,11 +64,11 @@
               {{ route.name }}
             </router-link>
             <hr class="my-1" />
+            <button v-if="showUserMenu" @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
+              <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
+              Cerrar Sesión
+            </button>
           </div>
-          <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
-            <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
-            Cerrar Sesión
-          </button>
         </div>
       </div>
     </header>
@@ -179,10 +179,17 @@ const handleLogout = () => {
   showUserMenu.value = false
 }
 
-const getCurrentTabName = () => {
-  const tabList = tabs.value || [];
-  const tab = tabList.find(t => t.id === props.activeTab)
-  return tab ? tab.name : ''
+// Returns the module name (Dashboard, Recepciones, etc) for the current route
+const getCurrentModuleName = () => {
+  const routes = mainRoutes.value || [];
+  const current = routes.find(r => r.path === route.path);
+  return current ? current.name : '';
+}
+
+const getCurrentModuleIcon = () => {
+  const routes = mainRoutes.value || [];
+  const current = routes.find(r => r.path === route.path);
+  return current ? current.icon : 'user';
 }
 
 const handleTabChange = (tabId) => {
