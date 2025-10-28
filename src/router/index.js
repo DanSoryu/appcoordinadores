@@ -90,9 +90,9 @@ router.beforeEach(async (to, from, next) => {
   // Verificar si la ruta requiere autenticación
   if (to.meta.requiresAuth) {
       if (!authStore.isLoggedIn) {
-        // Cerrar sesión y recargar la página para limpiar el estado y mostrar el login
+        // Cerrar sesión y redirigir al login
         authStore.logout();
-        window.location.reload();
+        next('/login');
         return;
       }
 
