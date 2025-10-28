@@ -2220,6 +2220,8 @@ export default {
       // Avanzar al siguiente paso sin guardar datos
       if (this.currentStep < 3) {
         this.currentStep++;
+        // Hacer scroll al top del modal
+        this.scrollToTop();
       }
     },
     
@@ -2227,7 +2229,19 @@ export default {
       // Retroceder al paso anterior sin guardar datos
       if (this.currentStep > 1) {
         this.currentStep--;
+        // Hacer scroll al top del modal
+        this.scrollToTop();
       }
+    },
+
+    scrollToTop() {
+      // Buscar el contenedor del modal y hacer scroll al top
+      this.$nextTick(() => {
+        const modalContainer = document.querySelector('.overflow-y-auto.max-h-\\[90vh\\]');
+        if (modalContainer) {
+          modalContainer.scrollTop = 0;
+        }
+      });
     },
     
     async handleFinalSubmit() {
