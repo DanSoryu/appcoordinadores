@@ -13,15 +13,11 @@
               @click="showUserMenu = !showUserMenu"
               class="flex items-center space-x-3 hover:bg-primary-600 px-3 py-2 rounded-custom transition-colors"
             >
-              <!-- mobile: module icon; desktop: user icon -->
-              <font-awesome-icon v-if="isMobile" :icon="getCurrentModuleIcon()" class="w-6 h-6" />
-              <font-awesome-icon v-else icon="user" class="w-6 h-6" />
-
+              <font-awesome-icon :icon="getCurrentModuleIcon()" class="w-6 h-6" />
               <span class="font-medium">
-                <span v-if="isMobile">{{ getCurrentModuleName() }}</span>
-                <span v-else>{{ user.usuario }}</span>
+                <span class="block sm:hidden">{{ getCurrentModuleName() }}</span>
+                <span class="hidden sm:block">{{ user.usuario }}</span>
               </span>
-
               <font-awesome-icon icon="chevron-down" class="w-4 h-4" />
             </button>
             
@@ -36,7 +32,7 @@
         </div>
 
         <!-- Main Navigation: hidden on mobile, visible on >=480px -->
-  <nav v-if="!isMobile" class="border-t border-primary-400">
+        <nav class="border-t border-primary-400 hidden sm:block">
           <div class="flex space-x-8 -mb-px">
             <router-link
               v-for="route in mainRoutes" 
@@ -54,9 +50,9 @@
             </router-link>
           </div>
         </nav>
-        <!-- Dropdown Menu (mobile shows module links + logout; desktop shows only logout) -->
+        <!-- Dropdown Menu for mobile -->
         <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-custom shadow-custom-lg py-1 z-50">
-          <template v-if="isMobile">
+          <div class="block sm:hidden">
             <router-link
               v-for="route in mainRoutes"
               :key="route.path"
@@ -68,17 +64,11 @@
               {{ route.name }}
             </router-link>
             <hr class="my-1" />
-            <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
+            <button v-if="showUserMenu" @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
               <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
               Cerrar Sesión
             </button>
-          </template>
-          <template v-else>
-            <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
-              <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
-              Cerrar Sesión
-            </button>
-          </template>
+          </div>
         </div>
       </div>
     </header>
@@ -117,17 +107,6 @@ const authStore = useAuthStore()
 
 // State
 const showUserMenu = ref(false)
-// mobile flag: true when viewport width <= 480px
-const isMobile = ref(false)
-
-const updateIsMobile = () => {
-  try {
-    isMobile.value = window.innerWidth <= 480
-  } catch (e) {
-    // server-side or test env fallback
-    isMobile.value = false
-  }
-}
 
 // All available routes
 const allRoutes = [
@@ -227,12 +206,9 @@ const handleClickOutside = (event) => {
 // Lifecycle hooks
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
-  updateIsMobile()
-  window.addEventListener('resize', updateIsMobile)
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
-  window.removeEventListener('resize', updateIsMobile)
 })
 </script>
