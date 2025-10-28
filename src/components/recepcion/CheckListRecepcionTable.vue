@@ -1035,9 +1035,9 @@ export default {
     // Helper para obtener la URL completa de una imagen
     const getImageUrl = (imageName) => {
       if (!imageName) return null;
-      return `http://127.0.0.1:8000/Mecasoft/detalles_ordenes/${imageName}`;
+      // return `http://127.0.0.1:8000/Mecasoft/detalles_ordenes/${imageName}`;
+      return `https://api.ed-intra.com/Mecasoft/detalles_ordenes/${imageName}`;
     };
-
     // Helper para formatear fechas
     const formatDate = (dateString) => {
       if (!dateString) return 'No disponible';
