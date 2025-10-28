@@ -5,9 +5,9 @@ import router from '@/router'
 // Configuración base de Axios
 const apiClient = axios.create({
   // baseURL local
-  baseURL: 'http://localhost:8000/api/mecasoft',
+  // baseURL: 'http://localhost:8000/api/mecasoft',
   // baseURL producción
-  // baseURL: 'https://api.ed-intra.com/api/mecasoft',
+  baseURL: 'https://api.ed-intra.com/api/mecasoft',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

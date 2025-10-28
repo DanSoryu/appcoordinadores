@@ -577,6 +577,7 @@ export default {
       currentCliente,
       clienteToEdit,
       clienteToDelete,
+      copesWithDetails,
       previousPage,
       nextPage,
       goToPage,
