@@ -180,7 +180,8 @@ const handleLogout = () => {
 }
 
 const getCurrentTabName = () => {
-  const tab = tabs.find(t => t.id === props.activeTab)
+  const tabList = tabs.value || [];
+  const tab = tabList.find(t => t.id === props.activeTab)
   return tab ? tab.name : ''
 }
 
