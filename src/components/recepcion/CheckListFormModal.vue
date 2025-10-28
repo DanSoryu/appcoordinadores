@@ -1807,59 +1807,59 @@ export default {
       }
       
       // --- STEP 3 ---
-      // Carrocería - usar imágenes base64
-      if (this.formData.carroceriaLadoDerecho === 'mal_estado' && this.formData.carroceriaLadoDerechoImagen) {
+      // Carrocería - usar imágenes base64 (SIEMPRE que existan, independientemente del estado)
+      if (this.formData.carroceriaLadoDerechoImagen) {
         result.carroceriaLadoDerechoImagen = this.formData.carroceriaLadoDerechoImagen;
       }
       
-      if (this.formData.carroceriaLadoIzquierdo === 'mal_estado' && this.formData.carroceriaLadoIzquierdoImagen) {
+      if (this.formData.carroceriaLadoIzquierdoImagen) {
         result.carroceriaLadoIzquierdoImagen = this.formData.carroceriaLadoIzquierdoImagen;
       }
       
-      if (this.formData.carroceriaLadoTrasero === 'mal_estado' && this.formData.carroceriaLadoTraseroImagen) {
+      if (this.formData.carroceriaLadoTraseroImagen) {
         result.carroceriaLadoTraseroImagen = this.formData.carroceriaLadoTraseroImagen;
       }
       
-      if (this.formData.carroceriaLadoFrontal === 'mal_estado' && this.formData.carroceriaLadoFrontalImagen) {
+      if (this.formData.carroceriaLadoFrontalImagen) {
         result.carroceriaLadoFrontalImagen = this.formData.carroceriaLadoFrontalImagen;
       }
       
-      // Neumáticos - usar imágenes base64
-      if (this.formData.neumaticosLadoPiloto === 'mal_estado' && this.formData.neumaticosLadoPilotoImagen) {
+      // Neumáticos - usar imágenes base64 (SIEMPRE que existan, independientemente del estado)
+      if (this.formData.neumaticosLadoPilotoImagen) {
         result.neumaticosLadoPilotoImagen = this.formData.neumaticosLadoPilotoImagen;
       }
       
-      if (this.formData.neumaticosLadoAtrasPiloto === 'mal_estado' && this.formData.neumaticosLadoAtrasPilotoImagen) {
+      if (this.formData.neumaticosLadoAtrasPilotoImagen) {
         result.neumaticosLadoAtrasPilotoImagen = this.formData.neumaticosLadoAtrasPilotoImagen;
       }
       
-      if (this.formData.neumaticosLadoCopiloto === 'mal_estado' && this.formData.neumaticosLadoCopilotoImagen) {
+      if (this.formData.neumaticosLadoCopilotoImagen) {
         result.neumaticosLadoCopilotoImagen = this.formData.neumaticosLadoCopilotoImagen;
       }
       
-      if (this.formData.neumaticosLadoAtrasCopiloto === 'mal_estado' && this.formData.neumaticosLadoAtrasCopilotoImagen) {
+      if (this.formData.neumaticosLadoAtrasCopilotoImagen) {
         result.neumaticosLadoAtrasCopilotoImagen = this.formData.neumaticosLadoAtrasCopilotoImagen;
       }
       
-      // Cristales - usar imágenes base64
-      if (this.formData.cristalesParabrisas === 'mal_estado' && this.formData.cristalesParabrisasImagen) {
+      // Cristales - usar imágenes base64 (SIEMPRE que existan, independientemente del estado)
+      if (this.formData.cristalesParabrisasImagen) {
         result.cristalesParabrisasImagen = this.formData.cristalesParabrisasImagen;
       }
       
-      if (this.formData.cristalesMedallonTrasero === 'mal_estado' && this.formData.cristalesMedallonTraseroImagen) {
+      if (this.formData.cristalesMedallonTraseroImagen) {
         result.cristalesMedallonTraseroImagen = this.formData.cristalesMedallonTraseroImagen;
       }
       
-      if (this.formData.cristalesLimpiadores === 'mal_estado' && this.formData.cristalesLimpiadoresImagen) {
+      if (this.formData.cristalesLimpiadoresImagen) {
         result.cristalesLimpiadoresImagen = this.formData.cristalesLimpiadoresImagen;
       }
       
-      // Motor - usar imágenes base64
-      if (this.formData.motorTapones === 'mal_estado' && this.formData.motorTaponesImagen) {
+      // Motor - usar imágenes base64 (SIEMPRE que existan, independientemente del estado)
+      if (this.formData.motorTaponesImagen) {
         result.motorTaponesImagen = this.formData.motorTaponesImagen;
       }
       
-      if (this.formData.motorBateria === 'mal_estado' && this.formData.motorBateriaImagen) {
+      if (this.formData.motorBateriaImagen) {
         result.motorBateriaImagen = this.formData.motorBateriaImagen;
       }
       
