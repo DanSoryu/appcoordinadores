@@ -13,7 +13,9 @@
               @click="showUserMenu = !showUserMenu"
               class="flex items-center space-x-3 hover:bg-primary-600 px-3 py-2 rounded-custom transition-colors"
             >
-              <font-awesome-icon :icon="getCurrentModuleIcon()" class="w-6 h-6" />
+              <!-- Ícono del módulo en pantallas pequeñas, ícono de usuario en pantallas grandes -->
+              <font-awesome-icon :icon="getCurrentModuleIcon()" class="w-6 h-6 block sm:hidden" />
+              <font-awesome-icon icon="user" class="w-6 h-6 hidden sm:block" />
               <span class="font-medium">
                 <span class="block sm:hidden">{{ getCurrentModuleName() }}</span>
                 <span class="hidden sm:block">{{ user.usuario }}</span>
