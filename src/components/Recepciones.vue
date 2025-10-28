@@ -9,12 +9,16 @@
       </div>
 
       <div v-if="activeTab === 'checklistrecepcion'">
-        <CheckListRecepcion @abrir-checklist-modal="handleAbrirChecklistModal" />
+        <CheckListRecepcion 
+          ref="checklistRecepcionRef"
+          @abrir-checklist-modal="handleAbrirChecklistModal" 
+        />
         <CheckListFormModal 
           v-if="showChecklistModal" 
           :show="showChecklistModal" 
           :checklistData="selectedChecklistData"
-          @close="showChecklistModal = false" 
+          @close="showChecklistModal = false"
+          @checklist-saved="handleChecklistSaved"
         />
       </div>
     </main>
@@ -36,10 +40,21 @@ const activeTab = ref('datosrecepcion')
 // Control del modal checklist
 const showChecklistModal = ref(false)
 const selectedChecklistData = ref({})
+const checklistRecepcionRef = ref(null)
 
 function handleAbrirChecklistModal(item) {
   selectedChecklistData.value = item
   showChecklistModal.value = true
   console.log('Datos pasados al modal:', item)
+}
+
+function handleChecklistSaved(data) {
+  console.log('Checklist guardado exitosamente:', data)
+  // Cerrar el modal
+  showChecklistModal.value = false
+  // Recargar los datos de la tabla
+  if (checklistRecepcionRef.value) {
+    checklistRecepcionRef.value.cargarChecklistData()
+  }
 }
 </script>
