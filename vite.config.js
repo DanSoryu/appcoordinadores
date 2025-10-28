@@ -29,9 +29,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Coordinadores Vue',
-        short_name: 'Coordinadores',
-        description: 'App de Coordinadores Vue',
+        name: 'Mecasoft',
+        short_name: 'Mecasoft',
+        description: 'App Mecasoft',
         theme_color: '#4f46e5',
         background_color: '#ffffff',
         display: 'standalone',
