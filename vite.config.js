@@ -32,7 +32,7 @@ export default defineConfig({
         name: 'Coordinadores Vue',
         short_name: 'Coordinadores',
         description: 'App de Coordinadores Vue',
-        theme_color: '#0ea5e9',
+        theme_color: '#4f46e5',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '.',

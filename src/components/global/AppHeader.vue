@@ -14,7 +14,10 @@
               class="flex items-center space-x-3 hover:bg-primary-600 px-3 py-2 rounded-custom transition-colors"
             >
               <font-awesome-icon icon="user" class="w-6 h-6" />
-              <span class="font-medium">{{ user.usuario }}</span>
+              <span class="font-medium">
+                <span class="block sm:hidden">{{ getCurrentTabName() }}</span>
+                <span class="hidden sm:block">{{ user.usuario }}</span>
+              </span>
               <font-awesome-icon icon="chevron-down" class="w-4 h-4" />
             </button>
             
@@ -28,8 +31,8 @@
           </div>
         </div>
 
-        <!-- Main Navigation -->
-        <nav class="border-t border-primary-400">
+        <!-- Main Navigation: hidden on mobile, visible on >=480px -->
+        <nav class="border-t border-primary-400 hidden sm:block">
           <div class="flex space-x-8 -mb-px">
             <router-link
               v-for="route in mainRoutes" 
@@ -47,6 +50,26 @@
             </router-link>
           </div>
         </nav>
+        <!-- Dropdown Menu for mobile -->
+        <div v-if="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-custom shadow-custom-lg py-1 z-50">
+          <div class="block sm:hidden">
+            <router-link
+              v-for="route in mainRoutes"
+              :key="route.path"
+              :to="route.path"
+              class="block px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors"
+              @click="showUserMenu = false"
+            >
+              <font-awesome-icon :icon="route.icon" class="w-4 h-4 inline mr-2" />
+              {{ route.name }}
+            </router-link>
+            <hr class="my-1" />
+          </div>
+          <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-secondary-100/60 hover:text-secondary-700 transition-colors">
+            <font-awesome-icon icon="sign-out-alt" class="w-4 h-4 inline mr-2" />
+            Cerrar Sesión
+          </button>
+        </div>
       </div>
     </header>
 
