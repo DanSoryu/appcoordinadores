@@ -112,7 +112,7 @@ const showUserMenu = ref(false)
 const allRoutes = [
   { path: '/dashboard', name: 'Dashboard', icon: 'tachometer-alt', roles: ['admin'] },
   { path: '/recepciones', name: 'Recepciones', icon: 'clipboard-list', roles: ['admin', 'mecanico'] },
-  { path: '/diagnosticos', name: 'Diagnósticos', icon: 'stethoscope', roles: ['admin'] },
+  { path: '/diagnosticos', name: 'Diagnósticos', icon: 'screwdriver-wrench', roles: ['admin'] },
   { path: '/vehiculos', name: 'Vehículos', icon: 'car', roles: ['admin'] },
   { path: '/clientes', name: 'Clientes', icon: 'id-card', roles: ['admin'] },
   { path: '/usuarios', name: 'Usuarios', icon: 'users', roles: ['admin'] }

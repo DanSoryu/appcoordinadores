@@ -43,7 +43,8 @@ import {
   faCommentAlt,
   faStethoscope,
   faClock,
-  faCamera
+  faCamera,
+  faScrewdriverWrench
 } from '@fortawesome/free-solid-svg-icons'
 
 // Agregar iconos a la librería
@@ -81,7 +82,8 @@ library.add(
   faCommentAlt,
   faStethoscope,
   faClock,
-  faCamera
+  faCamera,
+  faScrewdriverWrench
 )
 
 const app = createApp(App)
