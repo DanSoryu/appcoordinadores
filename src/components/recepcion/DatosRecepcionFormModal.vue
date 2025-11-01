@@ -152,14 +152,14 @@ export default {
 			},
 			vehiculos: [],
 			talleres: [
-				{ id: 1, nombre: 'Taller Principal' },
-				{ id: 2, nombre: 'Sucursal Norte' },
-				{ id: 3, nombre: 'Sucursal Sur' },
-				{ id: 4, nombre: 'Sucursal Este' },
-				{ id: 5, nombre: 'Sucursal Oeste' },
-				{ id: 6, nombre: 'Taller Especializado' },
-				{ id: 7, nombre: 'Centro de Servicio' },
-				{ id: 8, nombre: 'Taller de Emergencia' }
+				{ id: 1, nombre: 'Taller 1' },
+				{ id: 2, nombre: 'Taller 2' },
+				{ id: 3, nombre: 'Taller 3' },
+				{ id: 4, nombre: 'Taller 4' },
+				{ id: 5, nombre: 'Taller 5' },
+				{ id: 6, nombre: 'Taller 6' },
+				{ id: 7, nombre: 'Taller 7' },
+				{ id: 8, nombre: 'Taller 8' }
 			],
 			showVehiculoModal: false
 		};
