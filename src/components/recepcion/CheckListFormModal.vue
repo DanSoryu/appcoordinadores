@@ -1211,6 +1211,25 @@
             </div>
           </div>
         </div>
+        
+        <!-- Recuadro de validación -->
+        <div v-if="!isStepValid" class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+            </div>
+            <div class="ml-3">
+              <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+              <ul class="text-sm text-red-700 space-y-1">
+                <li v-for="error in validationErrors" :key="error" class="flex items-center">
+                  <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                  {{ error }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
         <div class="mt-8">
           <div v-if="currentStep < 3" class="flex justify-center">
             <BaseButton 
@@ -1648,6 +1667,218 @@ export default {
 
       return false;
     },
+    
+    // Lista de errores de validación específicos para mostrar al usuario
+    validationErrors() {
+      const errors = [];
+      
+      if (this.currentStep === 1) {
+        // Step 1 validation errors
+        if (!this.uiControls.llavesRecibidas) {
+          errors.push('Seleccionar si se recibieron llaves');
+        }
+        if (this.uiControls.llavesRecibidas === 'true' && !this.formData.cantidadLlaves) {
+          errors.push('Ingresar la cantidad de llaves recibidas');
+        }
+        if (!this.uiControls.polizaSeguro) {
+          errors.push('Seleccionar si se tiene póliza de seguro');
+        }
+        if (this.uiControls.polizaSeguro === 'true' && !this.formData.polizaSeguroArchivo) {
+          errors.push('Tomar fotografía de la póliza de seguro');
+        }
+        if (!this.uiControls.tarjetaCirculacion) {
+          errors.push('Seleccionar si se tiene tarjeta de circulación');
+        }
+        if (!this.formData.descripcionAccesorios || this.formData.descripcionAccesorios.trim() === '') {
+          errors.push('Escribir descripción de accesorios/herramienta');
+        }
+        if (!this.formData.accesoriosHerramientaArchivo) {
+          errors.push('Tomar fotografía de accesorios/herramienta');
+        }
+      }
+      
+      if (this.currentStep === 2) {
+        // Step 2 validation errors
+        if (!this.formData.odometroArchivo) {
+          errors.push('Tomar fotografía del odómetro');
+        }
+        if (!this.formData.nivelCombustible) {
+          errors.push('Seleccionar nivel de combustible');
+        }
+        if (!this.formData.combustibleArchivo) {
+          errors.push('Tomar fotografía del combustible');
+        }
+        if (!this.formData.testigosEncendidos || this.formData.testigosEncendidos.length === 0) {
+          errors.push('Seleccionar testigos encendidos');
+        }
+        if (!this.formData.testigosEncendidosArchivo) {
+          errors.push('Tomar fotografía de los testigos');
+        }
+        if (!this.uiControls.estereo) {
+          errors.push('Seleccionar si funciona el estéreo');
+        }
+        if (!this.uiControls.bocinas) {
+          errors.push('Seleccionar si funcionan las bocinas');
+        }
+        if (this.uiControls.bocinas === 'true' && !this.formData.cantidadBocinas) {
+          errors.push('Ingresar cantidad de bocinas funcionando');
+        }
+        if (!this.formData.manijas) {
+          errors.push('Seleccionar estado de las manijas');
+        }
+        if (!this.formData.estadoSeguros) {
+          errors.push('Seleccionar estado de los seguros');
+        }
+        if (!this.formData.segurosArchivo) {
+          errors.push('Tomar fotografía de los seguros');
+        }
+        if (!this.formData.estadoCristales) {
+          errors.push('Seleccionar estado de cristales de ventanas');
+        }
+        if (!this.formData.cristalesArchivo) {
+          errors.push('Tomar fotografía de cristales de ventanas');
+        }
+        if (!this.formData.estadoVestiduras) {
+          errors.push('Seleccionar estado de las vestiduras');
+        }
+        if (!this.formData.vestidurasArchivo) {
+          errors.push('Tomar fotografía de las vestiduras');
+        }
+        if (!this.formData.estadoCabeceras) {
+          errors.push('Seleccionar estado de las cabeceras');
+        }
+        if (!this.formData.cabecerasArchivo) {
+          errors.push('Tomar fotografía de las cabeceras');
+        }
+        if (!this.formData.funcionalidadCinturones) {
+          errors.push('Seleccionar funcionalidad de cinturones');
+        }
+      }
+      
+      if (this.currentStep === 3) {
+        // Step 3 validation errors
+        if (!this.formData.carroceriaLadoDerecho) {
+          errors.push('Seleccionar estado de carrocería lado derecho');
+        }
+        if (!this.formData.carroceriaLadoDerechoArchivo) {
+          errors.push('Tomar fotografía de carrocería lado derecho');
+        }
+        if (!this.formData.carroceriaLadoIzquierdo) {
+          errors.push('Seleccionar estado de carrocería lado izquierdo');
+        }
+        if (!this.formData.carroceriaLadoIzquierdoArchivo) {
+          errors.push('Tomar fotografía de carrocería lado izquierdo');
+        }
+        if (!this.formData.carroceriaLadoTrasero) {
+          errors.push('Seleccionar estado de carrocería lado trasero');
+        }
+        if (!this.formData.carroceriaLadoTraseroArchivo) {
+          errors.push('Tomar fotografía de carrocería lado trasero');
+        }
+        if (!this.formData.carroceriaLadoFrontal) {
+          errors.push('Seleccionar estado de carrocería lado frontal');
+        }
+        if (!this.formData.carroceriaLadoFrontalArchivo) {
+          errors.push('Tomar fotografía de carrocería lado frontal');
+        }
+        if (!this.formData.neumaticosLadoPiloto) {
+          errors.push('Seleccionar estado de neumático lado piloto');
+        }
+        if (!this.formData.neumaticosLadoPilotoArchivo) {
+          errors.push('Tomar fotografía de neumático lado piloto');
+        }
+        if (!this.formData.neumaticosLadoAtrasPiloto) {
+          errors.push('Seleccionar estado de neumático atrás piloto');
+        }
+        if (!this.formData.neumaticosLadoAtrasPilotoArchivo) {
+          errors.push('Tomar fotografía de neumático atrás piloto');
+        }
+        if (!this.formData.neumaticosLadoCopiloto) {
+          errors.push('Seleccionar estado de neumático lado copiloto');
+        }
+        if (!this.formData.neumaticosLadoCopilotoArchivo) {
+          errors.push('Tomar fotografía de neumático lado copiloto');
+        }
+        if (!this.formData.neumaticosLadoAtrasCopiloto) {
+          errors.push('Seleccionar estado de neumático atrás copiloto');
+        }
+        if (!this.formData.neumaticosLadoAtrasCopilotoArchivo) {
+          errors.push('Tomar fotografía de neumático atrás copiloto');
+        }
+        if (!this.formData.cristalesParabrisas) {
+          errors.push('Seleccionar estado del parabrisas');
+        }
+        if (!this.formData.cristalesParabrisasArchivo) {
+          errors.push('Tomar fotografía del parabrisas');
+        }
+        if (!this.formData.cristalesMedallonTrasero) {
+          errors.push('Seleccionar estado del medallón trasero');
+        }
+        if (!this.formData.cristalesMedallonTraseroArchivo) {
+          errors.push('Tomar fotografía del medallón trasero');
+        }
+        if (!this.formData.cristalesLimpiadores) {
+          errors.push('Seleccionar estado de plumas limpiadoras');
+        }
+        if (!this.formData.cristalesLimpiadoresArchivo) {
+          errors.push('Tomar fotografía de plumas limpiadoras');
+        }
+        if (!this.formData.motorTapones) {
+          errors.push('Seleccionar estado de tapones del motor');
+        }
+        if (!this.formData.motorTaponesArchivo) {
+          errors.push('Tomar fotografía de tapones del motor');
+        }
+        if (!this.formData.motorBateria) {
+          errors.push('Seleccionar estado de la batería');
+        }
+        if (!this.formData.motorBateriaArchivo) {
+          errors.push('Tomar fotografía de la batería');
+        }
+        if (!this.formData.motorNivelAceite) {
+          errors.push('Seleccionar nivel de aceite');
+        }
+        if (!this.formData.motorNivelAceiteArchivo) {
+          errors.push('Tomar fotografía del nivel de aceite');
+        }
+        if (!this.formData.motorNivelLiquidoFrenos) {
+          errors.push('Seleccionar nivel de líquido de frenos');
+        }
+        if (!this.formData.motorNivelLiquidoFrenosArchivo) {
+          errors.push('Tomar fotografía del nivel de líquido de frenos');
+        }
+        if (!this.formData.motorNivelAnticongelante) {
+          errors.push('Seleccionar nivel de anticongelante');
+        }
+        if (!this.formData.motorNivelAnticongelanteArchivo) {
+          errors.push('Tomar fotografía del nivel de anticongelante');
+        }
+        if (!this.formData.depositoPuerta) {
+          errors.push('Seleccionar estado de puerta del depósito');
+        }
+        if (!this.formData.depositoTapon) {
+          errors.push('Seleccionar estado del tapón del depósito');
+        }
+        if (!this.formData.escapeSilenciador) {
+          errors.push('Seleccionar estado del silenciador');
+        }
+        if (!this.formData.escapeSilenciadorArchivo) {
+          errors.push('Tomar fotografía del silenciador');
+        }
+        if (!this.formData.escapeCatalizador) {
+          errors.push('Seleccionar estado del catalizador');
+        }
+        if (!this.formData.escapeCatalizadorArchivo) {
+          errors.push('Tomar fotografía del catalizador');
+        }
+        if (!this.formData.comentarioGeneral || this.formData.comentarioGeneral.trim() === '') {
+          errors.push('Escribir comentario general');
+        }
+      }
+      
+      return errors;
+    },
+    
       // Crear un JSON final que solo incluya los valores relevantes según los controles
     finalFormData() {
       const result = {
