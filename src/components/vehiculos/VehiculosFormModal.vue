@@ -241,7 +241,9 @@ export default {
 			return regex.test(value);
 		},
 		formatPlacas(event) {
-			const value = event.target.value;
+			let value = event.target.value || '';
+			// Convertir a mayúsculas y remover espacios excesivos
+			value = value.toUpperCase();
 			if (value.length <= 12) {
 				this.formData.placas = value;
 			} else {
@@ -265,9 +267,10 @@ export default {
 			}
 		},
 		formatNumeroSerie(event) {
-			const value = event.target.value;
-			// Remover espacios y caracteres especiales, máximo 17 caracteres
-			const cleanValue = value.replace(/[^A-Za-z0-9]/g, '').substring(0, 17);
+			let value = event.target.value || '';
+			// Convertir a mayúsculas, remover espacios y caracteres especiales, máximo 17 caracteres
+			value = value.toUpperCase();
+			const cleanValue = value.replace(/[^A-Z0-9]/g, '').substring(0, 17);
 			this.formData.numero_serie = cleanValue;
 			event.target.value = cleanValue;
 		},
@@ -275,9 +278,11 @@ export default {
 			if (!this.vehiculoData || Object.keys(this.vehiculoData).length === 0) return;
 			this.formData.marca = this.vehiculoData.marca || '';
 			this.formData.modelo = this.vehiculoData.modelo || '';
-			this.formData.placas = this.vehiculoData.placas || '';
+			// Asegurar que las placas cargadas estén en mayúsculas
+			this.formData.placas = (this.vehiculoData.placas || '').toString().toUpperCase();
 			this.formData.año = this.vehiculoData.año || '';
-			this.formData.numero_serie = this.vehiculoData.numero_serie || '';
+			// Asegurar que el número de serie (VIN) esté en mayúsculas sin caracteres inválidos
+			this.formData.numero_serie = (this.vehiculoData.numero_serie || '').toString().toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0,17);
 			this.formData.numero_economico = this.vehiculoData.numero_economico || '';
 			this.formData.cliente_id = this.vehiculoData.cliente_id || '';
 		},
