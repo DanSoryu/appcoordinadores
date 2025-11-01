@@ -429,11 +429,22 @@ export default {
         const recepcionesData = recepcionResponse.data
         const vehiculosData = vehiculosResponse.data
         
-        // Combinar datos de recepción con datos de vehículos
+        // Helper: convertir 'YYYY-MM-DD HH:mm:ss' a 'YYYY-MM-DD'
+        const formatFecha = (fechaStr) => {
+          if (!fechaStr) return ''
+          // Si ya está en formato 'YYYY-MM-DD' devolverla tal cual
+          if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr)) return fechaStr
+          // Extraer la parte de fecha antes del espacio
+          const match = fechaStr.match(/^(\d{4}-\d{2}-\d{2})/)
+          return match ? match[1] : fechaStr
+        }
+
+        // Combinar datos de recepción con datos de vehículos y formatear fecha
         recepciones.value = recepcionesData.map(recepcion => {
           const vehiculo = vehiculosData.find(v => v.id === recepcion.vehiculo_id)
           return {
             ...recepcion,
+            fecha_recepcion: formatFecha(recepcion.fecha_recepcion),
             marca: vehiculo?.marca || 'N/A',
             modelo: vehiculo?.modelo || 'N/A',
             año: vehiculo?.año || 'N/A'
@@ -484,6 +495,19 @@ export default {
     }
 
     const handleRecepcionGuardada = async (nuevaRecepcion) => {
+      // Asegurarse de mantener el formato de fecha correcto cuando se actualiza/guarda
+      const formatFecha = (fechaStr) => {
+        if (!fechaStr) return ''
+        if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr)) return fechaStr
+        const match = fechaStr.match(/^(\d{4}-\d{2}-\d{2})/)
+        return match ? match[1] : fechaStr
+      }
+
+      // Normalizar la fecha de la nueva recepción
+      if (nuevaRecepcion.fecha_recepcion) {
+        nuevaRecepcion.fecha_recepcion = formatFecha(nuevaRecepcion.fecha_recepcion)
+      }
+
       if (recepcionToEdit.value) {
         // Actualizar recepción existente
         const index = recepciones.value.findIndex(r => r.id === nuevaRecepcion.id)
