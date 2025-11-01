@@ -194,7 +194,9 @@ export default {
 					this.formData = { 
 						...newData,
 						// Convertir fecha de formato 'YYYY-MM-DD HH:mm:ss' a 'YYYY-MM-DD'
-						fecha_recepcion: newData.fecha_recepcion ? newData.fecha_recepcion.split(' ')[0] : ''
+						fecha_recepcion: newData.fecha_recepcion ? newData.fecha_recepcion.split(' ')[0] : '',
+						// Normalizar entregado_por: primera letra de cada palabra en mayúscula
+						entregado_por: newData.entregado_por ? this.capitalizeWords(newData.entregado_por) : ''
 					};
 					console.log('Datos de recepción cargados para edición:', this.formData);
 				}
@@ -233,13 +235,23 @@ export default {
 		abrirVehiculoModal() {
 			this.showVehiculoModal = true;
 		},
+		// Capitalizar la primera letra de cada palabra para el campo 'entregado_por'
 		formatEntregadoPor(event) {
-			const value = event.target.value;
-			if (value.length <= 75) {
-				this.formData.entregado_por = value;
-			} else {
-				event.target.value = this.formData.entregado_por;
+			let value = event.target.value || '';
+			// Limitar longitud
+			if (value.length > 75) {
+				value = value.substring(0, 75);
 			}
+			this.formData.entregado_por = this.capitalizeWords(value);
+		},
+
+		// Helper: capitaliza la primera letra de cada palabra (separa por espacios)
+		capitalizeWords(value) {
+			if (!value) return '';
+			return value.toString().split(' ').map(w => {
+				if (!w) return '';
+				return w.charAt(0).toUpperCase() + w.slice(1);
+			}).join(' ');
 		},
 			validarKilometraje(event) {
 				let valor = event.target.value;

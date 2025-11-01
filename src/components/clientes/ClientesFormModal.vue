@@ -38,11 +38,11 @@
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Responsable Automotriz</label>
-								<input v-model="formData.responsable_automotriz" class="input mb-2 w-full" placeholder="Nombre del responsable automotriz" />
+								<input v-model="formData.responsable_automotriz" @input="formatNombreField('responsable_automotriz')" class="input mb-2 w-full" placeholder="Nombre del responsable automotriz" />
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Supervisor *</label>
-								<input v-model="formData.supervisor" class="input mb-2 w-full" placeholder="Nombre del supervisor" required />
+								<input v-model="formData.supervisor" @input="formatNombreField('supervisor')" class="input mb-2 w-full" placeholder="Nombre del supervisor" required />
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Correo del Supervisor</label>
@@ -205,10 +205,30 @@ export default {
 			if (!this.clienteData || Object.keys(this.clienteData).length === 0) return;
 			this.formData.telefono = this.clienteData.telefono || '';
 			this.formData.correo = this.clienteData.correo || '';
-			this.formData.responsable_automotriz = this.clienteData.responsable_automotriz || '';
-			this.formData.supervisor = this.clienteData.supervisor || '';
+			// Normalizar nombres: capitalizar la primera letra de cada palabra
+			this.formData.responsable_automotriz = this.capitalizeWords(this.clienteData.responsable_automotriz || '');
+			this.formData.supervisor = this.capitalizeWords(this.clienteData.supervisor || '');
 			this.formData.correo_supervisor = this.clienteData.correo_supervisor || '';
 			this.formData.cope_id = this.clienteData.cope_id || '';
+		},
+
+		// Capitalizar la primera letra de cada palabra en una cadena
+		capitalizeWords(value) {
+			if (!value) return '';
+			return value.toString().split(' ').map(word => {
+				if (!word) return '';
+				return word.charAt(0).toUpperCase() + word.slice(1);
+			}).join(' ');
+		},
+
+		// Handler genérico para inputs de nombre que capitaliza mientras se escribe
+		formatNombreField(field) {
+			let value = this.formData[field] || '';
+			// Mantener el límite de caracteres razonable si fuese necesario
+			if (value.length > 100) {
+				value = value.substring(0, 100);
+			}
+			this.formData[field] = this.capitalizeWords(value);
 		},
 			async handleFinalSubmit() {
 				if (!this.isStepValid) return;

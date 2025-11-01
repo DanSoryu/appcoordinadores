@@ -251,11 +251,17 @@ export default {
 			}
 		},
 		formatModelo(event) {
-			const value = event.target.value;
-			if (value.length <= 30) {
-				this.formData.modelo = value;
-			} else {
+			let value = event.target.value || '';
+			// Limitar longitud
+			if (value.length > 30) {
 				event.target.value = this.formData.modelo;
+				return;
+			}
+			// Capitalizar el primer carácter y mantener el resto como el usuario lo escribió
+			if (value.length > 0) {
+				this.formData.modelo = value.charAt(0).toUpperCase() + value.slice(1);
+			} else {
+				this.formData.modelo = value;
 			}
 		},
 		formatNumeroEconomico(event) {
