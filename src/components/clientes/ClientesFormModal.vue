@@ -17,51 +17,106 @@
 						</div>
 						<div class="space-y-4">
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Teléfono</label>
+								<label class="block mb-2 font-semibold text-gray-700">Teléfono *</label>
 								<input 
 									v-model="formData.telefono" 
-									class="input mb-2 w-full" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.telefono ? (telefonoValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
 									placeholder="Número de teléfono" 
 									maxlength="14"
 									@input="formatTelefono"
+									required
 								/>
+								<div v-if="formData.telefono && !telefonoValid" class="text-red-500 text-xs mt-1">
+									El teléfono debe tener al menos 10 dígitos
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Correo Electrónico</label>
+								<label class="block mb-2 font-semibold text-gray-700">Correo Electrónico *</label>
 								<input 
 									v-model="formData.correo" 
 									type="email" 
-									class="input mb-2 w-full" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.correo ? (correoValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
 									placeholder="Correo electrónico"
-									@input="formatCorreo('correo')"
+									@input="formatCorreoEvent($event, 'correo')"
+									required
 								/>
+								<div v-if="formData.correo && !correoValid" class="text-red-500 text-xs mt-1">
+									Ingrese un correo electrónico válido
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Responsable Automotriz</label>
-								<input v-model="formData.responsable_automotriz" @input="formatNombreField('responsable_automotriz')" class="input mb-2 w-full" placeholder="Nombre del responsable automotriz" />
+								<label class="block mb-2 font-semibold text-gray-700">Responsable Automotriz *</label>
+								<input 
+									v-model="formData.responsable_automotriz" 
+									@input="formatNombreField('responsable_automotriz')" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.responsable_automotriz ? (responsableAutomotrizValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
+									placeholder="Nombre del responsable automotriz"
+									required
+								/>
+								<div v-if="formData.responsable_automotriz && !responsableAutomotrizValid" class="text-red-500 text-xs mt-1">
+									Este campo es obligatorio
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Supervisor *</label>
-								<input v-model="formData.supervisor" @input="formatNombreField('supervisor')" class="input mb-2 w-full" placeholder="Nombre del supervisor" required />
+								<input 
+									v-model="formData.supervisor" 
+									@input="formatNombreField('supervisor')" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.supervisor ? (supervisorValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
+									placeholder="Nombre del supervisor" 
+									required 
+								/>
+								<div v-if="formData.supervisor && !supervisorValid" class="text-red-500 text-xs mt-1">
+									Este campo es obligatorio
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Correo del Supervisor</label>
+								<label class="block mb-2 font-semibold text-gray-700">Correo del Supervisor *</label>
 								<input 
 									v-model="formData.correo_supervisor" 
 									type="email" 
-									class="input mb-2 w-full" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.correo_supervisor ? (correoSupervisorValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
 									placeholder="Correo electrónico del supervisor"
-									@input="formatCorreo('correo_supervisor')"
+									@input="formatCorreoEvent($event, 'correo_supervisor')"
+									required
 								/>
+								<div v-if="formData.correo_supervisor && !correoSupervisorValid" class="text-red-500 text-xs mt-1">
+									Ingrese un correo electrónico válido
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">COPE *</label>
-								<select v-model="formData.cope_id" class="input mb-2 w-full" required>
+								<select 
+									v-model="formData.cope_id" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.cope_id ? (copeValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
+									required
+								>
 									<option value="">Seleccione una COPE</option>
 									<option v-for="cope in copesWithDetails" :key="cope.id" :value="cope.id">
 										{{ cope.displayName }}
 									</option>
 								</select>
+								<div v-if="formData.cope_id && !copeValid" class="text-red-500 text-xs mt-1">
+									Debe seleccionar una COPE
+								</div>
 							</div>
 						</div>
 					</div>
@@ -149,21 +204,54 @@ export default {
 		}
 	},
 	computed: {
+		// Validaciones individuales de cada campo
+		telefonoValid() {
+			if (!this.formData.telefono || this.formData.telefono.trim() === '') return false;
+			// Validar formato de teléfono: debe tener al menos 10 dígitos
+			const digitsOnly = this.formData.telefono.replace(/[^0-9]/g, '');
+			return digitsOnly.length >= 10;
+		},
+		correoValid() {
+			if (!this.formData.correo || this.formData.correo.trim() === '') return false;
+			// Validar formato de email
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			return emailRegex.test(this.formData.correo);
+		},
+		responsableAutomotrizValid() {
+			return this.formData.responsable_automotriz && this.formData.responsable_automotriz.trim() !== '';
+		},
+		supervisorValid() {
+			return this.formData.supervisor && this.formData.supervisor.trim() !== '';
+		},
+		correoSupervisorValid() {
+			if (!this.formData.correo_supervisor || this.formData.correo_supervisor.trim() === '') return false;
+			// Validar formato de email
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			return emailRegex.test(this.formData.correo_supervisor);
+		},
+		copeValid() {
+			return this.formData.cope_id && this.formData.cope_id !== '';
+		},
+		
 		isStepValid() {
-			// Campos requeridos: supervisor y cope_id
+			// Todos los campos son obligatorios y deben ser válidos
 			return (
-				this.formData.supervisor && this.formData.supervisor.trim() !== '' &&
-				this.formData.cope_id && this.formData.cope_id !== ''
+				this.telefonoValid &&
+				this.correoValid &&
+				this.responsableAutomotrizValid &&
+				this.supervisorValid &&
+				this.correoSupervisorValid &&
+				this.copeValid
 			);
 		},
 		finalFormData() {
-			// Devuelve solo los datos relevantes
+			// Devuelve solo los datos relevantes con trim para eliminar espacios al final
 			return {
-				telefono: this.formData.telefono || null,
-				correo: this.formData.correo || null,
-				responsable_automotriz: this.formData.responsable_automotriz || null,
-				supervisor: this.formData.supervisor,
-				correo_supervisor: this.formData.correo_supervisor || null,
+				telefono: this.formData.telefono,
+				correo: this.formData.correo,
+				responsable_automotriz: this.formData.responsable_automotriz.trim(),
+				supervisor: this.formData.supervisor.trim(),
+				correo_supervisor: this.formData.correo_supervisor,
 				cope_id: parseInt(this.formData.cope_id)
 			};
 		}
@@ -205,7 +293,7 @@ export default {
 			if (!this.clienteData || Object.keys(this.clienteData).length === 0) return;
 			this.formData.telefono = this.clienteData.telefono || '';
 			this.formData.correo = this.clienteData.correo || '';
-			// Normalizar nombres: capitalizar la primera letra de cada palabra
+			// Normalizar nombres: solo capitalizar la primera letra de cada palabra
 			this.formData.responsable_automotriz = this.capitalizeWords(this.clienteData.responsable_automotriz || '');
 			this.formData.supervisor = this.capitalizeWords(this.clienteData.supervisor || '');
 			this.formData.correo_supervisor = this.clienteData.correo_supervisor || '';
@@ -228,6 +316,7 @@ export default {
 			if (value.length > 100) {
 				value = value.substring(0, 100);
 			}
+			// Solo capitalizar palabras, NO eliminar espacios al final mientras se escribe
 			this.formData[field] = this.capitalizeWords(value);
 		},
 			async handleFinalSubmit() {
@@ -318,10 +407,20 @@ export default {
 			event.target.value = value;
 		},
 		formatCorreo(field) {
-			// Convertir a minúsculas
+			// Convertir a minúsculas y eliminar espacios en tiempo real
 			if (this.formData[field]) {
-				this.formData[field] = this.formData[field].toLowerCase();
+				this.formData[field] = this.formData[field].toLowerCase().replace(/\s/g, '');
 			}
+		},
+		
+		// Método específico para manejar el evento de input en correos
+		formatCorreoEvent(event, field) {
+			let value = event.target.value || '';
+			// Convertir a minúsculas y eliminar espacios en tiempo real
+			value = value.toLowerCase().replace(/\s/g, '');
+			this.formData[field] = value;
+			// Actualizar el valor del input para que el usuario vea el cambio inmediatamente
+			event.target.value = value;
 		},
 		async saveCurrentStepData() {
 			console.log('Guardando datos del cliente...');
@@ -349,11 +448,23 @@ export default {
 	border-radius: 8px;
 	padding: 10px;
 	font-size: 1rem;
-	transition: border-color 0.2s;
+	transition: border-color 0.2s, background-color 0.2s;
 }
 .input:focus {
 	border-color: #3b82f6;
 	outline: none;
+}
+.input.border-green-500 {
+	border-color: #10b981;
+}
+.input.border-red-500 {
+	border-color: #ef4444;
+}
+.input.bg-green-50 {
+	background-color: #f0fdf4;
+}
+.input.bg-red-50 {
+	background-color: #fef2f2;
 }
 .close-button {
 	background-color: #f87171;

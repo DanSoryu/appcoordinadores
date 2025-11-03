@@ -23,9 +23,15 @@
 								v-model="formData.fecha_recepcion"
 								type="date"
 								:max="currentDate"
-								class="input mb-2 w-full"
+								:class="[
+									'input mb-2 w-full transition-colors',
+									formData.fecha_recepcion ? (fechaRecepcionValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+								]"
 								required
 							>
+							<div v-if="formData.fecha_recepcion && !fechaRecepcionValid" class="text-red-500 text-xs mt-1">
+								Debe seleccionar una fecha
+							</div>
 						</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Kilometraje</label>
@@ -36,16 +42,25 @@
 									inputmode="numeric"
 									pattern="[0-9]*"
 									placeholder="Ejemplo: 15000"
-									class="input mb-2 w-full"
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.kilometraje ? (kilometrajeValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
 									required
 									@input="validarKilometraje"
 								>
+								<div v-if="formData.kilometraje && !kilometrajeValid" class="text-red-500 text-xs mt-1">
+									Debe ingresar un valor válido entre 0 y 2,000,000
+								</div>
 							</div>
 						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 							<label class="block mb-2 font-semibold text-gray-700">Taller Recepción</label>
 							<select
 								v-model="formData.taller_recepcion"
-								class="input mb-2 w-full"
+								:class="[
+									'input mb-2 w-full transition-colors',
+									formData.taller_recepcion ? (tallerRecepcionValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+								]"
 								required
 							>
 								<option value="">Seleccione un taller</option>
@@ -53,6 +68,9 @@
 									{{ taller.nombre }}
 								</option>
 							</select>
+							<div v-if="formData.taller_recepcion && !tallerRecepcionValid" class="text-red-500 text-xs mt-1">
+								Debe seleccionar un taller
+							</div>
 						</div>
 						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 							<label class="block mb-2 font-semibold text-gray-700">Entregado por</label>
@@ -60,17 +78,26 @@
 								v-model="formData.entregado_por"
 								type="text"
 								placeholder="Nombre de quien entrega el vehículo"
-								class="input mb-2 w-full"
+								:class="[
+									'input mb-2 w-full transition-colors',
+									formData.entregado_por ? (entregadoPorValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+								]"
 								maxlength="75"
 								required
 								@input="formatEntregadoPor"
 							>
+							<div v-if="formData.entregado_por && !entregadoPorValid" class="text-red-500 text-xs mt-1">
+								Este campo es obligatorio
+							</div>
 						</div>
 						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 							<label class="block mb-2 font-semibold text-gray-700">Vehículo</label>
 							<select
 								v-model="formData.vehiculo_id"
-								class="input mb-2 w-full"
+								:class="[
+									'input mb-2 w-full transition-colors',
+									formData.vehiculo_id ? (vehiculoIdValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+								]"
 								required
 							>
 								<option value="">Seleccione un vehículo</option>
@@ -78,6 +105,9 @@
 									{{ veh.numero_serie }} - {{ veh.marca }} {{ veh.modelo }} {{ veh.año }}
 								</option>
 							</select>
+							<div v-if="formData.vehiculo_id && !vehiculoIdValid" class="text-red-500 text-xs mt-1">
+								Debe seleccionar un vehículo
+							</div>
 							<div class="mt-2">
 								<button type="button" @click="abrirVehiculoModal" class="text-blue-600 hover:underline focus:outline-none">
 									¿No encuentras el vehículo? Regístralo aquí
@@ -169,18 +199,47 @@ export default {
 			const today = new Date();
 			return today.toISOString().split('T')[0];
 		},
+		
+		// Validaciones individuales de cada campo
+		fechaRecepcionValid() {
+			return this.formData.fecha_recepcion && this.formData.fecha_recepcion !== '';
+		},
+		kilometrajeValid() {
+			return this.formData.kilometraje !== '' && 
+				   !isNaN(this.formData.kilometraje) && 
+				   Number(this.formData.kilometraje) >= 0 && 
+				   Number(this.formData.kilometraje) <= 2000000;
+		},
+		tallerRecepcionValid() {
+			return this.formData.taller_recepcion && this.formData.taller_recepcion.trim() !== '';
+		},
+		entregadoPorValid() {
+			return this.formData.entregado_por && this.formData.entregado_por.trim() !== '';
+		},
+		vehiculoIdValid() {
+			return this.formData.vehiculo_id && this.formData.vehiculo_id !== '';
+		},
+		
 		isFormValid() {
 			// Todos los campos requeridos deben estar completos
 			return (
-				this.formData.fecha_recepcion && this.formData.fecha_recepcion !== '' &&
-				this.formData.taller_recepcion && this.formData.taller_recepcion.trim() !== '' &&
-				this.formData.entregado_por && this.formData.entregado_por.trim() !== '' &&
-				this.formData.vehiculo_id && this.formData.vehiculo_id !== '' &&
-				this.formData.kilometraje !== '' &&
-				!isNaN(this.formData.kilometraje) &&
-				Number(this.formData.kilometraje) >= 0 &&
-				Number(this.formData.kilometraje) <= 2000000
+				this.fechaRecepcionValid &&
+				this.tallerRecepcionValid &&
+				this.entregadoPorValid &&
+				this.vehiculoIdValid &&
+				this.kilometrajeValid
 			);
+		},
+		
+		finalFormData() {
+			// Devuelve solo los datos relevantes con trim para eliminar espacios al final
+			return {
+				kilometraje: parseInt(this.formData.kilometraje),
+				fecha_recepcion: this.formData.fecha_recepcion,
+				taller_recepcion: this.formData.taller_recepcion,
+				entregado_por: this.formData.entregado_por.trim(),
+				vehiculo_id: parseInt(this.formData.vehiculo_id)
+			};
 		}
 	},
 	created() {
@@ -242,6 +301,7 @@ export default {
 			if (value.length > 75) {
 				value = value.substring(0, 75);
 			}
+			// Solo capitalizar palabras, NO eliminar espacios al final mientras se escribe
 			this.formData.entregado_por = this.capitalizeWords(value);
 		},
 
@@ -270,14 +330,8 @@ export default {
 				await this.executeSubmit(async () => {
 					console.log('Guardando datos de recepción...');
 					
-					// Preparar datos para API
-					const datosParaAPI = {
-						kilometraje: parseInt(this.formData.kilometraje),
-						fecha_recepcion: this.formData.fecha_recepcion,
-						taller_recepcion: this.formData.taller_recepcion,
-						entregado_por: this.formData.entregado_por,
-						vehiculo_id: parseInt(this.formData.vehiculo_id)
-					};
+					// Usar finalFormData que ya aplica trim
+					const datosParaAPI = this.finalFormData;
 					
 					let response;
 					if (this.recepcionData?.id) {
@@ -365,10 +419,22 @@ export default {
 	border-radius: 8px;
 	padding: 10px;
 	font-size: 1rem;
-	transition: border-color 0.2s;
+	transition: border-color 0.2s, background-color 0.2s;
 }
 .input:focus {
 	border-color: #3b82f6;
 	outline: none;
+}
+.input.border-green-500 {
+	border-color: #10b981;
+}
+.input.border-red-500 {
+	border-color: #ef4444;
+}
+.input.bg-green-50 {
+	background-color: #f0fdf4;
+}
+.input.bg-red-50 {
+	background-color: #fef2f2;
 }
 </style>

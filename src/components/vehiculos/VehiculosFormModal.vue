@@ -17,77 +17,135 @@
 						</div>
 						<div class="space-y-4">
 								<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-									<label class="block mb-2 font-semibold text-gray-700">Cliente</label>
-									<select v-model="formData.cliente_id" class="input mb-2 w-full">
+									<label class="block mb-2 font-semibold text-gray-700">Cliente *</label>
+									<select 
+										v-model="formData.cliente_id" 
+										:class="[
+											'input mb-2 w-full transition-colors',
+											formData.cliente_id ? (clienteValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+										]"
+										required
+									>
 										<option value="">Selecciona un cliente</option>
 										<option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
                   							{{ cliente.responsable_automotriz }} - {{ cliente.supervisor }}
 										</option>
 									</select>
+									<div v-if="formData.cliente_id && !clienteValid" class="text-red-500 text-xs mt-1">
+										Debe seleccionar un cliente
+									</div>
 									<!-- Eliminado botón de registrar cliente -->
 								</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Marca</label>
-								<select v-model="formData.marca" class="input mb-2 w-full">
+								<label class="block mb-2 font-semibold text-gray-700">Marca *</label>
+								<select 
+									v-model="formData.marca" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.marca ? (marcaValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
+									required
+								>
 									<option value="">Selecciona una marca</option>
 									<option v-for="marca in marcas" :key="marca" :value="marca">
 										{{ marca }}
 									</option>
 								</select>
+								<div v-if="formData.marca && !marcaValid" class="text-red-500 text-xs mt-1">
+									Debe seleccionar una marca
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Modelo</label>
+								<label class="block mb-2 font-semibold text-gray-700">Modelo *</label>
 								<input 
 									v-model="formData.modelo" 
 									@input="formatModelo"
-									class="input mb-2 w-full" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.modelo ? (modeloValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
 									placeholder="Modelo" 
 									maxlength="30"
+									required
 								/>
+								<div v-if="formData.modelo && !modeloValid" class="text-red-500 text-xs mt-1">
+									Este campo es obligatorio
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Placas</label>
+								<label class="block mb-2 font-semibold text-gray-700">Placas *</label>
 								<input 
 									v-model="formData.placas" 
 									@input="formatPlacas"
-									class="input mb-2 w-full" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.placas ? (placasValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
 									placeholder="Placas" 
 									maxlength="12"
+									required
 								/>
+								<div v-if="formData.placas && !placasValid" class="text-red-500 text-xs mt-1">
+									Este campo es obligatorio
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Año</label>
-								<select v-model="formData.año" class="input mb-2 w-full">
+								<label class="block mb-2 font-semibold text-gray-700">Año *</label>
+								<select 
+									v-model="formData.año" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.año ? (añoValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
+									required
+								>
 									<option value="">Selecciona un año</option>
 									<option v-for="año in años" :key="año" :value="año">
 										{{ año }}
 									</option>
 								</select>
+								<div v-if="formData.año && !añoValid" class="text-red-500 text-xs mt-1">
+									Debe seleccionar un año
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">VIN</label>
+								<label class="block mb-2 font-semibold text-gray-700">VIN *</label>
 								<input 
 									v-model="formData.numero_serie" 
 									@input="formatNumeroSerie"
-									class="input mb-2 w-full" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.numero_serie ? (numeroSerieValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
 									placeholder="VIN - 17 caracteres alfanuméricos" 
 									pattern="[A-Za-z0-9]{17}"
 									title="Debe contener exactamente 17 caracteres alfanuméricos, sin espacios"
 									maxlength="17"
+									required
 								/>
 								<div class="text-xs text-gray-500 mt-1">
 									{{ formData.numero_serie.length }}/17 caracteres
 								</div>
+								<div v-if="formData.numero_serie && !numeroSerieValid" class="text-red-500 text-xs mt-1">
+									Debe contener exactamente 17 caracteres alfanuméricos
+								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Número Económico</label>
+								<label class="block mb-2 font-semibold text-gray-700">Número Económico *</label>
 								<input 
 									v-model="formData.numero_economico" 
 									@input="formatNumeroEconomico"
-									class="input mb-2 w-full" 
+									:class="[
+										'input mb-2 w-full transition-colors',
+										formData.numero_economico ? (numeroEconomicoValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									]"
 									placeholder="Número Económico" 
 									maxlength="30"
+									required
 								/>
+								<div v-if="formData.numero_economico && !numeroEconomicoValid" class="text-red-500 text-xs mt-1">
+									Este campo es obligatorio
+								</div>
 							</div>
 						</div>
 					</div>
@@ -182,30 +240,53 @@ export default {
 		}
 	},
 	computed: {
-			isStepValid() {
-				// Todos los campos requeridos deben estar completos
-				return (
-					this.formData.cliente_id && this.formData.cliente_id !== '' &&
-					this.formData.marca && this.formData.marca.trim() !== '' &&
-					this.formData.modelo && this.formData.modelo.trim() !== '' &&
-					this.formData.placas && this.formData.placas.trim() !== '' &&
-					this.formData.año && this.formData.año !== '' &&
-					this.formData.numero_serie && this.formData.numero_serie.trim() !== '' && this.formData.numero_serie.length === 17 &&
-					this.formData.numero_economico && this.formData.numero_economico.trim() !== ''
-				);
-			},
-			finalFormData() {
-				// Devuelve solo los datos relevantes
-				return {
-					cliente_id: parseInt(this.formData.cliente_id),
-					marca: this.formData.marca,
-					modelo: this.formData.modelo,
-					placas: this.formData.placas,
-					año: parseInt(this.formData.año),
-					numero_serie: this.formData.numero_serie,
-					numero_economico: this.formData.numero_economico
-				};
-			}
+		// Validaciones individuales de cada campo
+		clienteValid() {
+			return this.formData.cliente_id && this.formData.cliente_id !== '';
+		},
+		marcaValid() {
+			return this.formData.marca && this.formData.marca.trim() !== '';
+		},
+		modeloValid() {
+			return this.formData.modelo && this.formData.modelo.trim() !== '';
+		},
+		placasValid() {
+			return this.formData.placas && this.formData.placas.trim() !== '';
+		},
+		añoValid() {
+			return this.formData.año && this.formData.año !== '';
+		},
+		numeroSerieValid() {
+			return this.formData.numero_serie && this.formData.numero_serie.trim() !== '' && this.formData.numero_serie.length === 17;
+		},
+		numeroEconomicoValid() {
+			return this.formData.numero_economico && this.formData.numero_economico.trim() !== '';
+		},
+
+		isStepValid() {
+			// Todos los campos son obligatorios y deben ser válidos
+			return (
+				this.clienteValid &&
+				this.marcaValid &&
+				this.modeloValid &&
+				this.placasValid &&
+				this.añoValid &&
+				this.numeroSerieValid &&
+				this.numeroEconomicoValid
+			);
+		},
+		finalFormData() {
+			// Devuelve solo los datos relevantes con trim para eliminar espacios al final
+			return {
+				cliente_id: parseInt(this.formData.cliente_id),
+				marca: this.formData.marca,
+				modelo: this.formData.modelo.trim(),
+				placas: this.formData.placas,
+				año: parseInt(this.formData.año),
+				numero_serie: this.formData.numero_serie,
+				numero_economico: this.formData.numero_economico.trim()
+			};
+		}
 	},
 	methods: {
 		generateYears() {
@@ -242,8 +323,8 @@ export default {
 		},
 		formatPlacas(event) {
 			let value = event.target.value || '';
-			// Convertir a mayúsculas y remover espacios excesivos
-			value = value.toUpperCase();
+			// Convertir a mayúsculas y eliminar espacios en tiempo real
+			value = value.toUpperCase().replace(/\s/g, '');
 			if (value.length <= 12) {
 				this.formData.placas = value;
 			} else {
@@ -252,22 +333,18 @@ export default {
 		},
 		formatModelo(event) {
 			let value = event.target.value || '';
-			// Limitar longitud
-			if (value.length > 30) {
-				event.target.value = this.formData.modelo;
-				return;
-			}
-			// Capitalizar el primer carácter y mantener el resto como el usuario lo escribió
-			if (value.length > 0) {
-				this.formData.modelo = value.charAt(0).toUpperCase() + value.slice(1);
-			} else {
+			value = this.capitalizeWords(value);
+			if (value.length <= 50) {
 				this.formData.modelo = value;
+			} else {
+				event.target.value = this.formData.modelo;
 			}
 		},
 		formatNumeroEconomico(event) {
-			const value = event.target.value;
+			let value = event.target.value || '';
 			if (value.length <= 30) {
-				this.formData.numero_economico = value;
+				// Eliminar espacios al final automáticamente
+				this.formData.numero_economico = value.trimEnd();
 			} else {
 				event.target.value = this.formData.numero_economico;
 			}
@@ -283,13 +360,15 @@ export default {
 		loadVehiculoData() {
 			if (!this.vehiculoData || Object.keys(this.vehiculoData).length === 0) return;
 			this.formData.marca = this.vehiculoData.marca || '';
-			this.formData.modelo = this.vehiculoData.modelo || '';
+			// Aplicar capitalización al modelo sin hacer trim
+			this.formData.modelo = this.capitalizeWords(this.vehiculoData.modelo || '');
 			// Asegurar que las placas cargadas estén en mayúsculas
 			this.formData.placas = (this.vehiculoData.placas || '').toString().toUpperCase();
 			this.formData.año = this.vehiculoData.año || '';
 			// Asegurar que el número de serie (VIN) esté en mayúsculas sin caracteres inválidos
 			this.formData.numero_serie = (this.vehiculoData.numero_serie || '').toString().toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0,17);
-			this.formData.numero_economico = this.vehiculoData.numero_economico || '';
+			// Aplicar trim al número económico
+			this.formData.numero_economico = (this.vehiculoData.numero_economico || '').toString().trimEnd();
 			this.formData.cliente_id = this.vehiculoData.cliente_id || '';
 		},
 		async loadClientes() {
@@ -393,11 +472,23 @@ export default {
 	border-radius: 8px;
 	padding: 10px;
 	font-size: 1rem;
-	transition: border-color 0.2s;
+	transition: border-color 0.2s, background-color 0.2s;
 }
 .input:focus {
 	border-color: #3b82f6;
 	outline: none;
+}
+.input.border-green-500 {
+	border-color: #10b981;
+}
+.input.border-red-500 {
+	border-color: #ef4444;
+}
+.input.bg-green-50 {
+	background-color: #f0fdf4;
+}
+.input.bg-red-50 {
+	background-color: #fef2f2;
 }
 .close-button {
 	background-color: #f87171;
