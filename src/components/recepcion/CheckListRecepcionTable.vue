@@ -69,9 +69,20 @@
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         <span class="ml-3 text-gray-600">Cargando datos...</span>
       </div>
-      <div v-else-if="error" class="p-4 text-red-600 bg-red-50 text-center">
-        {{ error }}
-        <button @click="cargarChecklistData()" class="ml-2 text-blue-600 hover:text-blue-800 underline">
+      <div v-else-if="error" :class="[
+        'p-4 text-center',
+        error === 'No hay datos disponibles' ? 'text-gray-600 bg-gray-50' : 'text-red-600 bg-red-50'
+      ]">
+        <div class="flex items-center justify-center space-x-2">
+          <svg v-if="error === 'No hay datos disponibles'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>{{ error }}</span>
+        </div>
+        <button v-if="error !== 'No hay datos disponibles'" @click="cargarChecklistData()" class="ml-2 text-blue-600 hover:text-blue-800 underline">
           Reintentar
         </button>
       </div>
@@ -148,9 +159,18 @@
               <!-- Mensaje cuando no hay datos -->
               <tr v-if="paginatedData.length === 0 && !isLoading">
                 <td colspan="3" class="px-6 py-8 text-center text-gray-500">
-                  <div v-if="error" class="text-red-600">
-                    {{ error }}
-                    <button @click="cargarChecklistData()" class="ml-2 text-blue-600 hover:text-blue-800 underline">
+                  <div v-if="error" :class="[
+                    'flex items-center justify-center space-x-2',
+                    error === 'No hay datos disponibles' ? 'text-gray-600' : 'text-red-600'
+                  ]">
+                    <svg v-if="error === 'No hay datos disponibles'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>{{ error }}</span>
+                    <button v-if="error !== 'No hay datos disponibles'" @click="cargarChecklistData()" class="ml-2 text-blue-600 hover:text-blue-800 underline">
                       Reintentar
                     </button>
                   </div>
@@ -873,13 +893,25 @@ export default {
           throw new Error('Respuesta no exitosa del servidor');
         }
       } catch (err) {
-        error.value = 'Error al cargar los datos del checklist';
         console.error('Error al cargar checklist:', err);
-        toastStore.addToast({
-          message: 'Error al cargar los datos del checklist',
-          type: 'error',
-          duration: 5000
-        });
+        
+        // Manejar específicamente el error 404 (no hay datos)
+        if (err.response?.status === 404) {
+          error.value = 'No hay datos disponibles';
+          checklistData.value = [];
+          totalItems.value = 0;
+          totalPages.value = 1;
+          currentPage.value = 1;
+          // No mostrar toast para 404, es un estado normal cuando no hay datos
+        } else {
+          // Para otros errores (500, 401, etc.)
+          error.value = 'Error al cargar los datos del checklist';
+          toastStore.addToast({
+            message: 'Error al cargar los datos del checklist',
+            type: 'error',
+            duration: 5000
+          });
+        }
       } finally {
         isLoading.value = false;
       }

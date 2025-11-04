@@ -61,8 +61,19 @@
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         <span class="ml-3 text-gray-600">Cargando datos...</span>
       </div>
-      <div v-else-if="error" class="p-4 text-red-600 bg-red-50 text-center">
-        {{ error }}
+      <div v-else-if="error" :class="[
+        'p-4 text-center',
+        error === 'No hay datos disponibles' ? 'text-gray-600 bg-gray-50' : 'text-red-600 bg-red-50'
+      ]">
+        <div class="flex items-center justify-center space-x-2">
+          <svg v-if="error === 'No hay datos disponibles'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>{{ error }}</span>
+        </div>
       </div>
       <div v-else>
         <!-- Tabla con scroll -->
@@ -420,14 +431,42 @@ export default {
       error.value = null
       
       try {
-        // Cargar recepciones y vehículos en paralelo
-        const [recepcionResponse, vehiculosResponse] = await Promise.all([
-          apiClient.get('/recepcion'),
-          apiClient.get('/vehiculos')
-        ])
+        let recepcionesData = []
+        let vehiculosData = []
         
-        const recepcionesData = recepcionResponse.data
-        const vehiculosData = vehiculosResponse.data
+        // Intentar cargar recepciones
+        try {
+          const recepcionResponse = await apiClient.get('/recepcion')
+          recepcionesData = recepcionResponse.data
+        } catch (recepcionError) {
+          if (recepcionError.response?.status === 404) {
+            // No hay recepciones, pero no es un error real
+            console.log('No hay recepciones disponibles (404)')
+            recepcionesData = []
+          } else {
+            // Error real al cargar recepciones
+            throw recepcionError
+          }
+        }
+        
+        // Intentar cargar vehículos solo si hay recepciones
+        if (recepcionesData.length > 0) {
+          try {
+            const vehiculosResponse = await apiClient.get('/vehiculos')
+            vehiculosData = vehiculosResponse.data
+          } catch (vehiculosError) {
+            console.error('Error al cargar vehículos:', vehiculosError)
+            // Si falla la carga de vehículos, continuar sin ellos
+            vehiculosData = []
+          }
+        }
+        
+        // Si no hay recepciones, mostrar mensaje apropiado
+        if (recepcionesData.length === 0) {
+          error.value = 'No hay datos disponibles'
+          recepciones.value = []
+          return
+        }
         
         // Helper: convertir 'YYYY-MM-DD HH:mm:ss' a 'YYYY-MM-DD'
         const formatFecha = (fechaStr) => {
@@ -453,8 +492,11 @@ export default {
         
         console.log('Recepciones con datos de vehículos:', recepciones.value)
       } catch (err) {
-        error.value = 'Error al cargar las recepciones'
         console.error('Error al cargar recepciones:', err)
+        
+        // Para errores que no son 404 (500, 401, etc.)
+        error.value = 'Error al cargar las recepciones'
+        recepciones.value = []
         toastStore.addToast({
           message: 'Error al cargar las recepciones',
           type: 'error',

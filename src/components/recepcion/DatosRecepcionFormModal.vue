@@ -53,7 +53,7 @@
 									Debe ingresar un valor válido entre 0 y 2,000,000
 								</div>
 							</div>
-						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+						<div v-if="authStore.isAdmin" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 							<label class="block mb-2 font-semibold text-gray-700">Taller Recepción</label>
 							<select
 								v-model="formData.taller_recepcion"
@@ -102,7 +102,7 @@
 							>
 								<option value="">Seleccione un vehículo</option>
 								<option v-for="veh in vehiculos" :key="veh.id" :value="veh.id">
-									{{ veh.numero_serie }} - {{ veh.marca }} {{ veh.modelo }} {{ veh.año }}
+									{{ veh.placas }} - {{ veh.numero_economico }} - {{ veh.marca }} {{ veh.modelo }} {{ veh.año }}
 								</option>
 							</select>
 							<div v-if="formData.vehiculo_id && !vehiculoIdValid" class="text-red-500 text-xs mt-1">
@@ -144,6 +144,7 @@ import VehiculosFormModal from '../vehiculos/VehiculosFormModal.vue'
 import BaseButton from '../global/BaseButton.vue'
 import { useSubmitButton } from '../../composables/useSubmitButton.js'
 import { useToastStore } from '../../stores/toast.js'
+import { useAuthStore } from '../../stores/auth.js'
 import apiClient from '../../services/api.js'
 
 export default {
@@ -166,9 +167,11 @@ export default {
 	setup() {
 		const { executeSubmit } = useSubmitButton();
 		const toastStore = useToastStore();
+		const authStore = useAuthStore();
 		return {
 			executeSubmit,
-			toastStore
+			toastStore,
+			authStore
 		};
 	},
 	data() {
@@ -211,6 +214,8 @@ export default {
 				   Number(this.formData.kilometraje) <= 2000000;
 		},
 		tallerRecepcionValid() {
+			// Solo validar si el usuario es admin
+			if (!this.authStore.isAdmin) return true;
 			return this.formData.taller_recepcion && this.formData.taller_recepcion.trim() !== '';
 		},
 		entregadoPorValid() {
@@ -233,13 +238,19 @@ export default {
 		
 		finalFormData() {
 			// Devuelve solo los datos relevantes con trim para eliminar espacios al final
-			return {
+			const baseData = {
 				kilometraje: parseInt(this.formData.kilometraje),
 				fecha_recepcion: this.formData.fecha_recepcion,
-				taller_recepcion: this.formData.taller_recepcion,
 				entregado_por: this.formData.entregado_por.trim(),
 				vehiculo_id: parseInt(this.formData.vehiculo_id)
 			};
+			
+			// Solo incluir taller_recepcion si el usuario es admin
+			if (this.authStore.isAdmin) {
+				baseData.taller_recepcion = this.formData.taller_recepcion;
+			}
+			
+			return baseData;
 		}
 	},
 	created() {
@@ -350,7 +361,7 @@ export default {
 						...datosParaAPI,
 						// Agregar datos del vehículo para mostrar en tabla
 						numero_economico: this.vehiculos.find(v => v.id == this.formData.vehiculo_id)?.numero_economico || '',
-						numero_serie: this.vehiculos.find(v => v.id == this.formData.vehiculo_id)?.numero_serie || '',
+						placa: this.vehiculos.find(v => v.id == this.formData.vehiculo_id)?.placa || '',
 						cliente_nombre: this.vehiculos.find(v => v.id == this.formData.vehiculo_id)?.cliente_nombre || ''
 					};
 					

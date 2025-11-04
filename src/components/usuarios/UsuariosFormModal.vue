@@ -86,6 +86,31 @@
 								</div>
 							</div>
 						</div>
+
+						<!-- Campo de taller solo para mecánicos -->
+						<div v-if="formData.rol === 'mecanico'" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 animate-fade-in">
+							<label class="block mb-2 font-semibold text-gray-700">
+								<span class="flex items-center">
+									<svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+									</svg>
+									Taller *
+								</span>
+							</label>
+							<select
+								v-model="formData.taller"
+								class="input mb-2 w-full"
+								required
+								:class="{ 'border-red-500': errors.taller }"
+							>
+								<option value="">Seleccione un taller</option>
+								<option value="Taller 1">Taller 1</option>
+								<option value="Taller 2">Taller 2</option>
+								<option value="Taller 3">Taller 3</option>
+							</select>
+							<p v-if="errors.taller" class="text-red-500 text-sm mt-1">{{ errors.taller }}</p>
+							<p class="text-gray-500 text-sm mt-1">Seleccione el taller asignado al mecánico</p>
+						</div>
 					</div>
 				</div>
 
@@ -140,7 +165,8 @@ export default {
 		const formData = ref({
 			usuario: '',
 			password: '',
-			rol: ''
+			rol: '',
+			taller: ''
 		});
 
 		const errors = ref({});
@@ -150,15 +176,29 @@ export default {
 		const isFormValid = computed(() => {
 			if (props.isEdit) {
 				// Para edición solo requiere usuario y rol
-				return formData.value.usuario.trim() !== '' && 
-					   formData.value.rol !== '' &&
-					   formData.value.usuario.length <= 30;
+				const baseValid = formData.value.usuario.trim() !== '' && 
+								 formData.value.rol !== '' &&
+								 formData.value.usuario.length <= 30;
+								 
+				// Si es mecánico, también requiere taller
+				if (formData.value.rol === 'mecanico') {
+					return baseValid && formData.value.taller !== '';
+				}
+				
+				return baseValid;
 			} else {
 				// Para creación requiere usuario, contraseña y rol
-				return formData.value.usuario.trim() !== '' && 
-					   formData.value.password.length >= 8 && 
-					   formData.value.rol !== '' &&
-					   formData.value.usuario.length <= 30;
+				const baseValid = formData.value.usuario.trim() !== '' && 
+								 formData.value.password.length >= 8 && 
+								 formData.value.rol !== '' &&
+								 formData.value.usuario.length <= 30;
+								 
+				// Si es mecánico, también requiere taller
+				if (formData.value.rol === 'mecanico') {
+					return baseValid && formData.value.taller !== '';
+				}
+				
+				return baseValid;
 			}
 		});
 
@@ -168,7 +208,8 @@ export default {
 				formData.value = {
 					usuario: newData.usuario || '',
 					password: '', // Nunca cargar contraseña existente
-					rol: newData.rol || ''
+					rol: newData.rol || '',
+					taller: newData.taller || ''
 				};
 			}
 		}, { immediate: true });
@@ -182,12 +223,23 @@ export default {
 			}
 		});
 
+		// Limpiar campo taller cuando el rol no sea mecánico
+		watch(() => formData.value.rol, (newRol) => {
+			if (newRol !== 'mecanico') {
+				formData.value.taller = '';
+				if (errors.value.taller) {
+					delete errors.value.taller;
+				}
+			}
+		});
+
 		// Methods
 		const resetForm = () => {
 			formData.value = {
 				usuario: '',
 				password: '',
-				rol: ''
+				rol: '',
+				taller: ''
 			};
 			errors.value = {};
 		};
@@ -216,6 +268,11 @@ export default {
 				errors.value.rol = 'El rol es requerido';
 			}
 
+			// Validar taller (solo si el rol es mecánico)
+			if (formData.value.rol === 'mecanico' && !formData.value.taller) {
+				errors.value.taller = 'El taller es requerido para mecánicos';
+			}
+
 			return Object.keys(errors.value).length === 0;
 		};
 
@@ -225,9 +282,12 @@ export default {
 			try {
 				await executeSubmit(async () => {
 					let response;
+					let usuarioCreado = null;
 					
 					if (props.isEdit) {
 						// Actualizar usuario existente
+						// NOTA: Para mecánicos existentes, el taller no se actualiza aquí
+						// Se debe manejar por separado usando la API de detalle-mecanico
 						const updateData = {
 							usuario: formData.value.usuario,
 							rol: formData.value.rol
@@ -245,16 +305,66 @@ export default {
 						};
 						
 						response = await apiClient.post('/users', createData);
+						usuarioCreado = response.data;
 						
-						console.log('Usuario creado:', response.data);
+						console.log('Usuario creado - respuesta:', response.data);
+						
+						// Si el rol es mecánico, necesitamos obtener el ID del usuario creado y crear el detalle
+						if (formData.value.rol === 'mecanico') {
+							try {
+								// Hacer GET para obtener la lista de usuarios y buscar el recién creado
+								console.log('Obteniendo lista de usuarios para encontrar el ID...');
+								const usersResponse = await apiClient.get('/users');
+								console.log('Lista de usuarios obtenida:', usersResponse.data);
+								
+								// Buscar el usuario recién creado por nombre de usuario
+								const usuarioEncontrado = usersResponse.data.find(u => u.usuario === formData.value.usuario);
+								
+								if (!usuarioEncontrado) {
+									throw new Error('No se pudo encontrar el usuario recién creado en la lista');
+								}
+								
+								console.log('Usuario encontrado:', usuarioEncontrado);
+								const usuarioId = usuarioEncontrado.id;
+								
+								const detalleMecanicoData = {
+									usuario_mecasoft_id: usuarioId,
+									taller: formData.value.taller
+								};
+								
+								console.log('Creando detalle mecánico con datos:', detalleMecanicoData);
+								
+								const detalleResponse = await apiClient.post('/detalle-mecanico', detalleMecanicoData);
+								
+								console.log('Detalle mecánico creado exitosamente:', detalleResponse.data);
+								
+								// Actualizar usuarioCreado con el ID correcto
+								usuarioCreado = usuarioEncontrado;
+								
+							} catch (detalleError) {
+								console.error('Error al crear detalle mecánico:', detalleError);
+								
+								// No lanzar error aquí, solo loguearlo
+								// El usuario ya fue creado exitosamente
+								toastStore.addToast({
+									message: 'Usuario creado exitosamente, pero hubo un problema al asignar el taller. Contacte al administrador.',
+									type: 'warning',
+									duration: 7000
+								});
+							}
+						}
 					}
 					
 					// Preparar datos para emitir - usar datos del servidor o reconstruir
 					const usuarioGuardado = {
-						id: props.isEdit ? props.usuarioData.id : (response.data.id || response.data.user?.id),
+						id: props.isEdit ? props.usuarioData.id : (usuarioCreado?.id),
 						usuario: formData.value.usuario,
-						rol: formData.value.rol
+						rol: formData.value.rol,
+						// Incluir taller si es mecánico
+						...(formData.value.rol === 'mecanico' && { taller: formData.value.taller })
 					};
+					
+					console.log('Datos del usuario a emitir:', usuarioGuardado);
 					
 					// Emitir evento con los datos guardados
 					emit('usuario-guardado', usuarioGuardado);
@@ -283,9 +393,27 @@ export default {
 							duration: 5000
 						});
 					}
-				} else {
+				} else if (error.response?.status === 422) {
+					// Error de validación del servidor
+					console.error('Error de validación (422):', error.response.data);
 					toastStore.addToast({
-						message: `Error al ${props.isEdit ? 'actualizar' : 'crear'} el usuario. Por favor, intente nuevamente.`,
+						message: 'Error de validación: Verifique que todos los campos estén correctos.',
+						type: 'error',
+						duration: 5000
+					});
+				} else {
+					// Error genérico o de conexión
+					let errorMessage = `Error al ${props.isEdit ? 'actualizar' : 'crear'} el usuario.`;
+					
+					// Si contiene información sobre el error específico
+					if (error.message && error.message.includes('No se pudo encontrar el usuario')) {
+						errorMessage = 'Usuario creado, pero error al asignar taller. Contacte al administrador.';
+					} else if (formData.value.rol === 'mecanico' && !props.isEdit) {
+						errorMessage = 'Error al crear el usuario o asignar el taller. Por favor, intente nuevamente.';
+					}
+					
+					toastStore.addToast({
+						message: errorMessage,
 						type: 'error',
 						duration: 5000
 					});
@@ -321,5 +449,20 @@ export default {
 }
 .border-red-500 {
 	border-color: #ef4444;
+}
+
+.animate-fade-in {
+	animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 </style>

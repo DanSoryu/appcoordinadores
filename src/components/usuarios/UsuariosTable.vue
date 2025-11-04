@@ -256,10 +256,36 @@
                   <p class="text-sm text-gray-900 font-semibold">{{ currentUsuario.usuario }}</p>
                 </div>
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Rol</label>
+                  <label class="text-sm font-medium text-gray-500">Rol: </label>
                   <span :class="getRoleBadgeClass(currentUsuario.rol)" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                     {{ getRoleDisplayName(currentUsuario.rol) }}
                   </span>
+                </div>
+                
+                <!-- Información adicional para mecánicos -->
+                <div v-if="currentUsuario.rol === 'mecanico'" class="mt-4 pt-4 border-t border-gray-200">
+                  <h5 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Información del Mecánico
+                  </h5>
+                  
+                  <!-- Indicador de carga -->
+                  <div v-if="loadingDetalles" class="bg-blue-50 p-3 rounded-md flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-500 mr-2"></div>
+                    <span class="text-sm text-gray-600">Cargando detalles...</span>
+                  </div>
+                  
+                  <!-- Información del taller -->
+                  <div v-else class="bg-blue-50 p-3 rounded-md">
+                    <div>
+                      <label class="text-sm font-medium text-gray-500">Taller Asignado</label>
+                      <p class="text-sm text-gray-900 font-semibold">
+                        {{ currentUsuario.taller || 'No asignado' }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -316,6 +342,7 @@ export default {
     const showDetallesModal = ref(false)
     const showDeleteModal = ref(false)
     const showChangePasswordModal = ref(false)
+    const loadingDetalles = ref(false)
     const currentUsuario = ref(null)
     const usuarioToEdit = ref(null)
     const usuarioToDelete = ref(null)
@@ -463,9 +490,36 @@ export default {
       showUsuarioModal.value = true
     }
 
-    const verDetalles = (usuario) => {
-      currentUsuario.value = usuario
+    const verDetalles = async (usuario) => {
+      currentUsuario.value = { ...usuario }
       showDetallesModal.value = true
+      
+      // Si el usuario es mecánico, cargar también los detalles del taller
+      if (usuario.rol === 'mecanico') {
+        loadingDetalles.value = true
+        try {
+          console.log('Cargando detalles del mecánico para usuario ID:', usuario.id)
+          const response = await apiClient.get(`/detalle-mecanico/${usuario.id}`)
+          console.log('Detalles del mecánico obtenidos:', response.data)
+          
+          // Agregar información del taller al usuario actual
+          currentUsuario.value.detalleMecanico = response.data
+          currentUsuario.value.taller = response.data.taller
+        } catch (error) {
+          console.error('Error al cargar detalles del mecánico:', error)
+          // Si no se encuentra el detalle, agregar información de que no está disponible
+          currentUsuario.value.detalleMecanico = null
+          currentUsuario.value.taller = 'No asignado'
+          
+          toastStore.addToast({
+            message: 'No se pudieron cargar los detalles del taller para este mecánico',
+            type: 'warning',
+            duration: 3000
+          })
+        } finally {
+          loadingDetalles.value = false
+        }
+      }
     }
 
     const editarUsuario = (usuario) => {
@@ -561,6 +615,7 @@ export default {
       showDetallesModal,
       showDeleteModal,
       showChangePasswordModal,
+      loadingDetalles,
       currentUsuario,
       usuarioToEdit,
       usuarioToDelete,
