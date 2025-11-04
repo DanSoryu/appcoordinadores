@@ -470,7 +470,8 @@ export default {
       
       try {
         const response = await apiClient.get('/users')
-        usuarios.value = response.data
+        // Filtrar el usuario 'root' para que no aparezca en la tabla
+        usuarios.value = response.data.filter(usuario => usuario.usuario.toLowerCase() !== 'root')
       } catch (err) {
         error.value = 'Error al cargar los usuarios'
         console.error('Error al cargar usuarios:', err)
