@@ -1,0 +1,213 @@
+<template>
+	<div v-if="show" class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+		<div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg relative border border-gray-200 overflow-y-auto max-h-[90vh]">
+			<button @click="$emit('close')" class="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white rounded-md p-2">
+				<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
+			<h2 class="text-2xl font-bold mb-6 text-blue-600 text-center">Nueva División</h2>
+			<form @submit.prevent="handleSubmit">
+				<!-- SECCIÓN ÚNICA: DATOS DE DIVISIÓN -->
+				<div class="mb-8 p-6 bg-gradient-to-r from-primary-50 to-blue-50 rounded-xl border-l-4 border-primary-500">
+					<div class="flex items-center mb-4">
+						<div class="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center mr-3">
+							<font-awesome-icon icon="building" class="w-4 h-4" />
+						</div>
+						<h3 class="text-xl font-bold text-primary-700">Información de División</h3>
+					</div>
+					<div class="space-y-4">
+						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+							<label class="block mb-2 font-semibold text-gray-700">Nombre de División *</label>
+							<input 
+								v-model="formData.nombre"
+								type="text"
+								:class="[
+									'input w-full',
+									formData.nombre ? (nombreValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+								]"
+								placeholder="Ingrese el nombre de la división"
+								@input="formatNombre"
+								required
+								maxlength="255"
+							>
+							<div v-if="formData.nombre && !nombreValid" class="text-red-500 text-xs mt-1">
+								El nombre de la división es requerido
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="flex justify-end mt-8">
+					<BaseButton 
+						type="submit" 
+						variant="success"
+						:disabled="!isFormValid"
+						:onClick="handleSubmit"
+						custom-loading-text="Procesando"
+						:min-delay="1500"
+					>
+						Crear División
+					</BaseButton>
+				</div>
+			</form>
+		</div>
+	</div>
+</template>
+
+<script>
+import BaseButton from '../global/BaseButton.vue'
+import { useSubmitButton } from '../../composables/useSubmitButton.js'
+import { useToastStore } from '../../stores/toast.js'
+import apiClient from '../../services/api.js'
+
+export default {
+	name: 'DivisionesFormModal',
+	components: {
+		BaseButton
+	},
+	props: {
+		show: {
+			type: Boolean,
+			required: true
+		}
+	},
+	emits: ['close', 'division-guardada'],
+	setup() {
+		const { executeSubmit } = useSubmitButton();
+		const toastStore = useToastStore();
+		return {
+			executeSubmit,
+			toastStore
+		};
+	},
+	data() {
+		return {
+			formData: {
+				nombre: ''
+			}
+		};
+	},
+	computed: {
+		// Validaciones individuales de cada campo
+		nombreValid() {
+			return this.formData.nombre && this.formData.nombre.trim() !== '';
+		},
+		
+		isFormValid() {
+			return this.nombreValid;
+		},
+		
+		finalFormData() {
+			return {
+				nombre: this.formData.nombre.trim().toUpperCase()
+			};
+		}
+	},
+	watch: {
+		show(value) {
+			if (value) {
+				this.resetForm();
+			}
+		}
+	},
+	methods: {
+		// Formatear nombre: convertir a mayúsculas
+		formatNombre(event) {
+			let value = event.target.value || '';
+			// Limitar longitud
+			if (value.length > 255) {
+				value = value.substring(0, 255);
+			}
+			// Convertir a mayúsculas
+			this.formData.nombre = value.toUpperCase();
+		},
+		
+		async handleSubmit() {
+			if (!this.isFormValid) return;
+			
+			try {
+				await this.executeSubmit(async () => {
+					console.log('Creando nueva división...');
+					
+					const response = await apiClient.post('/divisiones', this.finalFormData);
+					console.log('División creada:', response.data);
+					
+					// Emitir evento con la nueva división
+					this.$emit('division-guardada', response.data.division);
+					
+					this.toastStore.addToast({
+						message: 'División creada exitosamente',
+						type: 'success',
+						duration: 3000
+					});
+				});
+				
+				// Cerrar el modal al finalizar
+				this.$emit('close');
+			} catch (error) {
+				console.error('Error al crear división:', error);
+				
+				// Manejar errores específicos del servidor
+				if (error.response?.data?.error) {
+					const serverErrors = error.response.data.error;
+					let errorMessage = 'Error de validación:';
+					
+					if (typeof serverErrors === 'object') {
+						Object.keys(serverErrors).forEach(field => {
+							if (serverErrors[field] && Array.isArray(serverErrors[field])) {
+								errorMessage += `\n${field}: ${serverErrors[field][0]}`;
+							}
+						});
+					} else if (typeof serverErrors === 'string') {
+						errorMessage = serverErrors;
+					}
+					
+					this.toastStore.addToast({
+						message: errorMessage,
+						type: 'error',
+						duration: 7000
+					});
+				} else {
+					this.toastStore.addToast({
+						message: 'Error al crear la división. Por favor, intente nuevamente.',
+						type: 'error',
+						duration: 5000
+					});
+				}
+			}
+		},
+		
+		resetForm() {
+			this.formData = {
+				nombre: ''
+			};
+		}
+	}
+};
+</script>
+
+<style scoped>
+.input {
+	border: 1px solid #cbd5e1;
+	border-radius: 8px;
+	padding: 10px;
+	font-size: 1rem;
+	transition: border-color 0.2s, background-color 0.2s;
+}
+.input:focus {
+	border-color: #3b82f6;
+	outline: none;
+}
+.input.border-green-500 {
+	border-color: #10b981;
+}
+.input.border-red-500 {
+	border-color: #ef4444;
+}
+.input.bg-green-50 {
+	background-color: #f0fdf4;
+}
+.input.bg-red-50 {
+	background-color: #fef2f2;
+}
+</style>

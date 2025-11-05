@@ -104,12 +104,17 @@
 								:class="{ 'border-red-500': errors.taller }"
 							>
 								<option value="">Seleccione un taller</option>
-								<option value="Taller 1">Taller 1</option>
-								<option value="Taller 2">Taller 2</option>
-								<option value="Taller 3">Taller 3</option>
+								<option v-for="taller in talleres" :key="taller.id" :value="taller.id">
+									{{ taller.nombre }}
+								</option>
 							</select>
 							<p v-if="errors.taller" class="text-red-500 text-sm mt-1">{{ errors.taller }}</p>
 							<p class="text-gray-500 text-sm mt-1">Seleccione el taller asignado al mecánico</p>
+							<div class="mt-2">
+								<button type="button" @click="abrirTallerModal" class="text-blue-600 hover:underline focus:outline-none">
+									¿No encuentras el taller? Regístralo aquí
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -129,11 +134,18 @@
 			</form>
 		</div>
 	</div>
+	
+	<TallerFormModal 
+		:show="showTallerModal" 
+		@close="showTallerModal = false"
+		@taller-guardado="handleTallerGuardado"
+	/>
 </template>
 
 <script>
 import { computed, ref, watch } from 'vue'
 import BaseButton from '../global/BaseButton.vue'
+import TallerFormModal from '../talleres/TallerFormModal.vue'
 import { useSubmitButton } from '../../composables/useSubmitButton.js'
 import { useToastStore } from '../../stores/toast.js'
 import apiClient from '../../services/api.js'
@@ -141,7 +153,8 @@ import apiClient from '../../services/api.js'
 export default {
 	name: 'UsuariosFormModal',
 	components: {
-		BaseButton
+		BaseButton,
+		TallerFormModal
 	},
 	props: {
 		show: {
@@ -171,6 +184,8 @@ export default {
 
 		const errors = ref({});
 		const showPassword = ref(false);
+		const talleres = ref([]);
+		const showTallerModal = ref(false);
 
 		// Computed properties
 		const isFormValid = computed(() => {
@@ -220,6 +235,8 @@ export default {
 			}
 			if (value) {
 				errors.value = {};
+				// Siempre asegurar que los talleres estén cargados cuando se abre el modal
+				loadTalleres();
 			}
 		});
 
@@ -230,10 +247,46 @@ export default {
 				if (errors.value.taller) {
 					delete errors.value.taller;
 				}
+			} else {
+				// Si cambia a mecánico y no hay talleres cargados, cargarlos
+				if (talleres.value.length === 0) {
+					loadTalleres();
+				}
 			}
 		});
 
 		// Methods
+		const loadTalleres = async () => {
+			try {
+				console.log('Cargando talleres...');
+				const response = await apiClient.get('/talleres');
+				console.log('Respuesta de talleres:', response.data);
+				talleres.value = response.data;
+				console.log('Talleres cargados:', talleres.value.length);
+			} catch (error) {
+				console.error('Error al cargar talleres:', error);
+				toastStore.addToast({
+					message: 'Error al cargar la lista de talleres',
+					type: 'error',
+					duration: 5000
+				});
+			}
+		};
+
+		// Cargar talleres cuando el componente se monta
+		loadTalleres();
+
+		const abrirTallerModal = () => {
+			showTallerModal.value = true;
+		};
+
+		const handleTallerGuardado = async (nuevoTaller) => {
+			// Recargar la lista de talleres para incluir el nuevo
+			await loadTalleres();
+			// Seleccionar automáticamente el nuevo taller
+			formData.value.taller = nuevoTaller.id;
+		};
+
 		const resetForm = () => {
 			formData.value = {
 				usuario: '',
@@ -329,7 +382,7 @@ export default {
 								
 								const detalleMecanicoData = {
 									usuario_mecasoft_id: usuarioId,
-									taller: formData.value.taller
+									taller_id: formData.value.taller
 								};
 								
 								console.log('Creando detalle mecánico con datos:', detalleMecanicoData);
@@ -425,11 +478,16 @@ export default {
 			formData,
 			errors,
 			showPassword,
+			talleres,
+			showTallerModal,
 			isFormValid,
 			executeSubmit,
 			toastStore,
 			handleSubmit,
-			resetForm
+			resetForm,
+			loadTalleres,
+			abrirTallerModal,
+			handleTallerGuardado
 		};
 	}
 };

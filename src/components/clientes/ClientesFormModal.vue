@@ -117,6 +117,11 @@
 								<div v-if="formData.cope_id && !copeValid" class="text-red-500 text-xs mt-1">
 									Debe seleccionar una COPE
 								</div>
+								<div class="mt-2">
+									<button type="button" @click="abrirCopeModal" class="text-blue-600 hover:underline focus:outline-none">
+										¿No encuentras el COPE? Crea uno aquí
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -136,10 +141,17 @@
 			</form>
 		</div>
 	</div>
+	
+	<CopesFormModal 
+		:show="showCopeModal" 
+		@close="showCopeModal = false"
+		@cope-guardado="handleCopeGuardado"
+	/>
 </template>
 
 <script>
 import BaseButton from '../global/BaseButton.vue';
+import CopesFormModal from '../dac/CopesFormModal.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
 import apiClient from '../../services/api.js';
@@ -147,7 +159,8 @@ import apiClient from '../../services/api.js';
 export default {
 	name: 'ClientesFormModal',
 	components: {
-		BaseButton
+		BaseButton,
+		CopesFormModal
 	},
 	props: {
 		show: {
@@ -181,7 +194,8 @@ export default {
 			copes: [],
 			areas: [],
 			divisiones: [],
-			copesWithDetails: [] // Para mostrar división-área-cope concatenado
+			copesWithDetails: [], // Para mostrar división-área-cope concatenado
+			showCopeModal: false
 		};
 	},
 	created() {
@@ -422,6 +436,18 @@ export default {
 			// Actualizar el valor del input para que el usuario vea el cambio inmediatamente
 			event.target.value = value;
 		},
+		
+		abrirCopeModal() {
+			this.showCopeModal = true;
+		},
+		
+		async handleCopeGuardado(nuevoCope) {
+			// Recargar la lista de COPEs para incluir el nuevo
+			await this.loadCopesData();
+			// Seleccionar automáticamente el nuevo COPE
+			this.formData.cope_id = nuevoCope.id;
+		},
+		
 		async saveCurrentStepData() {
 			console.log('Guardando datos del cliente...');
 			console.log('Datos actuales:', JSON.stringify(this.finalFormData, null, 2));

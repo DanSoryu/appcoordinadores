@@ -56,20 +56,25 @@
 						<div v-if="authStore.isAdmin" class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 							<label class="block mb-2 font-semibold text-gray-700">Taller Recepción</label>
 							<select
-								v-model="formData.taller_recepcion"
+								v-model="formData.taller_id"
 								:class="[
 									'input mb-2 w-full transition-colors',
-									formData.taller_recepcion ? (tallerRecepcionValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									formData.taller_id ? (tallerIdValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
 								]"
 								required
 							>
 								<option value="">Seleccione un taller</option>
-								<option v-for="taller in talleres" :key="taller.id" :value="taller.nombre">
+								<option v-for="taller in talleres" :key="taller.id" :value="taller.id">
 									{{ taller.nombre }}
 								</option>
 							</select>
-							<div v-if="formData.taller_recepcion && !tallerRecepcionValid" class="text-red-500 text-xs mt-1">
+							<div v-if="formData.taller_id && !tallerIdValid" class="text-red-500 text-xs mt-1">
 								Debe seleccionar un taller
+							</div>
+							<div class="mt-2">
+								<button type="button" @click="abrirTallerModal" class="text-blue-600 hover:underline focus:outline-none">
+									¿No encuentras el taller? Regístralo aquí
+								</button>
 							</div>
 						</div>
 						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -137,10 +142,17 @@
 		@close="showVehiculoModal = false"
 		@vehiculo-guardado="handleVehiculoGuardado"
 	/>
+	
+	<TallerFormModal 
+		:show="showTallerModal" 
+		@close="showTallerModal = false"
+		@taller-guardado="handleTallerGuardado"
+	/>
 </template>
 <script>
 import { computed } from 'vue'
 import VehiculosFormModal from '../vehiculos/VehiculosFormModal.vue'
+import TallerFormModal from '../talleres/TallerFormModal.vue'
 import BaseButton from '../global/BaseButton.vue'
 import { useSubmitButton } from '../../composables/useSubmitButton.js'
 import { useToastStore } from '../../stores/toast.js'
@@ -151,6 +163,7 @@ export default {
 	name: 'DatosRecepcionFormModal',
 	components: {
 		VehiculosFormModal,
+		TallerFormModal,
 		BaseButton
 	},
 	props: {
@@ -179,22 +192,14 @@ export default {
 			formData: {
 				fecha_recepcion: '',
 				kilometraje: '',
-				taller_recepcion: '',
+				taller_id: '',
 				entregado_por: '',
 				vehiculo_id: ''
 			},
 			vehiculos: [],
-			talleres: [
-				{ id: 1, nombre: 'Taller 1' },
-				{ id: 2, nombre: 'Taller 2' },
-				{ id: 3, nombre: 'Taller 3' },
-				{ id: 4, nombre: 'Taller 4' },
-				{ id: 5, nombre: 'Taller 5' },
-				{ id: 6, nombre: 'Taller 6' },
-				{ id: 7, nombre: 'Taller 7' },
-				{ id: 8, nombre: 'Taller 8' }
-			],
-			showVehiculoModal: false
+			talleres: [],
+			showVehiculoModal: false,
+			showTallerModal: false
 		};
 	},
 	computed: {
@@ -213,10 +218,10 @@ export default {
 				   Number(this.formData.kilometraje) >= 0 && 
 				   Number(this.formData.kilometraje) <= 2000000;
 		},
-		tallerRecepcionValid() {
+		tallerIdValid() {
 			// Solo validar si el usuario es admin
 			if (!this.authStore.isAdmin) return true;
-			return this.formData.taller_recepcion && this.formData.taller_recepcion.trim() !== '';
+			return this.formData.taller_id && this.formData.taller_id !== '';
 		},
 		entregadoPorValid() {
 			return this.formData.entregado_por && this.formData.entregado_por.trim() !== '';
@@ -229,7 +234,7 @@ export default {
 			// Todos los campos requeridos deben estar completos
 			return (
 				this.fechaRecepcionValid &&
-				this.tallerRecepcionValid &&
+				this.tallerIdValid &&
 				this.entregadoPorValid &&
 				this.vehiculoIdValid &&
 				this.kilometrajeValid
@@ -245,17 +250,18 @@ export default {
 				vehiculo_id: parseInt(this.formData.vehiculo_id)
 			};
 			
-			// Solo incluir taller_recepcion si el usuario es admin
+			// Solo incluir taller_id si el usuario es admin
 			if (this.authStore.isAdmin) {
-				baseData.taller_recepcion = this.formData.taller_recepcion;
+				baseData.taller_id = parseInt(this.formData.taller_id);
 			}
 			
 			return baseData;
 		}
 	},
 	created() {
-		// Cargar vehículos al crear el componente
+		// Cargar vehículos y talleres al crear el componente
 		this.loadVehiculos();
+		this.loadTalleres();
 	},
 	watch: {
 		recepcionData: {
@@ -275,9 +281,12 @@ export default {
 		},
 		show(value) {
 			if (value) {
-				// Cargar vehículos si no están cargados
+				// Cargar vehículos y talleres si no están cargados
 				if (this.vehiculos.length === 0) {
 					this.loadVehiculos();
+				}
+				if (this.talleres.length === 0) {
+					this.loadTalleres();
 				}
 				if (!Object.keys(this.recepcionData).length) {
 					this.resetForm();
@@ -302,8 +311,27 @@ export default {
 				});
 			}
 		},
+		async loadTalleres() {
+			try {
+				console.log('Cargando talleres...');
+				const response = await apiClient.get('/talleres');
+				console.log('Respuesta de talleres:', response.data);
+				this.talleres = response.data;
+				console.log('Talleres cargados:', this.talleres.length);
+			} catch (error) {
+				console.error('Error al cargar talleres:', error);
+				this.toastStore.addToast({
+					message: 'Error al cargar la lista de talleres',
+					type: 'error',
+					duration: 5000
+				});
+			}
+		},
 		abrirVehiculoModal() {
 			this.showVehiculoModal = true;
+		},
+		abrirTallerModal() {
+			this.showTallerModal = true;
 		},
 		// Capitalizar la primera letra de cada palabra para el campo 'entregado_por'
 		formatEntregadoPor(event) {
@@ -409,7 +437,7 @@ export default {
 			this.formData = {
 				fecha_recepcion: '',
 				kilometraje: '',
-				taller_recepcion: '',
+				taller_id: '',
 				entregado_por: '',
 				vehiculo_id: ''
 			};
@@ -419,6 +447,12 @@ export default {
 			await this.loadVehiculos();
 			// Seleccionar automáticamente el nuevo vehículo
 			this.formData.vehiculo_id = nuevoVehiculo.id;
+		},
+		async handleTallerGuardado(nuevoTaller) {
+			// Recargar la lista de talleres para incluir el nuevo
+			await this.loadTalleres();
+			// Seleccionar automáticamente el nuevo taller
+			this.formData.taller_id = nuevoTaller.id;
 		}
 	}
 };

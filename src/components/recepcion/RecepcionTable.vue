@@ -95,7 +95,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.id }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_recepcion }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.kilometraje?.toLocaleString() }} km</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.taller_recepcion }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getTallerNombre(item.taller_id) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {{ item.numero_serie }} - {{ item.marca }} {{ item.modelo }} {{ item.año }}
                 </td>
@@ -232,7 +232,7 @@
               </div>
               <div class="space-y-1">
                 <p class="text-sm font-medium text-gray-500">Taller de Recepción</p>
-                <p class="font-semibold">{{ currentRecepcion.taller_recepcion }}</p>
+                <p class="font-semibold">{{ getTallerNombre(currentRecepcion.taller_id) }}</p>
               </div>
               <div class="space-y-1">
                 <p class="text-sm font-medium text-gray-500">Entregado por</p>
@@ -284,6 +284,7 @@ export default {
     
     // Datos de recepción desde API
     const recepciones = ref([])
+    const talleres = ref([])
 
     // Modales
     const showRecepcionModal = ref(false)
@@ -345,10 +346,11 @@ export default {
       if (searchQuery.value) {
         const search = searchQuery.value.toLowerCase()
         result = result.filter(item => {
+          const tallerNombre = getTallerNombre(item.taller_id).toLowerCase()
           return (
             item.id.toString().includes(search) ||
             item.fecha_recepcion.toLowerCase().includes(search) ||
-            item.taller_recepcion.toLowerCase().includes(search) ||
+            tallerNombre.includes(search) ||
             item.numero_economico.toLowerCase().includes(search) ||
             item.numero_serie.toLowerCase().includes(search) ||
             item.cliente_nombre.toLowerCase().includes(search) ||
@@ -507,6 +509,30 @@ export default {
       }
     }
 
+    // Cargar talleres desde la API
+    const cargarTalleres = async () => {
+      try {
+        console.log('Cargando talleres...')
+        const response = await apiClient.get('/talleres')
+        talleres.value = response.data
+        console.log('Talleres cargados:', talleres.value.length)
+      } catch (error) {
+        console.error('Error al cargar talleres:', error)
+        toastStore.addToast({
+          message: 'Error al cargar la lista de talleres',
+          type: 'error',
+          duration: 5000
+        })
+      }
+    }
+
+    // Función para obtener el nombre del taller por ID
+    const getTallerNombre = (tallerId) => {
+      if (!tallerId) return 'N/A'
+      const taller = talleres.value.find(t => t.id === tallerId)
+      return taller ? taller.nombre : `Taller ID: ${tallerId}`
+    }
+
     // Acciones de la tabla
     const abrirModalNuevaRecepcion = () => {
       recepcionToEdit.value = null
@@ -524,7 +550,7 @@ export default {
         id: item.id,
         fecha_recepcion: item.fecha_recepcion,
         kilometraje: item.kilometraje,
-        taller_recepcion: item.taller_recepcion,
+        taller_id: item.taller_id,
         entregado_por: item.entregado_por,
         vehiculo_id: item.vehiculo_id
       }
@@ -592,10 +618,12 @@ export default {
     // Cargar datos al montar el componente
     onMounted(() => {
       cargarRecepciones()
+      cargarTalleres()
     })
 
     return {
       recepciones,
+      talleres,
       isLoading,
       error,
       searchQuery,
@@ -622,7 +650,9 @@ export default {
       editarRecepcion,
       handleRecepcionGuardada,
       resetFiltros,
-      cargarRecepciones
+      cargarRecepciones,
+      cargarTalleres,
+      getTallerNombre
     }
   }
 }

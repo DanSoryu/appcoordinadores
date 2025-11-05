@@ -505,7 +505,7 @@ export default {
           
           // Agregar información del taller al usuario actual
           currentUsuario.value.detalleMecanico = response.data
-          currentUsuario.value.taller = response.data.taller
+          currentUsuario.value.taller = response.data.taller?.nombre || 'No asignado'
         } catch (error) {
           console.error('Error al cargar detalles del mecánico:', error)
           // Si no se encuentra el detalle, agregar información de que no está disponible
