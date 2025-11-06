@@ -352,19 +352,12 @@ export default {
 							try {
 								console.log('Actualizando taller del mecánico...');
 								
-								// Primero obtener el detalle mecánico existente
-								const detalleMecanicoResponse = await apiClient.get('/detalle-mecanico');
-								console.log('Detalles mecánicos obtenidos:', detalleMecanicoResponse.data);
-								
-								// Buscar el detalle del mecánico actual
-								const detalleMecanico = detalleMecanicoResponse.data.find(
-									detalle => detalle.usuario_mecasoft_id === props.usuarioData.id
-								);
-								
-								if (detalleMecanico) {
-									console.log('Detalle mecánico encontrado:', detalleMecanico);
+								// Intentar obtener el detalle mecánico del usuario específico
+								try {
+									const detalleMecanicoResponse = await apiClient.get(`/detalle-mecanico/${props.usuarioData.id}`);
+									console.log('Detalle mecánico encontrado:', detalleMecanicoResponse.data);
 									
-									// Actualizar el taller del mecánico
+									// Actualizar el taller del mecánico existente
 									const updateDetalleData = {
 										taller_id: formData.value.taller
 									};
@@ -372,23 +365,30 @@ export default {
 									console.log('Actualizando detalle mecánico con:', updateDetalleData);
 									
 									const updateDetalleResponse = await apiClient.put(
-										`/detalle-mecanico/${detalleMecanico.id}`, 
+										`/detalle-mecanico/${detalleMecanicoResponse.data.id}`, 
 										updateDetalleData
 									);
 									
 									console.log('Taller del mecánico actualizado exitosamente:', updateDetalleResponse.data);
-								} else {
-									console.warn('No se encontró detalle mecánico para el usuario:', props.usuarioData.id);
-									// Si no existe detalle, crear uno nuevo
-									const createDetalleData = {
-										usuario_mecasoft_id: props.usuarioData.id,
-										taller_id: formData.value.taller
-									};
 									
-									console.log('Creando nuevo detalle mecánico:', createDetalleData);
-									
-									const createDetalleResponse = await apiClient.post('/detalle-mecanico', createDetalleData);
-									console.log('Nuevo detalle mecánico creado:', createDetalleResponse.data);
+								} catch (getDetalleError) {
+									// Si no se encuentra el detalle (404), crear uno nuevo
+									if (getDetalleError.response?.status === 404) {
+										console.log('No existe detalle mecánico, creando uno nuevo...');
+										
+										const createDetalleData = {
+											usuario_mecasoft_id: props.usuarioData.id,
+											taller_id: formData.value.taller
+										};
+										
+										console.log('Creando nuevo detalle mecánico:', createDetalleData);
+										
+										const createDetalleResponse = await apiClient.post('/detalle-mecanico', createDetalleData);
+										console.log('Nuevo detalle mecánico creado:', createDetalleResponse.data);
+									} else {
+										// Error diferente a 404
+										throw getDetalleError;
+									}
 								}
 								
 							} catch (detalleError) {
