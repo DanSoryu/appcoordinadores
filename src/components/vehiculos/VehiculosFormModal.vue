@@ -289,6 +289,14 @@ export default {
 		}
 	},
 	methods: {
+		// Helper: capitaliza la primera letra de cada palabra (separa por espacios)
+		capitalizeWords(value) {
+			if (!value) return '';
+			return value.toString().split(' ').map(w => {
+				if (!w) return '';
+				return w.charAt(0).toUpperCase() + w.slice(1);
+			}).join(' ');
+		},
 		generateYears() {
 			const currentYear = new Date().getFullYear();
 			for (let year = 2000; year <= currentYear; year++) {
