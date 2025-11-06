@@ -879,12 +879,40 @@ export default {
         
         if (response.data.success) {
           const data = response.data.data;
-          checklistData.value = data.data || [];
+          
+          // Procesar los datos para asegurar que testigosEncendidos sea un array válido
+          const processedData = (data.data || []).map(item => {
+            const processedItem = { ...item };
+            
+            // Procesar testigosEncendidos
+            if (processedItem.testigosEncendidos) {
+              if (typeof processedItem.testigosEncendidos === 'string') {
+                try {
+                  // Intentar parsear como JSON
+                  processedItem.testigosEncendidos = JSON.parse(processedItem.testigosEncendidos);
+                } catch (e) {
+                  // Si no es JSON válido, convertir a array con un solo elemento
+                  processedItem.testigosEncendidos = [processedItem.testigosEncendidos];
+                }
+              }
+              
+              // Asegurar que sea un array
+              if (!Array.isArray(processedItem.testigosEncendidos)) {
+                processedItem.testigosEncendidos = [processedItem.testigosEncendidos];
+              }
+            } else {
+              processedItem.testigosEncendidos = [];
+            }
+            
+            return processedItem;
+          });
+          
+          checklistData.value = processedData;
           totalItems.value = data.total || 0;
           totalPages.value = data.last_page || 1;
           currentPage.value = data.current_page || 1;
           
-          console.log('Datos de checklist cargados:', {
+          console.log('Datos de checklist cargados y procesados:', {
             items: checklistData.value.length,
             total: totalItems.value,
             page: currentPage.value
