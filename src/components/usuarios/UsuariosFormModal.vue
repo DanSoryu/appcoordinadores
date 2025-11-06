@@ -339,16 +339,67 @@ export default {
 					
 					if (props.isEdit) {
 						// Actualizar usuario existente
-						// NOTA: Para mecánicos existentes, el taller no se actualiza aquí
-						// Se debe manejar por separado usando la API de detalle-mecanico
 						const updateData = {
 							usuario: formData.value.usuario,
 							rol: formData.value.rol
 						};
 						
 						response = await apiClient.put(`/users/${props.usuarioData.id}`, updateData);
-						
 						console.log('Usuario actualizado:', response.data);
+						
+						// Si el usuario es mecánico, también actualizar su taller
+						if (formData.value.rol === 'mecanico' && formData.value.taller) {
+							try {
+								console.log('Actualizando taller del mecánico...');
+								
+								// Primero obtener el detalle mecánico existente
+								const detalleMecanicoResponse = await apiClient.get('/detalle-mecanico');
+								console.log('Detalles mecánicos obtenidos:', detalleMecanicoResponse.data);
+								
+								// Buscar el detalle del mecánico actual
+								const detalleMecanico = detalleMecanicoResponse.data.find(
+									detalle => detalle.usuario_mecasoft_id === props.usuarioData.id
+								);
+								
+								if (detalleMecanico) {
+									console.log('Detalle mecánico encontrado:', detalleMecanico);
+									
+									// Actualizar el taller del mecánico
+									const updateDetalleData = {
+										taller_id: formData.value.taller
+									};
+									
+									console.log('Actualizando detalle mecánico con:', updateDetalleData);
+									
+									const updateDetalleResponse = await apiClient.put(
+										`/detalle-mecanico/${detalleMecanico.id}`, 
+										updateDetalleData
+									);
+									
+									console.log('Taller del mecánico actualizado exitosamente:', updateDetalleResponse.data);
+								} else {
+									console.warn('No se encontró detalle mecánico para el usuario:', props.usuarioData.id);
+									// Si no existe detalle, crear uno nuevo
+									const createDetalleData = {
+										usuario_mecasoft_id: props.usuarioData.id,
+										taller_id: formData.value.taller
+									};
+									
+									console.log('Creando nuevo detalle mecánico:', createDetalleData);
+									
+									const createDetalleResponse = await apiClient.post('/detalle-mecanico', createDetalleData);
+									console.log('Nuevo detalle mecánico creado:', createDetalleResponse.data);
+								}
+								
+							} catch (detalleError) {
+								console.error('Error al actualizar taller del mecánico:', detalleError);
+								toastStore.addToast({
+									message: 'Usuario actualizado, pero hubo un problema al actualizar el taller asignado.',
+									type: 'warning',
+									duration: 7000
+								});
+							}
+						}
 					} else {
 						// Crear nuevo usuario
 						const createData = {
