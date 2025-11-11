@@ -116,6 +116,102 @@
 								</button>
 							</div>
 						</div>
+
+						<!-- Campos adicionales para mecánicos -->
+						<div v-if="formData.rol === 'mecanico'" class="space-y-4 animate-fade-in">
+							<!-- Nombre completo -->
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">Nombre Completo *</label>
+								<input 
+									v-model="formData.nombre"
+									type="text"
+									maxlength="255"
+									placeholder="Ejemplo: Juan Pérez García"
+									class="input mb-2 w-full"
+									required
+									:class="{ 'border-red-500': errors.nombre }"
+								>
+								<p v-if="errors.nombre" class="text-red-500 text-sm mt-1">{{ errors.nombre }}</p>
+								<p class="text-gray-500 text-sm mt-1">Ingrese el nombre completo del mecánico</p>
+							</div>
+
+							<!-- Domicilio -->
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">Domicilio *</label>
+								<textarea 
+									v-model="formData.domicilio"
+									placeholder="Ejemplo: Calle 5 de Mayo #123, Col. Centro, CP 12345, Ciudad, Estado"
+									class="input mb-2 w-full resize-none"
+									rows="3"
+									required
+									:class="{ 'border-red-500': errors.domicilio }"
+								></textarea>
+								<p v-if="errors.domicilio" class="text-red-500 text-sm mt-1">{{ errors.domicilio }}</p>
+								<p class="text-gray-500 text-sm mt-1">Ingrese la dirección completa del mecánico</p>
+							</div>
+
+							<!-- Teléfono -->
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">Teléfono *</label>
+								<input 
+									v-model="formData.telefono"
+									type="tel"
+									maxlength="20"
+									placeholder="Ejemplo: +52 55 1234 5678"
+									class="input mb-2 w-full"
+									required
+									:class="{ 'border-red-500': errors.telefono }"
+								>
+								<p v-if="errors.telefono" class="text-red-500 text-sm mt-1">{{ errors.telefono }}</p>
+								<p class="text-gray-500 text-sm mt-1">Ingrese el número de teléfono de contacto</p>
+							</div>
+
+							<!-- Licencia de Conducir -->
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">
+									<span class="flex items-center">
+										<svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+										</svg>
+										Licencia de Conducir
+									</span>
+								</label>
+								<p class="text-gray-500 text-sm mb-3">Suba una fotografía de la licencia de conducir (opcional)</p>
+								<FileUploadPreview
+									id="licenciaArchivo"
+									accept="image/*,.pdf"
+									:preloaded-file="licenciaPreexistente"
+									document-type="mecanico"
+									@file-selected="(file) => handleFileSelected('licencia', file)"
+								>
+									Seleccionar Licencia
+								</FileUploadPreview>
+								<p v-if="errors.licencia" class="text-red-500 text-sm mt-1">{{ errors.licencia }}</p>
+							</div>
+
+							<!-- INE -->
+							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+								<label class="block mb-2 font-semibold text-gray-700">
+									<span class="flex items-center">
+										<svg class="w-4 h-4 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+										</svg>
+										INE/Credencial de Elector
+									</span>
+								</label>
+								<p class="text-gray-500 text-sm mb-3">Suba una fotografía del INE o credencial de elector (opcional)</p>
+								<FileUploadPreview
+									id="ineArchivo"
+									accept="image/*,.pdf"
+									:preloaded-file="inePreexistente"
+									document-type="mecanico"
+									@file-selected="(file) => handleFileSelected('ine', file)"
+								>
+									Seleccionar INE
+								</FileUploadPreview>
+								<p v-if="errors.ine" class="text-red-500 text-sm mt-1">{{ errors.ine }}</p>
+							</div>
+						</div>
 					</div>
 				</div>
 
@@ -146,6 +242,7 @@
 import { computed, ref, watch } from 'vue'
 import BaseButton from '../global/BaseButton.vue'
 import TallerFormModal from '../talleres/TallerFormModal.vue'
+import FileUploadPreview from '../global/FileUploadPreview.vue'
 import { useSubmitButton } from '../../composables/useSubmitButton.js'
 import { useToastStore } from '../../stores/toast.js'
 import apiClient from '../../services/api.js'
@@ -154,7 +251,8 @@ export default {
 	name: 'UsuariosFormModal',
 	components: {
 		BaseButton,
-		TallerFormModal
+		TallerFormModal,
+		FileUploadPreview
 	},
 	props: {
 		show: {
@@ -179,13 +277,23 @@ export default {
 			usuario: '',
 			password: '',
 			rol: '',
-			taller: ''
+			taller: '',
+			// Campos del detalle mecánico
+			nombre: '',
+			licencia: '', // Campo para archivos (base64)
+			ine: '', // Campo para archivos (base64)
+			domicilio: '',
+			telefono: ''
 		});
 
 		const errors = ref({});
 		const showPassword = ref(false);
 		const talleres = ref([]);
 		const showTallerModal = ref(false);
+		
+		// Variables para archivos preexistentes
+		const licenciaPreexistente = ref('');
+		const inePreexistente = ref('');
 
 		// Computed properties
 		const isFormValid = computed(() => {
@@ -195,9 +303,13 @@ export default {
 								 formData.value.rol !== '' &&
 								 formData.value.usuario.length <= 30;
 								 
-				// Si es mecánico, también requiere taller
+				// Si es mecánico, también requiere taller y campos adicionales
 				if (formData.value.rol === 'mecanico') {
-					return baseValid && formData.value.taller !== '';
+					const mecanicoValid = formData.value.taller !== '' &&
+										  formData.value.nombre.trim() !== '' &&
+										  formData.value.domicilio.trim() !== '' &&
+										  formData.value.telefono.trim() !== '';
+					return baseValid && mecanicoValid;
 				}
 				
 				return baseValid;
@@ -208,9 +320,13 @@ export default {
 								 formData.value.rol !== '' &&
 								 formData.value.usuario.length <= 30;
 								 
-				// Si es mecánico, también requiere taller
+				// Si es mecánico, también requiere taller y campos adicionales
 				if (formData.value.rol === 'mecanico') {
-					return baseValid && formData.value.taller !== '';
+					const mecanicoValid = formData.value.taller !== '' &&
+										  formData.value.nombre.trim() !== '' &&
+										  formData.value.domicilio.trim() !== '' &&
+										  formData.value.telefono.trim() !== '';
+					return baseValid && mecanicoValid;
 				}
 				
 				return baseValid;
@@ -224,8 +340,18 @@ export default {
 					usuario: newData.usuario || '',
 					password: '', // Nunca cargar contraseña existente
 					rol: newData.rol || '',
-					taller: newData.taller || ''
+					taller: newData.taller || '',
+					// Campos del detalle mecánico
+					nombre: newData.nombre || '',
+					licencia: '', // No cargar archivos existentes directamente
+					ine: '', // No cargar archivos existentes directamente
+					domicilio: newData.domicilio || '',
+					telefono: newData.telefono || ''
 				};
+				
+				// Cargar archivos preexistentes para mostrar en FileUploadPreview
+				licenciaPreexistente.value = newData.licenciaArchivo || '';
+				inePreexistente.value = newData.ineArchivo || '';
 			}
 		}, { immediate: true });
 
@@ -240,13 +366,28 @@ export default {
 			}
 		});
 
-		// Limpiar campo taller cuando el rol no sea mecánico
+		// Limpiar campos cuando el rol no sea mecánico
 		watch(() => formData.value.rol, (newRol) => {
 			if (newRol !== 'mecanico') {
+				// Limpiar todos los campos de mecánico
 				formData.value.taller = '';
-				if (errors.value.taller) {
-					delete errors.value.taller;
-				}
+				formData.value.nombre = '';
+				formData.value.licencia = '';
+				formData.value.ine = '';
+				formData.value.domicilio = '';
+				formData.value.telefono = '';
+				
+				// Limpiar archivos preexistentes
+				licenciaPreexistente.value = '';
+				inePreexistente.value = '';
+				
+				// Limpiar errores relacionados
+				const mecanicoFields = ['taller', 'nombre', 'licencia', 'ine', 'domicilio', 'telefono'];
+				mecanicoFields.forEach(field => {
+					if (errors.value[field]) {
+						delete errors.value[field];
+					}
+				});
 			} else {
 				// Si cambia a mecánico y no hay talleres cargados, cargarlos
 				if (talleres.value.length === 0) {
@@ -280,6 +421,62 @@ export default {
 			showTallerModal.value = true;
 		};
 
+		// Función para manejar la selección de archivos y convertir a base64
+		const handleFileSelected = (fieldName, file) => {
+			if (!file) {
+				formData.value[fieldName] = '';
+				// Limpiar error si existía
+				if (errors.value[fieldName]) {
+					delete errors.value[fieldName];
+				}
+				return;
+			}
+
+			// Validar tipo de archivo
+			const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+			if (!allowedTypes.includes(file.type)) {
+				errors.value[fieldName] = 'Solo se permiten archivos de imagen (JPG, PNG, GIF, WebP) o PDF';
+				formData.value[fieldName] = '';
+				return;
+			}
+
+			// Validar tamaño del archivo (máximo 5MB)
+			const maxSize = 5 * 1024 * 1024; // 5MB
+			if (file.size > maxSize) {
+				errors.value[fieldName] = 'El archivo no debe superar los 5MB';
+				formData.value[fieldName] = '';
+				return;
+			}
+
+			// Convertir a base64
+			const reader = new FileReader();
+			reader.onload = (event) => {
+				try {
+					const base64String = event.target.result;
+					formData.value[fieldName] = base64String;
+					
+					// Limpiar error si existía
+					if (errors.value[fieldName]) {
+						delete errors.value[fieldName];
+					}
+
+					console.log(`Archivo ${fieldName} convertido a base64 exitosamente`);
+				} catch (error) {
+					console.error(`Error al convertir archivo ${fieldName} a base64:`, error);
+					errors.value[fieldName] = 'Error al procesar el archivo';
+					formData.value[fieldName] = '';
+				}
+			};
+			
+			reader.onerror = () => {
+				console.error(`Error al leer archivo ${fieldName}`);
+				errors.value[fieldName] = 'Error al leer el archivo';
+				formData.value[fieldName] = '';
+			};
+			
+			reader.readAsDataURL(file);
+		};
+
 		const handleTallerGuardado = async (nuevoTaller) => {
 			// Recargar la lista de talleres para incluir el nuevo
 			await loadTalleres();
@@ -292,9 +489,18 @@ export default {
 				usuario: '',
 				password: '',
 				rol: '',
-				taller: ''
+				taller: '',
+				// Campos del detalle mecánico
+				nombre: '',
+				licencia: '',
+				ine: '',
+				domicilio: '',
+				telefono: ''
 			};
 			errors.value = {};
+			// Limpiar archivos preexistentes
+			licenciaPreexistente.value = '';
+			inePreexistente.value = '';
 		};
 
 		const validateForm = () => {
@@ -321,9 +527,37 @@ export default {
 				errors.value.rol = 'El rol es requerido';
 			}
 
-			// Validar taller (solo si el rol es mecánico)
-			if (formData.value.rol === 'mecanico' && !formData.value.taller) {
-				errors.value.taller = 'El taller es requerido para mecánicos';
+			// Validaciones específicas para mecánicos
+			if (formData.value.rol === 'mecanico') {
+				// Taller
+				if (!formData.value.taller) {
+					errors.value.taller = 'El taller es requerido para mecánicos';
+				}
+				
+				// Nombre
+				if (!formData.value.nombre.trim()) {
+					errors.value.nombre = 'El nombre completo es requerido';
+				} else if (formData.value.nombre.length > 255) {
+					errors.value.nombre = 'El nombre no puede tener más de 255 caracteres';
+				}
+				
+				// Domicilio
+				if (!formData.value.domicilio.trim()) {
+					errors.value.domicilio = 'El domicilio es requerido';
+				}
+				
+				// Teléfono
+				if (!formData.value.telefono.trim()) {
+					errors.value.telefono = 'El teléfono es requerido';
+				} else if (formData.value.telefono.length > 20) {
+					errors.value.telefono = 'El teléfono no puede tener más de 20 caracteres';
+				}
+				
+				// Validar formato de teléfono básico (solo números, espacios, guiones, paréntesis y +)
+				const telefonoRegex = /^[\d\s\-\(\)\+]+$/;
+				if (formData.value.telefono.trim() && !telefonoRegex.test(formData.value.telefono)) {
+					errors.value.telefono = 'El formato del teléfono no es válido';
+				}
 			}
 
 			return Object.keys(errors.value).length === 0;
@@ -359,8 +593,19 @@ export default {
 									
 									// Actualizar el taller del mecánico existente
 									const updateDetalleData = {
-										taller_id: formData.value.taller
+										taller_id: formData.value.taller,
+										nombre: formData.value.nombre,
+										domicilio: formData.value.domicilio,
+										telefono: formData.value.telefono
 									};
+
+									// Agregar archivos en base64 si existen
+									if (formData.value.licencia) {
+										updateDetalleData.licencia = formData.value.licencia;
+									}
+									if (formData.value.ine) {
+										updateDetalleData.ine = formData.value.ine;
+									}
 									
 									console.log('Actualizando detalle mecánico con:', updateDetalleData);
 									
@@ -378,8 +623,19 @@ export default {
 										
 										const createDetalleData = {
 											usuario_mecasoft_id: props.usuarioData.id,
-											taller_id: formData.value.taller
+											taller_id: formData.value.taller,
+											nombre: formData.value.nombre,
+											domicilio: formData.value.domicilio,
+											telefono: formData.value.telefono
 										};
+
+										// Agregar archivos en base64 si existen
+										if (formData.value.licencia) {
+											createDetalleData.licencia = formData.value.licencia;
+										}
+										if (formData.value.ine) {
+											createDetalleData.ine = formData.value.ine;
+										}
 										
 										console.log('Creando nuevo detalle mecánico:', createDetalleData);
 										
@@ -433,8 +689,19 @@ export default {
 								
 								const detalleMecanicoData = {
 									usuario_mecasoft_id: usuarioId,
-									taller_id: formData.value.taller
+									taller_id: formData.value.taller,
+									nombre: formData.value.nombre,
+									domicilio: formData.value.domicilio,
+									telefono: formData.value.telefono
 								};
+
+								// Agregar archivos en base64 si existen
+								if (formData.value.licencia) {
+									detalleMecanicoData.licencia = formData.value.licencia;
+								}
+								if (formData.value.ine) {
+									detalleMecanicoData.ine = formData.value.ine;
+								}
 								
 								console.log('Creando detalle mecánico con datos:', detalleMecanicoData);
 								
@@ -531,6 +798,8 @@ export default {
 			showPassword,
 			talleres,
 			showTallerModal,
+			licenciaPreexistente,
+			inePreexistente,
 			isFormValid,
 			executeSubmit,
 			toastStore,
@@ -538,7 +807,8 @@ export default {
 			resetForm,
 			loadTalleres,
 			abrirTallerModal,
-			handleTallerGuardado
+			handleTallerGuardado,
+			handleFileSelected
 		};
 	}
 };

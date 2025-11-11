@@ -830,9 +830,13 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useToastStore } from '../../stores/toast.js'
 import { useAuthStore } from '../../stores/auth.js'
 import apiClient from '../../services/api.js'
+import ImageModal from '../global/ImageModal.vue'
 
 export default {
   name: 'CheckListRecepcionTable',
+  components: {
+    ImageModal
+  },
   emits: ['abrir-checklist-modal'],
   setup(props, { emit }) {
     const toastStore = useToastStore();
@@ -857,6 +861,10 @@ export default {
     // Modal de detalles
     const showDetallesModal = ref(false);
     const currentChecklistItem = ref(null);
+
+    // Modal de imagen
+    const showImageModal = ref(false);
+    const currentImageUrl = ref(null);
 
     // Cargar datos desde la API
     const cargarChecklistData = async (page = 1) => {
@@ -1067,6 +1075,18 @@ export default {
         duration: 3000
       });
     };
+
+    // Función para abrir el modal de imagen
+    const openImageModal = (imageUrl) => {
+      currentImageUrl.value = imageUrl
+      showImageModal.value = true
+    }
+
+    // Función para cerrar el modal de imagen
+    const closeImageModal = () => {
+      showImageModal.value = false
+      currentImageUrl.value = null
+    }
 
     // Helper para determinar el estado basado en la propiedad 'estado'
     const isCompleted = (item) => {

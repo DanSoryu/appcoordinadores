@@ -39,6 +39,11 @@ export default {
     preloadedFile: {
       type: String,
       default: null
+    },
+    documentType: {
+      type: String,
+      default: 'orden', // 'orden' o 'mecanico'
+      validator: value => ['orden', 'mecanico'].includes(value)
     }
   },
   data() {
@@ -75,7 +80,12 @@ export default {
     },
     imageUrl() {
       if (this.isPreloadedFile && this.fileName && this.isImage) {
-        return `http://127.0.0.1:8000/Mecasoft/detalles_ordenes/${this.fileName}`;
+        // Usar la URL correcta según el tipo de documento
+        if (this.documentType === 'mecanico') {
+          return `https://api.ed-intra.com/Mecasoft/documentos_mecanico/${this.fileName}`;
+        } else {
+          return `http://127.0.0.1:8000/Mecasoft/detalles_ordenes/${this.fileName}`;
+        }
       }
       return this.preview;
     }

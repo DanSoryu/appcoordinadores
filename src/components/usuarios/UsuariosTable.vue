@@ -222,7 +222,7 @@
 
     <!-- Modal de Detalles de Usuario -->
     <div v-if="showDetallesModal" class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div class="bg-white w-[90%] max-w-lg max-h-[90vh] rounded-lg shadow-xl">
+      <div class="bg-white w-[90%] max-w-2xl max-h-[90vh] rounded-lg shadow-xl">
         <!-- Encabezado del modal -->
         <div class="bg-blue-600 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
           <h3 class="text-lg font-semibold">Detalles del Usuario</h3>
@@ -277,13 +277,94 @@
                     <span class="text-sm text-gray-600">Cargando detalles...</span>
                   </div>
                   
-                  <!-- Información del taller -->
-                  <div v-else class="bg-blue-50 p-3 rounded-md">
-                    <div>
-                      <label class="text-sm font-medium text-gray-500">Taller Asignado</label>
-                      <p class="text-sm text-gray-900 font-semibold">
-                        {{ currentUsuario.taller || 'No asignado' }}
-                      </p>
+                  <!-- Información completa del mecánico -->
+                  <div v-else class="space-y-4">
+                    <!-- Información básica -->
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                      <h6 class="text-sm font-semibold text-blue-800 mb-3">Datos Básicos</h6>
+                      <div class="grid grid-cols-1 gap-3">
+                        <div v-if="currentUsuario.detalleMecanico?.nombre">
+                          <label class="text-xs font-medium text-gray-500">Nombre Completo</label>
+                          <p class="text-sm text-gray-900 font-semibold">{{ currentUsuario.detalleMecanico.nombre }}</p>
+                        </div>
+                        <div>
+                          <label class="text-xs font-medium text-gray-500">Taller Asignado</label>
+                          <p class="text-sm text-gray-900 font-semibold">
+                            {{ currentUsuario.taller || 'No asignado' }}
+                          </p>
+                        </div>
+                        <div v-if="currentUsuario.detalleMecanico?.telefono">
+                          <label class="text-xs font-medium text-gray-500">Teléfono</label>
+                          <p class="text-sm text-gray-900 font-semibold">{{ currentUsuario.detalleMecanico.telefono }}</p>
+                        </div>
+                        <div v-if="currentUsuario.detalleMecanico?.domicilio">
+                          <label class="text-xs font-medium text-gray-500">Domicilio</label>
+                          <p class="text-sm text-gray-900 bg-white p-2 rounded border">{{ currentUsuario.detalleMecanico.domicilio }}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Documentos -->
+                    <div class="bg-green-50 p-4 rounded-lg">
+                      <h6 class="text-sm font-semibold text-green-800 mb-3">Documentos</h6>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Licencia de Conducir -->
+                        <div>
+                          <label class="text-xs font-medium text-gray-500 mb-2 block">Licencia de Conducir</label>
+                          <div v-if="currentUsuario.detalleMecanico?.licencia" class="text-center">
+                            <div @click="openImageModal(getImageUrl(currentUsuario.detalleMecanico.licencia))" class="block cursor-pointer">
+                              <img 
+                                :src="getImageUrl(currentUsuario.detalleMecanico.licencia)" 
+                                alt="Licencia de Conducir" 
+                                class="w-full h-24 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer"
+                                @error="handleImageError"
+                              >
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Click para ver en tamaño completo</p>
+                          </div>
+                          <div v-else class="text-center py-4">
+                            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p class="text-xs text-gray-500">No disponible</p>
+                          </div>
+                        </div>
+
+                        <!-- INE -->
+                        <div>
+                          <label class="text-xs font-medium text-gray-500 mb-2 block">INE/Credencial</label>
+                          <div v-if="currentUsuario.detalleMecanico?.ine" class="text-center">
+                            <div @click="openImageModal(getImageUrl(currentUsuario.detalleMecanico.ine))" class="block cursor-pointer">
+                              <img 
+                                :src="getImageUrl(currentUsuario.detalleMecanico.ine)" 
+                                alt="INE/Credencial" 
+                                class="w-full h-24 object-cover rounded-lg border hover:opacity-75 transition-opacity cursor-pointer"
+                                @error="handleImageError"
+                              >
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Click para ver en tamaño completo</p>
+                          </div>
+                          <div v-else class="text-center py-4">
+                            <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                            </svg>
+                            <p class="text-xs text-gray-500">No disponible</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Mensaje cuando no hay detalles -->
+                    <div v-if="!currentUsuario.detalleMecanico" class="bg-yellow-50 p-3 rounded-md border border-yellow-200">
+                      <div class="flex items-center">
+                        <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                        <p class="text-sm text-yellow-800">
+                          Este mecánico no tiene información adicional registrada. 
+                          <br><span class="text-xs">Puede editarlo para agregar sus datos completos.</span>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -311,6 +392,13 @@
       @close="showChangePasswordModal = false"
       @password-changed="handlePasswordChanged"
     />
+
+    <!-- Modal de Imagen -->
+    <ImageModal
+      :show="showImageModal"
+      :imageUrl="currentImageUrl"
+      @close="closeImageModal"
+    />
   </div>
 </template>
 
@@ -321,13 +409,15 @@ import apiClient from '../../services/api.js'
 import UsuariosFormModal from './UsuariosFormModal.vue'
 import UsuariosDeleteModal from './UsuariosDeleteModal.vue'
 import UsuariosChangePasswordModal from './UsuariosChangePasswordModal.vue'
+import ImageModal from '../global/ImageModal.vue'
 
 export default {
   name: 'UsuariosTable',
   components: {
     UsuariosFormModal,
     UsuariosDeleteModal,
-    UsuariosChangePasswordModal
+    UsuariosChangePasswordModal,
+    ImageModal
   },
   setup() {
     const toastStore = useToastStore()
@@ -342,6 +432,8 @@ export default {
     const showDetallesModal = ref(false)
     const showDeleteModal = ref(false)
     const showChangePasswordModal = ref(false)
+    const showImageModal = ref(false)
+    const currentImageUrl = ref(null)
     const loadingDetalles = ref(false)
     const currentUsuario = ref(null)
     const usuarioToEdit = ref(null)
@@ -523,8 +615,45 @@ export default {
       }
     }
 
-    const editarUsuario = (usuario) => {
+    const editarUsuario = async (usuario) => {
+      // Crear copia del usuario con datos básicos
       usuarioToEdit.value = { ...usuario }
+      
+      // Si el usuario es mecánico, cargar también los detalles del mecánico
+      if (usuario.rol === 'mecanico') {
+        try {
+          console.log('Cargando detalles del mecánico para edición, usuario ID:', usuario.id)
+          const response = await apiClient.get(`/detalle-mecanico/${usuario.id}`)
+          console.log('Detalles del mecánico obtenidos para edición:', response.data)
+          
+          // Agregar los datos del detalle mecánico al objeto usuario
+          usuarioToEdit.value = {
+            ...usuarioToEdit.value,
+            // Datos del detalle mecánico
+            taller: response.data.taller_id || '',
+            nombre: response.data.nombre || '',
+            domicilio: response.data.domicilio || '',
+            telefono: response.data.telefono || '',
+            // Nombres de archivos para mostrar en el FileUploadPreview
+            licenciaArchivo: response.data.licencia || '',
+            ineArchivo: response.data.ine || ''
+          }
+        } catch (error) {
+          console.error('Error al cargar detalles del mecánico para edición:', error)
+          
+          // Si no se encuentra el detalle, continuar con los datos básicos
+          if (error.response?.status === 404) {
+            console.log('No existe detalle mecánico, continuando con datos básicos')
+          } else {
+            toastStore.addToast({
+              message: 'Error al cargar los detalles del mecánico. Se editará solo la información básica.',
+              type: 'warning',
+              duration: 5000
+            })
+          }
+        }
+      }
+      
       showUsuarioModal.value = true
     }
 
@@ -587,6 +716,46 @@ export default {
       })
     }
 
+    // Helper para obtener la URL completa de una imagen del detalle mecánico
+    const getImageUrl = (imageName) => {
+      if (!imageName) return null
+      // Usar la misma URL base que el CheckListRecepcionTable
+      return `https://api.ed-intra.com/Mecasoft/documentos_mecanico/${imageName}`
+    }
+
+    // Función para abrir el modal de imagen
+    const openImageModal = (imageUrl) => {
+      currentImageUrl.value = imageUrl
+      showImageModal.value = true
+    }
+
+    // Función para cerrar el modal de imagen
+    const closeImageModal = () => {
+      showImageModal.value = false
+      currentImageUrl.value = null
+    }
+
+    // Helper para manejar errores de carga de imágenes
+    const handleImageError = (event) => {
+      console.error('Error al cargar imagen:', event.target.src)
+      // Reemplazar con imagen de placeholder o ocultar
+      event.target.style.display = 'none'
+      
+      // Mostrar mensaje de error
+      const parent = event.target.parentElement
+      if (parent) {
+        const errorDiv = document.createElement('div')
+        errorDiv.className = 'text-center py-4'
+        errorDiv.innerHTML = `
+          <svg class="w-8 h-8 text-red-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          <p class="text-xs text-red-500">Error al cargar imagen</p>
+        `
+        parent.appendChild(errorDiv)
+      }
+    }
+
 
 
     // Watchers para filtros
@@ -616,6 +785,8 @@ export default {
       showDetallesModal,
       showDeleteModal,
       showChangePasswordModal,
+      showImageModal,
+      currentImageUrl,
       loadingDetalles,
       currentUsuario,
       usuarioToEdit,
@@ -634,7 +805,11 @@ export default {
       handlePasswordChanged,
       getRoleDisplayName,
       getRoleBadgeClass,
-      cargarUsuarios
+      cargarUsuarios,
+      getImageUrl,
+      handleImageError,
+      openImageModal,
+      closeImageModal
     }
   }
 }
