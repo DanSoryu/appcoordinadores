@@ -27,8 +27,8 @@
 										required
 									>
 										<option value="">Selecciona un cliente</option>
-										<option v-for="cliente in clientes" :key="cliente.id" :value="cliente.id">
-                  							{{ cliente.responsable_automotriz }} - {{ cliente.supervisor }}
+										<option v-for="cliente in clientesWithDetails" :key="cliente.id" :value="cliente.id">
+                  							{{ cliente.displayName }}
 										</option>
 									</select>
 									<div v-if="formData.cliente_id && !clienteValid" class="text-red-500 text-xs mt-1">
@@ -212,6 +212,10 @@ export default {
 						numero_economico: ''
 					},
 								clientes: [],
+								copes: [],
+								areas: [],
+								divisiones: [],
+								clientesWithDetails: [], // Para mostrar supervisor y cope concatenado
 								marcas: [
 									'Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan', 'Hyundai', 'Kia',
 									'Volkswagen', 'Jeep', 'Dodge'
@@ -381,8 +385,32 @@ export default {
 		},
 		async loadClientes() {
 			try {
-				const response = await apiClient.get('/clientes');
-				this.clientes = response.data;
+				// Cargar clientes, copes, áreas y divisiones
+				const [clientesResponse, copesResponse, areasResponse, divisionesResponse] = await Promise.all([
+					apiClient.get('/clientes'),
+					apiClient.get('/copes'),
+					apiClient.get('/areas'),
+					apiClient.get('/divisiones')
+				]);
+
+				this.clientes = clientesResponse.data;
+				this.copes = copesResponse.data;
+				this.areas = areasResponse.data;
+				this.divisiones = divisionesResponse.data;
+
+				// Crear array con información concatenada
+				this.clientesWithDetails = this.clientes.map(cliente => {
+					const cope = this.copes.find(c => c.id === cliente.cope_id);
+					const area = cope ? this.areas.find(a => a.id === cope.area_id) : null;
+					const division = area ? this.divisiones.find(d => d.id === area.division_id) : null;
+					
+					const copeInfo = cope ? `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}` : 'Sin COPE';
+					
+					return {
+						...cliente,
+						displayName: `${cliente.supervisor} - ${copeInfo}`
+					};
+				});
 			} catch (error) {
 				console.error('Error al cargar clientes:', error);
 				this.toastStore.addToast({
