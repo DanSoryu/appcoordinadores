@@ -472,13 +472,19 @@ export default {
         const areas = areasResponse.data
         const divisiones = divisionesResponse.data
 
+        console.log('Vehiculos desde API:', vehiculosResponse.data[0]) // Ver estructura del primer vehículo
+        console.log('COPEs disponibles:', copes.length)
+        
         // Procesar vehículos para agregar información del COPE
         vehiculos.value = vehiculosResponse.data.map(vehiculo => {
-          const cope = copes.find(c => c.id === vehiculo.cliente_cope_id)
+          // Buscar el cope usando el cope_id del cliente del vehículo
+          const cope = copes.find(c => c.id === vehiculo.cliente_cope_id || vehiculo.cope_id)
           const area = cope ? areas.find(a => a.id === cope.area_id) : null
           const division = area ? divisiones.find(d => d.id === area.division_id) : null
           
           const copeInfo = cope ? `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}` : 'Sin COPE'
+          
+          console.log('Vehículo:', vehiculo.numero_economico, 'COPE ID:', vehiculo.cliente_cope_id || vehiculo.cope_id, 'COPE Info:', copeInfo)
           
           return {
             ...vehiculo,
