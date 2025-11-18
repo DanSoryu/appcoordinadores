@@ -23,7 +23,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Buscar por marca, modelo, placa..."
+            placeholder="Buscar por marca, modelo, supervisor, COPE, placa..."
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
         </div>
@@ -86,7 +86,7 @@
                   Vehículo
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Cliente Supervisor
+                  Supervisor - COPE
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Año
@@ -122,7 +122,7 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ vehiculo.cliente_responsable_automotriz }} - {{ vehiculo.cliente_supervisor }}
+                  {{ vehiculo.cliente_supervisor }} - {{ vehiculo.cliente_cope_info }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {{ vehiculo.año }}
@@ -281,8 +281,12 @@
                   <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.marca }} {{ currentVehiculo.modelo }}</p>
                 </div>
                 <div>
-                  <label class="text-sm font-medium text-gray-500">Cliente</label>
-                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.cliente_nombre }}</p>
+                  <label class="text-sm font-medium text-gray-500">Supervisor</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.cliente_supervisor }}</p>
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-gray-500">COPE</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentVehiculo.cliente_cope_info }}</p>
                 </div>
                 <div>
                   <label class="text-sm font-medium text-gray-500">Año</label>
@@ -375,7 +379,8 @@ export default {
           return item.marca.toLowerCase().includes(search) ||
                  item.modelo.toLowerCase().includes(search) ||
                  item.numero_economico.toLowerCase().includes(search) ||
-                 item.cliente_nombre.toLowerCase().includes(search) ||
+                 item.cliente_supervisor.toLowerCase().includes(search) ||
+                 item.cliente_cope_info.toLowerCase().includes(search) ||
                  item.placas.toLowerCase().includes(search) ||
                  item.numero_serie.toLowerCase().includes(search)
         })
@@ -455,8 +460,31 @@ export default {
       error.value = null
       
       try {
-        const response = await apiClient.get('/vehiculos')
-        vehiculos.value = response.data
+        // Cargar vehículos, copes, áreas y divisiones en paralelo
+        const [vehiculosResponse, copesResponse, areasResponse, divisionesResponse] = await Promise.all([
+          apiClient.get('/vehiculos'),
+          apiClient.get('/copes'),
+          apiClient.get('/areas'),
+          apiClient.get('/divisiones')
+        ])
+
+        const copes = copesResponse.data
+        const areas = areasResponse.data
+        const divisiones = divisionesResponse.data
+
+        // Procesar vehículos para agregar información del COPE
+        vehiculos.value = vehiculosResponse.data.map(vehiculo => {
+          const cope = copes.find(c => c.id === vehiculo.cliente_cope_id)
+          const area = cope ? areas.find(a => a.id === cope.area_id) : null
+          const division = area ? divisiones.find(d => d.id === area.division_id) : null
+          
+          const copeInfo = cope ? `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}` : 'Sin COPE'
+          
+          return {
+            ...vehiculo,
+            cliente_cope_info: copeInfo
+          }
+        })
       } catch (err) {
         error.value = 'Error al cargar los vehículos'
         console.error('Error al cargar vehículos:', err)
