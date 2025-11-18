@@ -460,34 +460,41 @@ export default {
       error.value = null
       
       try {
-        // Cargar vehículos, copes, áreas y divisiones en paralelo
-        const [vehiculosResponse, copesResponse, areasResponse, divisionesResponse] = await Promise.all([
+        // Cargar vehículos, clientes, copes, áreas y divisiones en paralelo
+        const [vehiculosResponse, clientesResponse, copesResponse, areasResponse, divisionesResponse] = await Promise.all([
           apiClient.get('/vehiculos'),
+          apiClient.get('/clientes'),
           apiClient.get('/copes'),
           apiClient.get('/areas'),
           apiClient.get('/divisiones')
         ])
 
+        const clientes = clientesResponse.data
         const copes = copesResponse.data
         const areas = areasResponse.data
         const divisiones = divisionesResponse.data
 
         console.log('Vehiculos desde API:', vehiculosResponse.data[0]) // Ver estructura del primer vehículo
+        console.log('Clientes disponibles:', clientes.length)
         console.log('COPEs disponibles:', copes.length)
         
         // Procesar vehículos para agregar información del COPE
         vehiculos.value = vehiculosResponse.data.map(vehiculo => {
-          // Buscar el cope usando el cope_id del cliente del vehículo
-          const cope = copes.find(c => c.id === vehiculo.cliente_cope_id || vehiculo.cope_id)
+          // Primero buscar el cliente del vehículo
+          const cliente = clientes.find(c => c.id === vehiculo.cliente_id)
+          
+          // Luego buscar el COPE del cliente
+          const cope = cliente ? copes.find(c => c.id === cliente.cope_id) : null
           const area = cope ? areas.find(a => a.id === cope.area_id) : null
           const division = area ? divisiones.find(d => d.id === area.division_id) : null
           
           const copeInfo = cope ? `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}` : 'Sin COPE'
           
-          console.log('Vehículo:', vehiculo.numero_economico, 'COPE ID:', vehiculo.cliente_cope_id || vehiculo.cope_id, 'COPE Info:', copeInfo)
+          console.log('Vehículo:', vehiculo.numero_economico, 'Cliente ID:', vehiculo.cliente_id, 'Cliente:', cliente?.supervisor, 'COPE ID:', cliente?.cope_id, 'COPE Info:', copeInfo)
           
           return {
             ...vehiculo,
+            cliente_supervisor: cliente?.supervisor || 'Sin supervisor',
             cliente_cope_info: copeInfo
           }
         })
