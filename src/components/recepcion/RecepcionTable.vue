@@ -84,7 +84,7 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kilometraje</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
+                <th v-if="isAdmin" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehículo</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entregado por</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
@@ -95,7 +95,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.id }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_recepcion }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.kilometraje?.toLocaleString() }} km</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getTallerNombre(item.taller_id) }}</td>
+                <td v-if="isAdmin" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getTallerNombre(item.taller_id) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {{ item.numero_economico }} - {{ item.placas }}
                 </td>
@@ -118,7 +118,7 @@
               </tr>
               <!-- Mensaje cuando no hay datos -->
               <tr v-if="paginatedData.length === 0">
-                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                <td :colspan="isAdmin ? 7 : 6" class="px-6 py-8 text-center text-gray-500">
                   No se encontraron registros de recepción.
                 </td>
               </tr>
@@ -269,6 +269,7 @@
 <script>
 import { ref, computed, watch, onMounted } from 'vue'
 import { useToastStore } from '../../stores/toast.js'
+import { useAuthStore } from '../../stores/auth.js'
 import apiClient from '../../services/api.js'
 import DatosRecepcionFormModal from './DatosRecepcionFormModal.vue'
 
@@ -279,6 +280,7 @@ export default {
   },
   setup() {
     const toastStore = useToastStore()
+    const authStore = useAuthStore()
     const isLoading = ref(false)
     const error = ref(null)
     
@@ -302,6 +304,11 @@ export default {
     const itemsPerPage = 10
     const totalItems = ref(0)
     const totalPages = computed(() => Math.ceil(filteredData.value.length / itemsPerPage))
+
+    // Computed para verificar si el usuario es admin
+    const isAdmin = computed(() => {
+      return authStore.user?.rol === 'admin'
+    })
 
     // Fechas límite
     const currentDate = computed(() => {
@@ -641,6 +648,7 @@ export default {
       showDetallesModal,
       currentRecepcion,
       recepcionToEdit,
+      isAdmin,
       previousPage,
       nextPage,
       goToPage,
