@@ -97,7 +97,7 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.kilometraje?.toLocaleString() }} km</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getTallerNombre(item.taller_id) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ item.numero_serie }} - {{ item.marca }} {{ item.modelo }} {{ item.año }}
+                  {{ item.numero_economico }} - {{ item.placas }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.entregado_por }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
@@ -352,7 +352,7 @@ export default {
             item.fecha_recepcion.toLowerCase().includes(search) ||
             tallerNombre.includes(search) ||
             item.numero_economico.toLowerCase().includes(search) ||
-            item.numero_serie.toLowerCase().includes(search) ||
+            item.placas.toLowerCase().includes(search) ||
             item.cliente_nombre.toLowerCase().includes(search) ||
             item.entregado_por.toLowerCase().includes(search)
           )
@@ -486,9 +486,8 @@ export default {
           return {
             ...recepcion,
             fecha_recepcion: formatFecha(recepcion.fecha_recepcion),
-            marca: vehiculo?.marca || 'N/A',
-            modelo: vehiculo?.modelo || 'N/A',
-            año: vehiculo?.año || 'N/A'
+            numero_economico: vehiculo?.numero_economico || 'N/A',
+            placas: vehiculo?.placas || 'N/A'
           }
         })
         
