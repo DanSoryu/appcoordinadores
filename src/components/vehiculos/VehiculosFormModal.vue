@@ -246,9 +246,9 @@ export default {
 								años: []
 		};
 	},
-	created() {
+	async created() {
 		this.loadVehiculoData();
-		this.loadTallerInfo();
+		await this.loadTallerInfo();
 		this.loadClientes();
 		this.generateYears();
 	},
@@ -411,29 +411,49 @@ export default {
 				// Solo cargar información del taller si el usuario es mecánico
 				if (this.authStore.user && this.authStore.user.rol === 'mecanico') {
 					console.log('Usuario mecánico detectado, cargando información del taller...');
+					console.log('ID del usuario:', this.authStore.user.id);
 					
-					// Cargar todos los talleres para encontrar el del mecánico
-					const talleresResponse = await apiClient.get('/talleres');
-					this.talleres = talleresResponse.data;
+					// Primero obtener los detalles del mecánico usando su ID
+					const detalleMecanicoResponse = await apiClient.get(`/detalle-mecanico/${this.authStore.user.id}`);
+					console.log('Detalles del mecánico obtenidos:', detalleMecanicoResponse.data);
 					
-					// Encontrar el taller asignado al mecánico logueado
-					this.tallerDelMecanico = this.talleres.find(taller => 
-						taller.id === this.authStore.user.taller
-					);
+					const detalleMecanico = detalleMecanicoResponse.data;
+					const tallerId = detalleMecanico.taller_id;
 					
-					if (this.tallerDelMecanico) {
-						console.log('Taller del mecánico:', this.tallerDelMecanico);
+					if (tallerId) {
+						// Cargar todos los talleres para encontrar el del mecánico
+						const talleresResponse = await apiClient.get('/talleres');
+						this.talleres = talleresResponse.data;
+						
+						// Encontrar el taller asignado al mecánico
+						this.tallerDelMecanico = this.talleres.find(taller => taller.id === tallerId);
+						
+						if (this.tallerDelMecanico) {
+							console.log('Taller del mecánico encontrado:', this.tallerDelMecanico);
+							console.log('COPE del taller:', this.tallerDelMecanico.cope_id);
+						} else {
+							console.warn('No se encontró el taller con ID:', tallerId);
+						}
 					} else {
-						console.warn('No se encontró taller asignado para el mecánico');
+						console.warn('El mecánico no tiene taller_id asignado en su detalle');
 					}
 				}
 			} catch (error) {
 				console.error('Error al cargar información del taller:', error);
-				this.toastStore.addToast({
-					message: 'Error al cargar información del taller',
-					type: 'error',
-					duration: 5000
-				});
+				if (error.response?.status === 404) {
+					console.warn('No se encontró detalle del mecánico para el usuario ID:', this.authStore.user.id);
+					this.toastStore.addToast({
+						message: 'No se encontró información del taller asignado',
+						type: 'warning',
+						duration: 4000
+					});
+				} else {
+					this.toastStore.addToast({
+						message: 'Error al cargar información del taller',
+						type: 'error',
+						duration: 5000
+					});
+				}
 			}
 		},
 		
@@ -464,6 +484,9 @@ export default {
 					
 					console.log(`Mecánico: Filtrando clientes para COPE ${copeDelTaller}`);
 					console.log(`Clientes filtrados: ${clientesFiltrados.length} de ${this.clientes.length} totales`);
+				} else if (this.authStore.user && this.authStore.user.rol === 'mecanico') {
+					// Si es mecánico pero no tiene taller asignado, mostrar mensaje
+					console.warn('Mecánico sin taller asignado, no se pueden filtrar clientes');
 				}
 
 				// Crear array con información concatenada
