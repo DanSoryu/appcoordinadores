@@ -7,8 +7,100 @@
       <h2 class="text-2xl font-bold mb-6 text-blue-600 text-center">Diagnóstico Técnico</h2>
       
       <form @submit.prevent="">
-        <!-- STEP 1: Motor -->
+        <!-- STEP 0: Selección de Categorías -->
         <div v-if="currentStep === 1">
+          <h3 class="text-xl font-bold text-gray-800 mb-6">Seleccionar Sistemas a Diagnosticar</h3>
+          
+          <div class="mb-8 p-6 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border-l-4 border-gray-500">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4">¿Qué sistemas presentan fallas o requieren diagnóstico?</h4>
+            <p class="text-sm text-gray-600 mb-6">Seleccione únicamente los sistemas que necesitan revisión. Solo se mostrarán los formularios correspondientes a los sistemas seleccionados.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-blue-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.motor" class="rounded text-blue-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Motor</span>
+                  <p class="text-xs text-gray-500">Empaques, sellos, bujías, batería, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-green-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.transmision" class="rounded text-green-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Sistema de Transmisión</span>
+                  <p class="text-xs text-gray-500">Retenes, juntas, discos, convertidor, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-red-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.frenos" class="rounded text-red-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Sistema de Frenos</span>
+                  <p class="text-xs text-gray-500">Balatas, discos, líquido, calipers, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-yellow-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.sistemaElectrico" class="rounded text-yellow-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Sistema Eléctrico</span>
+                  <p class="text-xs text-gray-500">Batería, alternador, luces, conexiones, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-orange-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.suspensionDireccion" class="rounded text-orange-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Suspensión y Dirección</span>
+                  <p class="text-xs text-gray-500">Amortiguadores, terminales, rótulas, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-blue-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.sistemaEnfriamiento" class="rounded text-blue-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Sistema de Enfriamiento</span>
+                  <p class="text-xs text-gray-500">Radiador, bomba de agua, termostato, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-purple-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.sistemaEscape" class="rounded text-purple-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Sistema de Escape</span>
+                  <p class="text-xs text-gray-500">Silenciador, catalizador, corrosión, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-teal-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.sistemaClimatizacion" class="rounded text-teal-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Sistema de Climatización</span>
+                  <p class="text-xs text-gray-500">A/C, calefacción, filtros, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-pink-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.carroceriaAccesorios" class="rounded text-pink-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Carrocería y Accesorios</span>
+                  <p class="text-xs text-gray-500">Golpes, cristales, puertas, limpia parabrisas, etc.</p>
+                </div>
+              </label>
+              
+              <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer">
+                <input type="checkbox" v-model="categoriesSelection.llantasRines" class="rounded text-indigo-600">
+                <div>
+                  <span class="text-sm font-medium text-gray-800">Llantas y Rines</span>
+                  <p class="text-xs text-gray-500">Alineación, balanceo, presión, desgaste, etc.</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Motor -->
+        <div v-else-if="currentStep === 2 && categoriesSelection.motor">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Motor</h3>
           
           <!-- Sección: Motor -->
@@ -81,8 +173,8 @@
           </div>
         </div>
 
-        <!-- STEP 2: Sistema de Transmisión -->
-        <div v-else-if="currentStep === 2">
+        <!-- Sistema de Transmisión -->
+        <div v-else-if="isCurrentCategoryStep('transmision')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Sistema de Transmisión</h3>
           
           <!-- Sección: Sistema de Transmisión -->
@@ -131,8 +223,8 @@
           </div>
         </div>
 
-        <!-- STEP 3: Sistema de frenos -->
-        <div v-else-if="currentStep === 3">
+        <!-- Sistema de frenos -->
+        <div v-else-if="isCurrentCategoryStep('frenos')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Sistema de Frenos</h3>
           
           <!-- Sección: Frenos -->
@@ -181,8 +273,8 @@
           </div>
         </div>
 
-        <!-- STEP 4: Sistema eléctrico -->
-        <div v-else-if="currentStep === 4">
+        <!-- Sistema eléctrico -->
+        <div v-else-if="isCurrentCategoryStep('sistemaElectrico')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Sistema Eléctrico</h3>
           
           <!-- Sección: Sistema Eléctrico (único recuadro) -->
@@ -249,8 +341,8 @@
           </div>
         </div>
 
-        <!-- STEP 5: Suspensión y Dirección -->
-        <div v-else-if="currentStep === 5">
+        <!-- Suspensión y Dirección -->
+        <div v-else-if="isCurrentCategoryStep('suspensionDireccion')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Suspensión y Dirección</h3>
           
           <!-- Sección: Suspensión y Dirección (único recuadro) -->
@@ -317,8 +409,8 @@
           </div>
         </div>
 
-        <!-- STEP 6: Sistema de enfriamiento -->
-        <div v-else-if="currentStep === 6">
+        <!-- Sistema de enfriamiento -->
+        <div v-else-if="isCurrentCategoryStep('sistemaEnfriamiento')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Sistema de Enfriamiento</h3>
           
           <!-- Sección: Sistema de Enfriamiento (único recuadro) -->
@@ -381,8 +473,8 @@
           </div>
         </div>
 
-        <!-- STEP 7: Sistema de Escape -->
-        <div v-else-if="currentStep === 7">
+        <!-- Sistema de Escape -->
+        <div v-else-if="isCurrentCategoryStep('sistemaEscape')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Sistema de Escape</h3>
           
           <!-- Sección: Sistema de Escape (único recuadro) -->
@@ -438,8 +530,8 @@
           </div>
         </div>
 
-        <!-- STEP 8: Sistema de Climatización -->
-        <div v-else-if="currentStep === 8">
+        <!-- Sistema de Climatización -->
+        <div v-else-if="isCurrentCategoryStep('sistemaClimatizacion')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Sistema de Climatización</h3>
           
           <!-- Sección: Sistema de Climatización (único recuadro) -->
@@ -495,8 +587,8 @@
           </div>
         </div>
 
-        <!-- STEP 9: Carrocería y Accesorios -->
-        <div v-else-if="currentStep === 9">
+        <!-- Carrocería y Accesorios -->
+        <div v-else-if="isCurrentCategoryStep('carroceriaAccesorios')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Carrocería y Accesorios</h3>
           
           <!-- Sección: Carrocería y Accesorios (único recuadro) -->
@@ -578,8 +670,8 @@
           </div>
         </div>
 
-        <!-- STEP 10: Llantas y Rines -->
-        <div v-else-if="currentStep === 10">
+        <!-- Llantas y Rines -->
+        <div v-else-if="isCurrentCategoryStep('llantasRines')">
           <h3 class="text-xl font-bold text-gray-800 mb-6">Llantas y Rines</h3>
           
           <!-- Sección: Llantas y Rines (único recuadro) -->
@@ -670,7 +762,7 @@
           <div v-else></div>
           
           <BaseButton 
-            v-if="currentStep < totalSteps" 
+            v-if="currentStep < dynamicTotalSteps" 
             @click="handleNextStep"
             variant="primary"
             :disabled="!isStepValid"
@@ -679,7 +771,7 @@
           </BaseButton>
           
           <BaseButton 
-            v-if="currentStep === totalSteps"
+            v-if="currentStep === dynamicTotalSteps"
             @click="handleFinalSubmit"
             variant="success"
             :disabled="!isStepValid"
@@ -692,7 +784,7 @@
         
         <!-- Indicador de progreso -->
         <div class="mt-6 flex justify-center gap-2">
-          <div v-for="step in totalSteps" :key="step" 
+          <div v-for="step in dynamicTotalSteps" :key="step" 
                :class="[
                  'w-3 h-3 rounded-full transition-colors',
                  step === currentStep ? 'bg-blue-600' : 
@@ -739,6 +831,20 @@ export default {
     return {
       currentStep: 1,
       totalSteps: 10,
+      
+      // Categorías disponibles para diagnóstico
+      categoriesSelection: {
+        motor: false,
+        transmision: false,
+        frenos: false,
+        sistemaElectrico: false,
+        suspensionDireccion: false,
+        sistemaEnfriamiento: false,
+        sistemaEscape: false,
+        sistemaClimatizacion: false,
+        carroceriaAccesorios: false,
+        llantasRines: false
+      },
       
       // Datos del formulario organizados por categorías
       formData: {
@@ -900,205 +1006,95 @@ export default {
   },
   
   computed: {
+    // Obtener las categorías seleccionadas en orden
+    selectedCategories() {
+      const categories = [
+        'motor',
+        'transmision', 
+        'frenos',
+        'sistemaElectrico',
+        'suspensionDireccion',
+        'sistemaEnfriamiento',
+        'sistemaEscape',
+        'sistemaClimatizacion',
+        'carroceriaAccesorios',
+        'llantasRines'
+      ];
+      
+      return categories.filter(category => this.categoriesSelection[category]);
+    },
+    
+    // Calcular el total de pasos dinámicamente
+    dynamicTotalSteps() {
+      return this.selectedCategories.length + 1; // +1 for selection step
+    },
+    
+    // Obtener la categoría actual basada en el step
+    currentCategory() {
+      if (this.currentStep === 1) return null; // Selection step
+      const categoryIndex = this.currentStep - 2; // -2 because step 1 is selection, step 2 is first category
+      return this.selectedCategories[categoryIndex] || null;
+    },
+    
     isStepValid() {
-      // Para este formulario, consideramos válido si al menos hay alguna selección o comentario en la sección del step actual
+      // Step 1: Validar selección de categorías
       if (this.currentStep === 1) {
-        const motorHasSelection = Object.keys(this.formData.motor).some(key => 
-          key !== 'comentarios' && this.formData.motor[key]
-        );
-        const hasComments = this.formData.motor.comentarios.trim();
-        
-        return motorHasSelection || hasComments;
+        return this.selectedCategories.length > 0;
       }
       
-      if (this.currentStep === 2) {
-        const transmisionHasSelection = Object.keys(this.formData.transmision).some(key => 
-          key !== 'comentarios' && this.formData.transmision[key]
-        );
-        const hasComments = this.formData.transmision.comentarios.trim();
-        
-        return transmisionHasSelection || hasComments;
-      }
+      // Steps de categorías: Validar que tenga al menos una selección o comentario
+      const category = this.currentCategory;
+      if (!category || !this.formData[category]) return false;
       
-      if (this.currentStep === 3) {
-        const frenosHasSelection = Object.keys(this.formData.frenos).some(key => 
-          key !== 'comentarios' && this.formData.frenos[key]
-        );
-        const hasComments = this.formData.frenos.comentarios.trim();
-        
-        return frenosHasSelection || hasComments;
-      }
+      const categoryData = this.formData[category];
+      const hasSelection = Object.keys(categoryData).some(key => 
+        key !== 'comentarios' && categoryData[key]
+      );
+      const hasComments = categoryData.comentarios && categoryData.comentarios.trim();
       
-      if (this.currentStep === 4) {
-        const sistemaElectricoHasSelection = Object.keys(this.formData.sistemaElectrico).some(key => 
-          key !== 'comentarios' && this.formData.sistemaElectrico[key]
-        );
-        const hasComments = this.formData.sistemaElectrico.comentarios.trim();
-        
-        return sistemaElectricoHasSelection || hasComments;
-      }
-      
-      if (this.currentStep === 5) {
-        const suspensionDireccionHasSelection = Object.keys(this.formData.suspensionDireccion).some(key => 
-          key !== 'comentarios' && this.formData.suspensionDireccion[key]
-        );
-        const hasComments = this.formData.suspensionDireccion.comentarios.trim();
-        
-        return suspensionDireccionHasSelection || hasComments;
-      }
-      
-      if (this.currentStep === 6) {
-        const sistemaEnfriamientoHasSelection = Object.keys(this.formData.sistemaEnfriamiento).some(key => 
-          key !== 'comentarios' && this.formData.sistemaEnfriamiento[key]
-        );
-        const hasComments = this.formData.sistemaEnfriamiento.comentarios.trim();
-        
-        return sistemaEnfriamientoHasSelection || hasComments;
-      }
-      
-      if (this.currentStep === 7) {
-        const sistemaEscapeHasSelection = Object.keys(this.formData.sistemaEscape).some(key => 
-          key !== 'comentarios' && this.formData.sistemaEscape[key]
-        );
-        const hasComments = this.formData.sistemaEscape.comentarios.trim();
-        
-        return sistemaEscapeHasSelection || hasComments;
-      }
-      
-      if (this.currentStep === 8) {
-        const sistemaClimatizacionHasSelection = Object.keys(this.formData.sistemaClimatizacion).some(key => 
-          key !== 'comentarios' && this.formData.sistemaClimatizacion[key]
-        );
-        const hasComments = this.formData.sistemaClimatizacion.comentarios.trim();
-        
-        return sistemaClimatizacionHasSelection || hasComments;
-      }
-      
-      if (this.currentStep === 9) {
-        const carroceriaAccesoriosHasSelection = Object.keys(this.formData.carroceriaAccesorios).some(key => 
-          key !== 'comentarios' && this.formData.carroceriaAccesorios[key]
-        );
-        const hasComments = this.formData.carroceriaAccesorios.comentarios.trim();
-        
-        return carroceriaAccesoriosHasSelection || hasComments;
-      }
-      
-      if (this.currentStep === 10) {
-        const llantasRinesHasSelection = Object.keys(this.formData.llantasRines).some(key => 
-          key !== 'comentarios' && this.formData.llantasRines[key]
-        );
-        const hasComments = this.formData.llantasRines.comentarios.trim();
-        
-        return llantasRinesHasSelection || hasComments;
-      }
-      
-      return false;
+      return hasSelection || hasComments;
+
     },
     
     validationErrors() {
       const errors = [];
       
+      // Step 1: Validar selección de categorías
       if (this.currentStep === 1) {
-        const motorHasData = Object.keys(this.formData.motor).some(key => 
-          key !== 'comentarios' ? this.formData.motor[key] : this.formData.motor[key].trim()
-        );
-        
-        if (!motorHasData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en el Motor');
+        if (this.selectedCategories.length === 0) {
+          errors.push('Debe seleccionar al menos un sistema para diagnosticar');
         }
+        return errors;
       }
       
-      if (this.currentStep === 2) {
-        const transmisionHasData = Object.keys(this.formData.transmision).some(key => 
-          key !== 'comentarios' ? this.formData.transmision[key] : this.formData.transmision[key].trim()
-        );
-        
-        if (!transmisionHasData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en el Sistema de Transmisión');
-        }
-      }
+      // Steps de categorías
+      const category = this.currentCategory;
+      if (!category || !this.formData[category]) return errors;
       
-      if (this.currentStep === 3) {
-        const frenosHasData = Object.keys(this.formData.frenos).some(key => 
-          key !== 'comentarios' ? this.formData.frenos[key] : this.formData.frenos[key].trim()
-        );
-        
-        if (!frenosHasData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en el Sistema de Frenos');
-        }
-      }
+      const categoryData = this.formData[category];
+      const hasSelection = Object.keys(categoryData).some(key => 
+        key !== 'comentarios' && categoryData[key]
+      );
+      const hasComments = categoryData.comentarios && categoryData.comentarios.trim();
       
-      if (this.currentStep === 4) {
-        const hasElectricalData = Object.keys(this.formData.sistemaElectrico).some(key => 
-          key !== 'comentarios' ? this.formData.sistemaElectrico[key] : this.formData.sistemaElectrico[key].trim()
-        );
-        
-        if (!hasElectricalData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en el Sistema Eléctrico');
-        }
-      }
-      
-      if (this.currentStep === 5) {
-        const hasSuspensionData = Object.keys(this.formData.suspensionDireccion).some(key => 
-          key !== 'comentarios' ? this.formData.suspensionDireccion[key] : this.formData.suspensionDireccion[key].trim()
-        );
-        
-        if (!hasSuspensionData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en Suspensión y Dirección');
-        }
-      }
-      
-      if (this.currentStep === 6) {
-        const hasCoolingData = Object.keys(this.formData.sistemaEnfriamiento).some(key => 
-          key !== 'comentarios' ? this.formData.sistemaEnfriamiento[key] : this.formData.sistemaEnfriamiento[key].trim()
-        );
-        
-        if (!hasCoolingData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en el Sistema de Enfriamiento');
-        }
-      }
-      
-      if (this.currentStep === 7) {
-        const hasEscapeData = Object.keys(this.formData.sistemaEscape).some(key => 
-          key !== 'comentarios' ? this.formData.sistemaEscape[key] : this.formData.sistemaEscape[key].trim()
-        );
-        
-        if (!hasEscapeData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en el Sistema de Escape');
-        }
-      }
-      
-      if (this.currentStep === 8) {
-        const hasClimatizacionData = Object.keys(this.formData.sistemaClimatizacion).some(key => 
-          key !== 'comentarios' ? this.formData.sistemaClimatizacion[key] : this.formData.sistemaClimatizacion[key].trim()
-        );
-        
-        if (!hasClimatizacionData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en el Sistema de Climatización');
-        }
-      }
-      
-      if (this.currentStep === 9) {
-        const hasCarroceriaData = Object.keys(this.formData.carroceriaAccesorios).some(key => 
-          key !== 'comentarios' ? this.formData.carroceriaAccesorios[key] : this.formData.carroceriaAccesorios[key].trim()
-        );
-        
-        if (!hasCarroceriaData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en Carrocería y Accesorios');
-        }
-      }
-      
-      if (this.currentStep === 10) {
-        const hasLlantasData = Object.keys(this.formData.llantasRines).some(key => 
-          key !== 'comentarios' ? this.formData.llantasRines[key] : this.formData.llantasRines[key].trim()
-        );
-        
-        if (!hasLlantasData) {
-          errors.push('Debe seleccionar al menos una falla o agregar comentarios en Llantas y Rines');
-        }
+      if (!hasSelection && !hasComments) {
+        const categoryNames = {
+          motor: 'Motor',
+          transmision: 'Sistema de Transmisión',
+          frenos: 'Sistema de Frenos',
+          sistemaElectrico: 'Sistema Eléctrico',
+          suspensionDireccion: 'Suspensión y Dirección',
+          sistemaEnfriamiento: 'Sistema de Enfriamiento',
+          sistemaEscape: 'Sistema de Escape',
+          sistemaClimatizacion: 'Sistema de Climatización',
+          carroceriaAccesorios: 'Carrocería y Accesorios',
+          llantasRines: 'Llantas y Rines'
+        };
+        errors.push(`Debe seleccionar al menos una falla o agregar comentarios en ${categoryNames[category]}`);
       }
       
       return errors;
+
     },
     
     finalFormData() {
@@ -1283,6 +1279,10 @@ export default {
   },
   
   methods: {
+    isCurrentCategoryStep(category) {
+      return this.currentCategory === category;
+    },
+    
     loadDiagnosticoData() {
       if (!this.diagnosticoData || Object.keys(this.diagnosticoData).length === 0) return;
       
@@ -1294,7 +1294,7 @@ export default {
     },
     
     handleNextStep() {
-      if (this.currentStep < this.totalSteps) {
+      if (this.currentStep < this.dynamicTotalSteps) {
         this.currentStep++;
         this.scrollToTop();
       }
@@ -1366,7 +1366,12 @@ export default {
     },
     
     resetForm() {
-      // Resetear todos los valores a su estado inicial
+      // Resetear selección de categorías
+      Object.keys(this.categoriesSelection).forEach(category => {
+        this.categoriesSelection[category] = false;
+      });
+      
+      // Resetear todos los valores del formulario a su estado inicial
       Object.keys(this.formData).forEach(seccion => {
         Object.keys(this.formData[seccion]).forEach(campo => {
           if (campo === 'comentarios') {
@@ -1376,6 +1381,9 @@ export default {
           }
         });
       });
+      
+      // Resetear al primer paso
+      this.currentStep = 1;
     }
   }
 };
