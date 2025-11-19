@@ -179,6 +179,7 @@ import BaseButton from '../global/BaseButton.vue';
 import ClientesFormModal from '../clientes/ClientesFormModal.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
+import { useAuthStore } from '../../stores/auth.js';
 import apiClient from '../../services/api.js';
 
 export default {
@@ -201,9 +202,11 @@ export default {
 	setup() {
 		const { executeSubmit } = useSubmitButton();
 		const toastStore = useToastStore();
+		const authStore = useAuthStore();
 		return {
 			executeSubmit,
-			toastStore
+			toastStore,
+			authStore
 		};
 	},
 	data() {
@@ -221,7 +224,9 @@ export default {
 								copes: [],
 								areas: [],
 								divisiones: [],
+								talleres: [],
 								clientesWithDetails: [], // Para mostrar supervisor y cope concatenado
+								tallerDelMecanico: null, // Para almacenar el taller del mecánico logueado
 								marcas: [
 									'Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan', 'Hyundai', 'Kia',
 									'Volkswagen', 'Jeep', 'Dodge'
@@ -243,6 +248,7 @@ export default {
 	},
 	created() {
 		this.loadVehiculoData();
+		this.loadTallerInfo();
 		this.loadClientes();
 		this.generateYears();
 	},
@@ -399,6 +405,38 @@ export default {
 			this.formData.numero_economico = (this.vehiculoData.numero_economico || '').toString().trimEnd();
 			this.formData.cliente_id = this.vehiculoData.cliente_id || '';
 		},
+		
+		async loadTallerInfo() {
+			try {
+				// Solo cargar información del taller si el usuario es mecánico
+				if (this.authStore.user && this.authStore.user.rol === 'mecanico') {
+					console.log('Usuario mecánico detectado, cargando información del taller...');
+					
+					// Cargar todos los talleres para encontrar el del mecánico
+					const talleresResponse = await apiClient.get('/talleres');
+					this.talleres = talleresResponse.data;
+					
+					// Encontrar el taller asignado al mecánico logueado
+					this.tallerDelMecanico = this.talleres.find(taller => 
+						taller.id === this.authStore.user.taller
+					);
+					
+					if (this.tallerDelMecanico) {
+						console.log('Taller del mecánico:', this.tallerDelMecanico);
+					} else {
+						console.warn('No se encontró taller asignado para el mecánico');
+					}
+				}
+			} catch (error) {
+				console.error('Error al cargar información del taller:', error);
+				this.toastStore.addToast({
+					message: 'Error al cargar información del taller',
+					type: 'error',
+					duration: 5000
+				});
+			}
+		},
+		
 		async loadClientes() {
 			try {
 				// Cargar clientes, copes, áreas y divisiones
@@ -414,8 +452,22 @@ export default {
 				this.areas = areasResponse.data;
 				this.divisiones = divisionesResponse.data;
 
+				// Filtrar clientes según el rol del usuario
+				let clientesFiltrados = this.clientes;
+				
+				if (this.authStore.user && this.authStore.user.rol === 'mecanico' && this.tallerDelMecanico) {
+					// Si es mecánico, solo mostrar clientes del COPE de su taller
+					const copeDelTaller = this.tallerDelMecanico.cope_id;
+					clientesFiltrados = this.clientes.filter(cliente => 
+						cliente.cope_id === copeDelTaller
+					);
+					
+					console.log(`Mecánico: Filtrando clientes para COPE ${copeDelTaller}`);
+					console.log(`Clientes filtrados: ${clientesFiltrados.length} de ${this.clientes.length} totales`);
+				}
+
 				// Crear array con información concatenada
-				this.clientesWithDetails = this.clientes.map(cliente => {
+				this.clientesWithDetails = clientesFiltrados.map(cliente => {
 					const cope = this.copes.find(c => c.id === cliente.cope_id);
 					const area = cope ? this.areas.find(a => a.id === cope.area_id) : null;
 					const division = area ? this.divisiones.find(d => d.id === area.division_id) : null;
@@ -427,6 +479,14 @@ export default {
 						displayName: `${cliente.supervisor} - ${copeInfo}`
 					};
 				});
+				// Mostrar mensaje informativo si es mecánico y no tiene clientes
+				if (this.authStore.user && this.authStore.user.rol === 'mecanico' && this.clientesWithDetails.length === 0) {
+					this.toastStore.addToast({
+						message: 'No hay clientes disponibles para su COPE asignado',
+						type: 'info',
+						duration: 4000
+					});
+				}
 			} catch (error) {
 				console.error('Error al cargar clientes:', error);
 				this.toastStore.addToast({
