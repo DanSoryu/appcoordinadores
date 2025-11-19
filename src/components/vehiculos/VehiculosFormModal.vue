@@ -57,19 +57,25 @@
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
 								<label class="block mb-2 font-semibold text-gray-700">Modelo *</label>
-								<input 
-									v-model="formData.modelo" 
-									@input="formatModelo"
+								<select 
+									v-model="formData.modelo"
 									:class="[
 										'input mb-2 w-full transition-colors',
 										formData.modelo ? (modeloValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
 									]"
-									placeholder="Modelo" 
-									maxlength="30"
+									:disabled="!formData.marca || modelosDisponibles.length === 0"
 									required
-								/>
+								>
+									<option value="">
+										{{ !formData.marca ? 'Selecciona una marca primero' : 
+											modelosDisponibles.length === 0 ? 'No hay modelos disponibles' : 'Selecciona un modelo' }}
+									</option>
+									<option v-for="modelo in modelosDisponibles" :key="modelo" :value="modelo">
+										{{ modelo }}
+									</option>
+								</select>
 								<div v-if="formData.modelo && !modeloValid" class="text-red-500 text-xs mt-1">
-									Este campo es obligatorio
+									Debe seleccionar un modelo
 								</div>
 							</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
@@ -220,6 +226,18 @@ export default {
 									'Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan', 'Hyundai', 'Kia',
 									'Volkswagen', 'Jeep', 'Dodge'
 								],
+								modelosPorMarca: {
+									'Ford': ['F-150'],
+									'Chevrolet': ['Spark'],
+									'Nissan': ['NP300'],
+									'Toyota': [],
+									'Honda': [],
+									'Hyundai': [],
+									'Kia': [],
+									'Volkswagen': [],
+									'Jeep': [],
+									'Dodge': []
+								},
 								años: []
 		};
 	},
@@ -241,6 +259,12 @@ export default {
 				// Log para depuración
 				console.log('FormData changed:', newVal);
 			}
+		},
+		'formData.marca'() {
+			// Resetear modelo cuando cambie la marca
+			if (this.formData.modelo && !this.modelosDisponibles.includes(this.formData.modelo)) {
+				this.formData.modelo = '';
+			}
 		}
 	},
 	computed: {
@@ -252,7 +276,7 @@ export default {
 			return this.formData.marca && this.formData.marca.trim() !== '';
 		},
 		modeloValid() {
-			return this.formData.modelo && this.formData.modelo.trim() !== '';
+			return this.formData.modelo && this.formData.modelo !== '';
 		},
 		placasValid() {
 			return this.formData.placas && this.formData.placas.trim() !== '';
@@ -265,6 +289,12 @@ export default {
 		},
 		numeroEconomicoValid() {
 			return this.formData.numero_economico && this.formData.numero_economico.trim() !== '';
+		},
+
+		// Modelos disponibles según la marca seleccionada
+		modelosDisponibles() {
+			if (!this.formData.marca) return [];
+			return this.modelosPorMarca[this.formData.marca] || [];
 		},
 
 		isStepValid() {
@@ -284,7 +314,7 @@ export default {
 			return {
 				cliente_id: parseInt(this.formData.cliente_id),
 				marca: this.formData.marca,
-				modelo: this.formData.modelo.trim(),
+				modelo: this.formData.modelo,
 				placas: this.formData.placas,
 				año: parseInt(this.formData.año),
 				numero_serie: this.formData.numero_serie,
@@ -314,13 +344,7 @@ export default {
 			}
 			return true;
 		},
-		validateModelo(value) {
-			// Máximo 30 caracteres
-			if (value.length > 30) {
-				return false;
-			}
-			return true;
-		},
+
 		validateNumeroEconomico(value) {
 			// Máximo 30 caracteres
 			if (value.length > 30) {
@@ -343,15 +367,7 @@ export default {
 				event.target.value = this.formData.placas;
 			}
 		},
-		formatModelo(event) {
-			let value = event.target.value || '';
-			value = this.capitalizeWords(value);
-			if (value.length <= 50) {
-				this.formData.modelo = value;
-			} else {
-				event.target.value = this.formData.modelo;
-			}
-		},
+
 		formatNumeroEconomico(event) {
 			let value = event.target.value || '';
 			if (value.length <= 30) {
@@ -372,8 +388,8 @@ export default {
 		loadVehiculoData() {
 			if (!this.vehiculoData || Object.keys(this.vehiculoData).length === 0) return;
 			this.formData.marca = this.vehiculoData.marca || '';
-			// Aplicar capitalización al modelo sin hacer trim
-			this.formData.modelo = this.capitalizeWords(this.vehiculoData.modelo || '');
+			// El modelo ahora viene directamente del select, sin modificaciones
+			this.formData.modelo = this.vehiculoData.modelo || '';
 			// Asegurar que las placas cargadas estén en mayúsculas
 			this.formData.placas = (this.vehiculoData.placas || '').toString().toUpperCase();
 			this.formData.año = this.vehiculoData.año || '';

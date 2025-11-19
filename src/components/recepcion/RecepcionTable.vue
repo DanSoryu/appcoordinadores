@@ -219,7 +219,7 @@
           <div v-if="currentRecepcion" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="space-y-1">
-                <p class="text-sm font-medium text-gray-500">ID</p>
+                <p class="text-sm font-medium text-gray-500">Folio</p>
                 <p class="font-semibold">{{ currentRecepcion.id }}</p>
               </div>
               <div class="space-y-1">
