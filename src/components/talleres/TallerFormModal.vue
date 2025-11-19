@@ -35,6 +35,31 @@
 								El nombre del taller es requerido
 							</div>
 						</div>
+						
+						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+							<label class="block mb-2 font-semibold text-gray-700">COPE *</label>
+							<select 
+								v-model="formData.cope_id" 
+								:class="[
+									'input w-full',
+									formData.cope_id ? (copeValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+								]"
+								required
+							>
+								<option value="">Seleccione una COPE</option>
+								<option v-for="cope in copesWithDetails" :key="cope.id" :value="cope.id">
+									{{ cope.displayName }}
+								</option>
+							</select>
+							<div v-if="formData.cope_id && !copeValid" class="text-red-500 text-xs mt-1">
+								Debe seleccionar una COPE
+							</div>
+							<div class="mt-2">
+								<button type="button" @click="abrirCopeModal" class="text-blue-600 hover:underline focus:outline-none">
+									¿No encuentras el COPE? Crea uno aquí
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="flex justify-end mt-8">
@@ -52,10 +77,17 @@
 			</form>
 		</div>
 	</div>
+	
+	<CopesFormModal 
+		:show="showCopeModal" 
+		@close="showCopeModal = false"
+		@cope-guardado="handleCopeGuardado"
+	/>
 </template>
 
 <script>
 import BaseButton from '../global/BaseButton.vue'
+import CopesFormModal from '../dac/CopesFormModal.vue'
 import { useSubmitButton } from '../../composables/useSubmitButton.js'
 import { useToastStore } from '../../stores/toast.js'
 import apiClient from '../../services/api.js'
@@ -63,7 +95,8 @@ import apiClient from '../../services/api.js'
 export default {
 	name: 'TallerFormModal',
 	components: {
-		BaseButton
+		BaseButton,
+		CopesFormModal
 	},
 	props: {
 		show: {
@@ -83,9 +116,18 @@ export default {
 	data() {
 		return {
 			formData: {
-				nombre: ''
-			}
+				nombre: '',
+				cope_id: ''
+			},
+			copes: [],
+			areas: [],
+			divisiones: [],
+			copesWithDetails: [], // Para mostrar división-área-cope concatenado
+			showCopeModal: false
 		};
+	},
+	created() {
+		this.loadCopesData();
 	},
 	computed: {
 		// Validaciones individuales de cada campo
@@ -93,13 +135,18 @@ export default {
 			return this.formData.nombre && this.formData.nombre.trim() !== '';
 		},
 		
+		copeValid() {
+			return this.formData.cope_id && this.formData.cope_id !== '';
+		},
+		
 		isFormValid() {
-			return this.nombreValid;
+			return this.nombreValid && this.copeValid;
 		},
 		
 		finalFormData() {
 			return {
-				nombre: this.formData.nombre.trim()
+				nombre: this.formData.nombre.trim(),
+				cope_id: parseInt(this.formData.cope_id)
 			};
 		}
 	},
@@ -111,6 +158,50 @@ export default {
 		}
 	},
 	methods: {
+		async loadCopesData() {
+			try {
+				// Cargar copes, áreas y divisiones
+				const [copesResponse, areasResponse, divisionesResponse] = await Promise.all([
+					apiClient.get('/copes'),
+					apiClient.get('/areas'),
+					apiClient.get('/divisiones')
+				]);
+
+				this.copes = copesResponse.data;
+				this.areas = areasResponse.data;
+				this.divisiones = divisionesResponse.data;
+
+				// Crear array con información concatenada
+				this.copesWithDetails = this.copes.map(cope => {
+					const area = this.areas.find(a => a.id === cope.area_id);
+					const division = area ? this.divisiones.find(d => d.id === area.division_id) : null;
+					
+					return {
+						...cope,
+						displayName: `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}`
+					};
+				});
+			} catch (error) {
+				console.error('Error al cargar datos:', error);
+				this.toastStore.addToast({
+					message: 'Error al cargar los datos de COPEs',
+					type: 'error',
+					duration: 5000
+				});
+			}
+		},
+		
+		abrirCopeModal() {
+			this.showCopeModal = true;
+		},
+		
+		async handleCopeGuardado(nuevoCope) {
+			// Recargar la lista de COPEs para incluir el nuevo
+			await this.loadCopesData();
+			// Seleccionar automáticamente el nuevo COPE
+			this.formData.cope_id = nuevoCope.id;
+		},
+		
 		// Formatear nombre: mantener formato original
 		formatNombre(event) {
 			let value = event.target.value || '';
@@ -178,7 +269,8 @@ export default {
 		
 		resetForm() {
 			this.formData = {
-				nombre: ''
+				nombre: '',
+				cope_id: ''
 			};
 		}
 	}

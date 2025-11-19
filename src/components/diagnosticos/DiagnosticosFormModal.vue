@@ -96,6 +96,38 @@
                 </div>
               </label>
             </div>
+            
+            <!-- Mensaje informativo cuando no hay selecciones -->
+            <div v-if="selectedCategories.length === 0" class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-amber-700">
+                    Seleccione al menos un sistema para continuar con el diagnóstico.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Resumen de selecciones -->
+            <div v-else class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-green-700">
+                    {{ selectedCategories.length }} sistema{{ selectedCategories.length > 1 ? 's' : '' }} seleccionado{{ selectedCategories.length > 1 ? 's' : '' }} para diagnóstico.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -782,6 +814,16 @@
           </BaseButton>
         </div>
         
+        <!-- Información del progreso -->
+        <div v-if="selectedCategories.length > 0" class="mt-4 text-center text-sm text-gray-600">
+          <span v-if="currentStep === 1">
+            Sistemas seleccionados: {{ selectedCategories.length }}
+          </span>
+          <span v-else>
+            Paso {{ currentStep - 1 }} de {{ selectedCategories.length }}: {{ getCategoryDisplayName(currentCategory) }}
+          </span>
+        </div>
+        
         <!-- Indicador de progreso -->
         <div class="mt-6 flex justify-center gap-2">
           <div v-for="step in dynamicTotalSteps" :key="step" 
@@ -1275,12 +1317,38 @@ export default {
         this.loadDiagnosticoData();
       },
       deep: true
+    },
+    
+    selectedCategories: {
+      handler(newCategories, oldCategories) {
+        // Si estamos en un paso que ya no es válido debido a cambios en las categorías
+        if (this.currentStep > 1 && this.currentStep > newCategories.length + 1) {
+          this.currentStep = newCategories.length + 1; // Ir al último paso válido
+        }
+      },
+      deep: true
     }
   },
   
   methods: {
     isCurrentCategoryStep(category) {
       return this.currentCategory === category;
+    },
+    
+    getCategoryDisplayName(category) {
+      const categoryNames = {
+        motor: 'Motor',
+        transmision: 'Sistema de Transmisión',
+        frenos: 'Sistema de Frenos',
+        sistemaElectrico: 'Sistema Eléctrico',
+        suspensionDireccion: 'Suspensión y Dirección',
+        sistemaEnfriamiento: 'Sistema de Enfriamiento',
+        sistemaEscape: 'Sistema de Escape',
+        sistemaClimatizacion: 'Sistema de Climatización',
+        carroceriaAccesorios: 'Carrocería y Accesorios',
+        llantasRines: 'Llantas y Rines'
+      };
+      return categoryNames[category] || category;
     },
     
     loadDiagnosticoData() {
