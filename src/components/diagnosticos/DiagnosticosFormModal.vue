@@ -1140,9 +1140,6 @@ export default {
     },
     
     finalFormData() {
-      // Crear observaciones generales primero
-      const observacionesGenerales = this.getObservacionesGeneralesHelper();
-      
       // Crear estructura JSON final similar al CheckList con campos booleanos directos
       const result = {
         folioRecepcion: this.diagnosticoData.folioRecepcion || '',
@@ -1284,10 +1281,7 @@ export default {
           rinesImpactoBaches: this.formData.llantasRines?.impactoBaches || false,
           rinesImpactoBanquetas: this.formData.llantasRines?.impactoBanquetas || false,
           llantasComentarios: this.formData.llantasRines?.comentarios || ''
-        }),
-        
-        // Observaciones generales (combinación de todos los comentarios)
-        observacionesGenerales: observacionesGenerales
+        })
       };
       
       // Log del JSON completo para debug
