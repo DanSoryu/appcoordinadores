@@ -1165,7 +1165,8 @@ export default {
           motorFallaRadiador: this.formData.motor?.fallaRadiador || false,
           motorFallaTermostato: this.formData.motor?.fallaTermostato || false,
           motorSoportes: this.formData.motor?.soportes || false,
-          motorComentarios: this.formData.motor?.comentarios || ''
+          motorComentarios: this.formData.motor?.comentarios || '',
+          observacionesGeneralesMotor: this.formData.motor?.comentarios || ''
         }),
         
         // --- TRANSMISION ---
@@ -1177,7 +1178,8 @@ export default {
           transmisionDesgasteDiscos: this.formData.transmision?.desgasteDiscos || false,
           transmisionConvertidorTorque: this.formData.transmision?.convertidorTorque || false,
           transmisionMantenimientoProgramado: this.formData.transmision?.mantenimientoProgramado || false,
-          transmisionComentarios: this.formData.transmision?.comentarios || ''
+          transmisionComentarios: this.formData.transmision?.comentarios || '',
+          observacionesGeneralesTransmision: this.formData.transmision?.comentarios || ''
         }),
         
         // --- FRENOS ---
@@ -1189,7 +1191,8 @@ export default {
           frenosClipers: this.formData.frenos?.clipers || false,
           frenosManguerasDefectuosas: this.formData.frenos?.manguerasDefectuosas || false,
           frenosControlDesgastePeriodico: this.formData.frenos?.controlDesgastePeriodico || false,
-          frenosComentarios: this.formData.frenos?.comentarios || ''
+          frenosComentarios: this.formData.frenos?.comentarios || '',
+          observacionesGeneralesFrenos: this.formData.frenos?.comentarios || ''
         }),
         
         // --- SISTEMA ELECTRICO ---
@@ -1201,7 +1204,8 @@ export default {
           electricoFocoFundido: this.formData.sistemaElectrico?.focoFundido || false,
           electricoConectoresSulfatados: this.formData.sistemaElectrico?.conectoresSulfatados || false,
           electricoInspeccionPeriodica: this.formData.sistemaElectrico?.inspeccionPeriodica || false,
-          electricoComentarios: this.formData.sistemaElectrico?.comentarios || ''
+          electricoComentarios: this.formData.sistemaElectrico?.comentarios || '',
+          observacionesGeneralesSistemaElectrico: this.formData.sistemaElectrico?.comentarios || ''
         }),
         
         // --- SUSPENSION Y DIRECCION ---
@@ -1213,7 +1217,8 @@ export default {
           suspensionBujesDanados: this.formData.suspensionDireccion?.bujesDanados || false,
           suspensionRotulasDanadas: this.formData.suspensionDireccion?.rotulasDanadas || false,
           suspensionAjusteProgramado: this.formData.suspensionDireccion?.ajusteProgramado || false,
-          suspensionComentarios: this.formData.suspensionDireccion?.comentarios || ''
+          suspensionComentarios: this.formData.suspensionDireccion?.comentarios || '',
+          observacionesGeneralesSuspensionDireccion: this.formData.suspensionDireccion?.comentarios || ''
         }),
         
         // --- SISTEMA ENFRIAMIENTO ---
@@ -1224,7 +1229,8 @@ export default {
           enfriamientoDesgasteRodamiento: this.formData.sistemaEnfriamiento?.desgasteRodamiento || false,
           enfriamientoTermostatoBloqueado: this.formData.sistemaEnfriamiento?.termostatoBloqueado || false,
           enfriamientoControlTemperatura: this.formData.sistemaEnfriamiento?.controlTemperatura || false,
-          enfriamientoComentarios: this.formData.sistemaEnfriamiento?.comentarios || ''
+          enfriamientoComentarios: this.formData.sistemaEnfriamiento?.comentarios || '',
+          observacionesGeneralesSistemaEnfriamiento: this.formData.sistemaEnfriamiento?.comentarios || ''
         }),
         
         // --- SISTEMA ESCAPE ---
@@ -1237,7 +1243,8 @@ export default {
           escapeSilenciadorSuelto: this.formData.sistemaEscape?.silenciadorSuelto || false,
           escapeCatalizadorObstruido: this.formData.sistemaEscape?.catalizadorObstruido || false,
           escapeMalaCombustion: this.formData.sistemaEscape?.malaCombustion || false,
-          escapeComentarios: this.formData.sistemaEscape?.comentarios || ''
+          escapeComentarios: this.formData.sistemaEscape?.comentarios || '',
+          observacionesGeneralesSistemaEscape: this.formData.sistemaEscape?.comentarios || ''
         }),
         
         // --- SISTEMA CLIMATIZACION ---
@@ -1251,7 +1258,8 @@ export default {
           climatizacionNoCalienta: this.formData.sistemaClimatizacion?.noCalienta || false,
           climatizacionFallaTermostato: this.formData.sistemaClimatizacion?.fallaTermostato || false,
           climatizacionRadiadorInterior: this.formData.sistemaClimatizacion?.radiadorInterior || false,
-          climatizacionComentarios: this.formData.sistemaClimatizacion?.comentarios || ''
+          climatizacionComentarios: this.formData.sistemaClimatizacion?.comentarios || '',
+          observacionesGeneralesSistemaClimatizacion: this.formData.sistemaClimatizacion?.comentarios || ''
         }),
         
         // --- CARROCERIA Y ACCESORIOS ---
@@ -1268,7 +1276,8 @@ export default {
           limpiaParabrisasNoFunciona: this.formData.carroceriaAccesorios?.limpiaNoFunciona || false,
           limpiaParabrisasMotorDanado: this.formData.carroceriaAccesorios?.motorDanado || false,
           limpiaParabrisasFusibleDanado: this.formData.carroceriaAccesorios?.fusibleDanado || false,
-          carroceriaComentarios: this.formData.carroceriaAccesorios?.comentarios || ''
+          carroceriaComentarios: this.formData.carroceriaAccesorios?.comentarios || '',
+          observacionesGeneralesCarroceriaAccesorios: this.formData.carroceriaAccesorios?.comentarios || ''
         }),
         
         // --- LLANTAS Y RINES ---
@@ -1283,7 +1292,8 @@ export default {
           rinesGolpeadosDeformados: this.formData.llantasRines?.rinesGolpeadosDeformados || false,
           rinesImpactoBaches: this.formData.llantasRines?.impactoBaches || false,
           rinesImpactoBanquetas: this.formData.llantasRines?.impactoBanquetas || false,
-          llantasComentarios: this.formData.llantasRines?.comentarios || ''
+          llantasComentarios: this.formData.llantasRines?.comentarios || '',
+          observacionesGeneralesLlantasRines: this.formData.llantasRines?.comentarios || ''
         }),
         
         // Observaciones generales (combinación de todos los comentarios)
