@@ -1140,6 +1140,9 @@ export default {
     },
     
     finalFormData() {
+      // Crear observaciones generales primero
+      const observacionesGenerales = this.getObservacionesGeneralesHelper();
+      
       // Crear estructura JSON final similar al CheckList con campos booleanos directos
       const result = {
         folioRecepcion: this.diagnosticoData.folioRecepcion || '',
@@ -1284,7 +1287,7 @@ export default {
         }),
         
         // Observaciones generales (combinación de todos los comentarios)
-        observacionesGenerales: this.getObservacionesGenerales()
+        observacionesGenerales: observacionesGenerales
       };
       
       // Log del JSON completo para debug
@@ -1293,45 +1296,6 @@ export default {
       console.log('=====================================');
       
       return result;
-    },
-    
-    // Método helper para obtener observaciones generales
-    getObservacionesGenerales() {
-      const todasLasObservaciones = [];
-      
-      // Solo incluir comentarios de las secciones seleccionadas
-      if (this.categoriesSelection.motor && this.formData.motor?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Motor: ${this.formData.motor.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.transmision && this.formData.transmision?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Transmisión: ${this.formData.transmision.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.frenos && this.formData.frenos?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Frenos: ${this.formData.frenos.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.sistemaElectrico && this.formData.sistemaElectrico?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Sistema Eléctrico: ${this.formData.sistemaElectrico.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.suspensionDireccion && this.formData.suspensionDireccion?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Suspensión y Dirección: ${this.formData.suspensionDireccion.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.sistemaEnfriamiento && this.formData.sistemaEnfriamiento?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Sistema de Enfriamiento: ${this.formData.sistemaEnfriamiento.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.sistemaEscape && this.formData.sistemaEscape?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Sistema de Escape: ${this.formData.sistemaEscape.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.sistemaClimatizacion && this.formData.sistemaClimatizacion?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Sistema de Climatización: ${this.formData.sistemaClimatizacion.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.carroceriaAccesorios && this.formData.carroceriaAccesorios?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Carrocería y Accesorios: ${this.formData.carroceriaAccesorios.comentarios.trim()}`);
-      }
-      if (this.categoriesSelection.llantasRines && this.formData.llantasRines?.comentarios?.trim()) {
-        todasLasObservaciones.push(`Llantas y Rines: ${this.formData.llantasRines.comentarios.trim()}`);
-      }
-      
-      return todasLasObservaciones.join('. ');
     }
   },
   
@@ -1380,6 +1344,10 @@ export default {
       handler(newVal) {
         console.log('=== CAMBIO EN CATEGORÍAS DETECTADO ===');
         console.log('Categorías seleccionadas:', newVal);
+        console.log('selectedCategories computed:', this.selectedCategories);
+        console.log('currentStep:', this.currentStep);
+        console.log('dynamicTotalSteps:', this.dynamicTotalSteps);
+        console.log('currentCategory:', this.currentCategory);
         
         // Mostrar el JSON actualizado cuando cambian las categorías
         this.$nextTick(() => {
@@ -1393,6 +1361,45 @@ export default {
   },
   
   methods: {
+    // Método helper para obtener observaciones generales
+    getObservacionesGeneralesHelper() {
+      const todasLasObservaciones = [];
+      
+      // Solo incluir comentarios de las secciones seleccionadas
+      if (this.categoriesSelection.motor && this.formData.motor?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Motor: ${this.formData.motor.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.transmision && this.formData.transmision?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Transmisión: ${this.formData.transmision.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.frenos && this.formData.frenos?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Frenos: ${this.formData.frenos.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.sistemaElectrico && this.formData.sistemaElectrico?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Sistema Eléctrico: ${this.formData.sistemaElectrico.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.suspensionDireccion && this.formData.suspensionDireccion?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Suspensión y Dirección: ${this.formData.suspensionDireccion.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.sistemaEnfriamiento && this.formData.sistemaEnfriamiento?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Sistema de Enfriamiento: ${this.formData.sistemaEnfriamiento.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.sistemaEscape && this.formData.sistemaEscape?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Sistema de Escape: ${this.formData.sistemaEscape.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.sistemaClimatizacion && this.formData.sistemaClimatizacion?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Sistema de Climatización: ${this.formData.sistemaClimatizacion.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.carroceriaAccesorios && this.formData.carroceriaAccesorios?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Carrocería y Accesorios: ${this.formData.carroceriaAccesorios.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.llantasRines && this.formData.llantasRines?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Llantas y Rines: ${this.formData.llantasRines.comentarios.trim()}`);
+      }
+      
+      return todasLasObservaciones.join('. ');
+    },
+
     isCurrentCategoryStep(category) {
       return this.currentCategory === category;
     },
