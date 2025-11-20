@@ -1140,170 +1140,198 @@ export default {
     },
     
     finalFormData() {
-      // Crear estructura JSON final con solo los datos relevantes
+      // Crear estructura JSON final similar al CheckList con campos booleanos directos
       const result = {
         folioRecepcion: this.diagnosticoData.folioRecepcion || '',
         fechaCompletado: new Date().toISOString(),
         estado: 'completado',
-        diagnosticos: [],
-        observacionesGenerales: ''
+        
+        // --- MOTOR ---
+        // Solo incluir campos de la categoría seleccionada
+        ...(this.categoriesSelection.motor && {
+          // Motor - Empaques y sellos
+          motorEmpaques: this.formData.motor?.empaques || false,
+          motorSellos: this.formData.motor?.sellos || false,
+          motorDesgasteAnillos: this.formData.motor?.desgasteAnillos || false,
+          motorDesgasteValvulas: this.formData.motor?.desgasteValvulas || false,
+          motorFaltaLubricacion: this.formData.motor?.faltaLubricacion || false,
+          motorPiezasSueltas: this.formData.motor?.piezasSueltas || false,
+          motorBujias: this.formData.motor?.bujias || false,
+          motorBateria: this.formData.motor?.bateria || false,
+          motorBombaGasolina: this.formData.motor?.bombaGasolina || false,
+          motorFallaRadiador: this.formData.motor?.fallaRadiador || false,
+          motorFallaTermostato: this.formData.motor?.fallaTermostato || false,
+          motorSoportes: this.formData.motor?.soportes || false,
+          motorComentarios: this.formData.motor?.comentarios || ''
+        }),
+        
+        // --- TRANSMISION ---
+        ...(this.categoriesSelection.transmision && {
+          transmisionRetenesDanados: this.formData.transmision?.retenesDanados || false,
+          transmisionJuntasDanadas: this.formData.transmision?.juntasDanadas || false,
+          transmisionNivelBajoFlujo: this.formData.transmision?.nivelBajoFlujo || false,
+          transmisionDesgasteInterno: this.formData.transmision?.desgasteInterno || false,
+          transmisionDesgasteDiscos: this.formData.transmision?.desgasteDiscos || false,
+          transmisionConvertidorTorque: this.formData.transmision?.convertidorTorque || false,
+          transmisionMantenimientoProgramado: this.formData.transmision?.mantenimientoProgramado || false,
+          transmisionComentarios: this.formData.transmision?.comentarios || ''
+        }),
+        
+        // --- FRENOS ---
+        ...(this.categoriesSelection.frenos && {
+          frenosAireEnSistema: this.formData.frenos?.aireEnSistema || false,
+          frenosFugaLiquido: this.formData.frenos?.fugaLiquido || false,
+          frenosBalatasDesgastadas: this.formData.frenos?.balatasDesgastadas || false,
+          frenosDiscoDesgastado: this.formData.frenos?.discoDesgastado || false,
+          frenosClipers: this.formData.frenos?.clipers || false,
+          frenosManguerasDefectuosas: this.formData.frenos?.manguerasDefectuosas || false,
+          frenosControlDesgastePeriodico: this.formData.frenos?.controlDesgastePeriodico || false,
+          frenosComentarios: this.formData.frenos?.comentarios || ''
+        }),
+        
+        // --- SISTEMA ELECTRICO ---
+        ...(this.categoriesSelection.sistemaElectrico && {
+          electricoCeldasDanadas: this.formData.sistemaElectrico?.celdasDanadas || false,
+          electricoAlternadorDefectuoso: this.formData.sistemaElectrico?.alternadorDefectuoso || false,
+          electricoBandaSuelta: this.formData.sistemaElectrico?.bandaSuelta || false,
+          electricoAlternadorDanado: this.formData.sistemaElectrico?.alternadorDanado || false,
+          electricoFocoFundido: this.formData.sistemaElectrico?.focoFundido || false,
+          electricoConectoresSulfatados: this.formData.sistemaElectrico?.conectoresSulfatados || false,
+          electricoInspeccionPeriodica: this.formData.sistemaElectrico?.inspeccionPeriodica || false,
+          electricoComentarios: this.formData.sistemaElectrico?.comentarios || ''
+        }),
+        
+        // --- SUSPENSION Y DIRECCION ---
+        ...(this.categoriesSelection.suspensionDireccion && {
+          suspensionDesgaste: this.formData.suspensionDireccion?.desgaste || false,
+          suspensionRupturaRetenes: this.formData.suspensionDireccion?.rupturaRetenes || false,
+          direccionTerminales: this.formData.suspensionDireccion?.terminales || false,
+          direccionCremalleras: this.formData.suspensionDireccion?.cremalleras || false,
+          suspensionBujesDanados: this.formData.suspensionDireccion?.bujesDanados || false,
+          suspensionRotulasDanadas: this.formData.suspensionDireccion?.rotulasDanadas || false,
+          suspensionAjusteProgramado: this.formData.suspensionDireccion?.ajusteProgramado || false,
+          suspensionComentarios: this.formData.suspensionDireccion?.comentarios || ''
+        }),
+        
+        // --- SISTEMA ENFRIAMIENTO ---
+        ...(this.categoriesSelection.sistemaEnfriamiento && {
+          enfriamientoManguerasPerforadas: this.formData.sistemaEnfriamiento?.manguerasPerforadas || false,
+          enfriamientoNucleoPerforado: this.formData.sistemaEnfriamiento?.nucleoPerforado || false,
+          enfriamientoDesgasteReten: this.formData.sistemaEnfriamiento?.desgasteReten || false,
+          enfriamientoDesgasteRodamiento: this.formData.sistemaEnfriamiento?.desgasteRodamiento || false,
+          enfriamientoTermostatoBloqueado: this.formData.sistemaEnfriamiento?.termostatoBloqueado || false,
+          enfriamientoControlTemperatura: this.formData.sistemaEnfriamiento?.controlTemperatura || false,
+          enfriamientoComentarios: this.formData.sistemaEnfriamiento?.comentarios || ''
+        }),
+        
+        // --- SISTEMA ESCAPE ---
+        ...(this.categoriesSelection.sistemaEscape && {
+          escapeFugasPerforaciones: this.formData.sistemaEscape?.fugasPerforaciones || false,
+          escapeCorrosion: this.formData.sistemaEscape?.corrosion || false,
+          escapeImpacto: this.formData.sistemaEscape?.impacto || false,
+          escapeRuidoExcesivo: this.formData.sistemaEscape?.ruidoExcesivo || false,
+          escapeSilenciadorRoto: this.formData.sistemaEscape?.silenciadorRoto || false,
+          escapeSilenciadorSuelto: this.formData.sistemaEscape?.silenciadorSuelto || false,
+          escapeCatalizadorObstruido: this.formData.sistemaEscape?.catalizadorObstruido || false,
+          escapeMalaCombustion: this.formData.sistemaEscape?.malaCombustion || false,
+          escapeComentarios: this.formData.sistemaEscape?.comentarios || ''
+        }),
+        
+        // --- SISTEMA CLIMATIZACION ---
+        ...(this.categoriesSelection.sistemaClimatizacion && {
+          climatizacionAcNoEnfria: this.formData.sistemaClimatizacion?.acNoEnfria || false,
+          climatizacionFugaGas: this.formData.sistemaClimatizacion?.fugaGas || false,
+          climatizacionCompresorDanado: this.formData.sistemaClimatizacion?.compresorDanado || false,
+          climatizacionMalOlorVentilacion: this.formData.sistemaClimatizacion?.malOlorVentilacion || false,
+          climatizacionFiltroCabinaSucio: this.formData.sistemaClimatizacion?.filtroCabinaSucio || false,
+          climatizacionRevisionPresionesGas: this.formData.sistemaClimatizacion?.revisionPresionesGas || false,
+          climatizacionNoCalienta: this.formData.sistemaClimatizacion?.noCalienta || false,
+          climatizacionFallaTermostato: this.formData.sistemaClimatizacion?.fallaTermostato || false,
+          climatizacionRadiadorInterior: this.formData.sistemaClimatizacion?.radiadorInterior || false,
+          climatizacionComentarios: this.formData.sistemaClimatizacion?.comentarios || ''
+        }),
+        
+        // --- CARROCERIA Y ACCESORIOS ---
+        ...(this.categoriesSelection.carroceriaAccesorios && {
+          carroceriaRayonesAbolladuras: this.formData.carroceriaAccesorios?.rayonesAbolladuras || false,
+          carroceriaGolpes: this.formData.carroceriaAccesorios?.golpes || false,
+          carroceriaRoces: this.formData.carroceriaAccesorios?.roces || false,
+          puertasCierreDeficiente: this.formData.carroceriaAccesorios?.cierreDeficiente || false,
+          puertasCerraduras: this.formData.carroceriaAccesorios?.cerraduras || false,
+          puertasBisagraDesajustada: this.formData.carroceriaAccesorios?.bisagraDesajustada || false,
+          cristalesGrietasAstilladuras: this.formData.carroceriaAccesorios?.grietasAstilladuras || false,
+          cristalesImpactoCristal: this.formData.carroceriaAccesorios?.impactoCristal || false,
+          cristalesTensionTermica: this.formData.carroceriaAccesorios?.tensionTermica || false,
+          limpiaParabrisasNoFunciona: this.formData.carroceriaAccesorios?.limpiaNoFunciona || false,
+          limpiaParabrisasMotorDanado: this.formData.carroceriaAccesorios?.motorDanado || false,
+          limpiaParabrisasFusibleDanado: this.formData.carroceriaAccesorios?.fusibleDanado || false,
+          carroceriaComentarios: this.formData.carroceriaAccesorios?.comentarios || ''
+        }),
+        
+        // --- LLANTAS Y RINES ---
+        ...(this.categoriesSelection.llantasRines && {
+          llantasDesgasteIrregular: this.formData.llantasRines?.desgasteIrregular || false,
+          llantasAlineacion: this.formData.llantasRines?.alineacion || false,
+          llantasBalanceoDeficiente: this.formData.llantasRines?.balanceoDeficiente || false,
+          llantasPresionIncorrecta: this.formData.llantasRines?.presionIncorrecta || false,
+          llantasRevisionPeriodica: this.formData.llantasRines?.revisionPeriodica || false,
+          llantasRevisionFechaFabricacion: this.formData.llantasRines?.revisionFechaFabricacion || false,
+          llantasControlVidaUtil: this.formData.llantasRines?.controlVidaUtil || false,
+          rinesGolpeadosDeformados: this.formData.llantasRines?.rinesGolpeadosDeformados || false,
+          rinesImpactoBaches: this.formData.llantasRines?.impactoBaches || false,
+          rinesImpactoBanquetas: this.formData.llantasRines?.impactoBanquetas || false,
+          llantasComentarios: this.formData.llantasRines?.comentarios || ''
+        }),
+        
+        // Observaciones generales (combinación de todos los comentarios)
+        observacionesGenerales: this.getObservacionesGenerales()
       };
       
-      // Procesar cada sección y agregar solo las fallas seleccionadas
-      const secciones = [
-        { key: 'motor', nombre: 'Motor' },
-        { key: 'transmision', nombre: 'Sistema de Transmisión' },
-        { key: 'frenos', nombre: 'Sistema de Frenos' },
-        { key: 'sistemaElectrico', nombre: 'Sistema Eléctrico' },
-        { key: 'suspensionDireccion', nombre: 'Suspensión y Dirección' },
-        { key: 'sistemaEnfriamiento', nombre: 'Sistema de Enfriamiento' },
-        { key: 'sistemaEscape', nombre: 'Sistema de Escape' },
-        { key: 'sistemaClimatizacion', nombre: 'Sistema de Climatización' },
-        { key: 'carroceriaAccesorios', nombre: 'Carrocería y Accesorios' },
-        { key: 'llantasRines', nombre: 'Llantas y Rines' }
-      ];
+      // Log del JSON completo para debug
+      console.log('=== JSON DIAGNOSTICO ACTUALIZADO ===');
+      console.log(JSON.stringify(result, null, 2));
+      console.log('=====================================');
       
-      // Mapeo de nombres técnicos a nombres legibles
-      const fallaNames = {
-        empaques: 'Empaques dañados',
-        sellos: 'Sellos dañados',
-        desgasteAnillos: 'Desgaste de anillos',
-        desgasteValvulas: 'Desgaste válvulas',
-        faltaLubricacion: 'Falta de lubricación',
-        piezasSueltas: 'Piezas sueltas',
-        bujias: 'Bujías defectuosas',
-        bateria: 'Problemas de batería',
-        bombaGasolina: 'Bomba de gasolina',
-        fallaRadiador: 'Falla en radiador',
-        fallaTermostato: 'Falla en termostato',
-        soportes: 'Soportes de motor',
-        retenesDanados: 'Retenes dañados',
-        juntasDanadas: 'Juntas dañadas',
-        nivelBajoFlujo: 'Nivel bajo de flujo',
-        desgasteInterno: 'Desgaste interno',
-        desgasteDiscos: 'Desgaste de discos',
-        convertidorTorque: 'Convertidor de torque',
-        mantenimientoProgramado: 'Mantenimiento programado',
-        aireEnSistema: 'Aire en el sistema',
-        fugaLiquido: 'Fuga de líquido',
-        balatasDesgastadas: 'Balatas desgastadas',
-        discoDesgastado: 'Disco desgastado',
-        clipers: 'Problema en calipers',
-        manguerasDefectuosas: 'Mangueras defectuosas',
-        controlDesgastePeriodico: 'Control de desgaste periódico',
-        celdasDanadas: 'Celdas dañadas',
-        alternadorDefectuoso: 'Alternador defectuoso',
-        bandaSuelta: 'Banda suelta',
-        alternadorDanado: 'Alternador dañado',
-        focoFundido: 'Foco fundido',
-        conectoresSulfatados: 'Conectores sulfatados o flojos',
-        inspeccionPeriodica: 'Inspección periódica',
-        desgaste: 'Desgaste',
-        rupturaRetenes: 'Ruptura de retenes',
-        terminales: 'Terminales dañados',
-        cremalleras: 'Cremalleras desgastadas',
-        bujesDanados: 'Bujes dañados',
-        rotulasDanadas: 'Rótulas dañadas',
-        ajusteProgramado: 'Ajuste programado',
-        manguerasPerforadas: 'Mangueras perforadas',
-        nucleoPerforado: 'Núcleo perforado',
-        desgasteReten: 'Desgaste del retén',
-        desgasteRodamiento: 'Desgaste de rodamiento',
-        termostatoBloqueado: 'Termostato bloqueado',
-        controlTemperatura: 'Control de temperatura óptima',
-        // Sistema de Escape
-        fugasPerforaciones: 'Fugas o perforaciones',
-        corrosion: 'Corrosión',
-        impacto: 'Impacto',
-        ruidoExcesivo: 'Ruido excesivo',
-        silenciadorRoto: 'Silenciador roto',
-        silenciadorSuelto: 'Silenciador suelto',
-        catalizadorObstruido: 'Catalizador obstruido o dañado',
-        malaCombustion: 'Mala combustión',
-        // Sistema de Climatización
-        acNoEnfria: 'A/C no enfría',
-        fugaGas: 'Fuga de gas',
-        compresorDanado: 'Compresor dañado',
-        malOlorVentilacion: 'Mal olor en ventilación',
-        filtroCabinaSucio: 'Filtro de cabina sucio',
-        revisionPresionesGas: 'Revisión de presiones y gas',
-        noCalienta: 'No calienta',
-        radiadorInterior: 'Radiador interior',
-        // Carrocería y Accesorios
-        rayonesAbolladuras: 'Rayones o abolladuras',
-        golpes: 'Golpes',
-        roces: 'Roces',
-        cierreDeficiente: 'Cierre deficiente',
-        cerraduras: 'Cerraduras',
-        bisagraDesajustada: 'Bisagra desajustada',
-        grietasAstilladuras: 'Grietas o astilladuras',
-        impactoCristal: 'Impacto en cristal',
-        tensionTermica: 'Tensión térmica',
-        limpiaNoFunciona: 'Limpia parabrisas no funciona',
-        motorDanado: 'Motor dañado',
-        fusibleDanado: 'Fusible dañado',
-        // Llantas y Rines
-        desgasteIrregular: 'Desgaste irregular',
-        alineacion: 'Problemas de alineación',
-        balanceoDeficiente: 'Balanceo deficiente',
-        presionIncorrecta: 'Presión incorrecta',
-        revisionPeriodica: 'Revisión periódica',
-        revisionFechaFabricacion: 'Revisión de fecha de fabricación',
-        controlVidaUtil: 'Control de vida útil',
-        rinesGolpeadosDeformados: 'Rines golpeados o deformados',
-        impactoBaches: 'Impacto con baches',
-        impactoBanquetas: 'Impacto con banquetas'
-      };
+      return result;
+    },
+    
+    // Método helper para obtener observaciones generales
+    getObservacionesGenerales() {
+      const todasLasObservaciones = [];
       
-      secciones.forEach(seccion => {
-        const seccionData = this.formData[seccion.key];
-        if (seccionData) {
-          let tieneSelecciones = false;
-          let descripcionSeccion = `${seccion.nombre}: `;
-          let fallasEncontradas = [];
-          
-          // Revisar cada campo excepto comentarios
-          Object.keys(seccionData).forEach(campo => {
-            if (campo !== 'comentarios' && seccionData[campo]) {
-              fallasEncontradas.push(fallaNames[campo] || campo);
-              tieneSelecciones = true;
-            }
-          });
-          
-          // Si hay selecciones o comentarios, agregar al diagnóstico
-          if (tieneSelecciones || seccionData.comentarios?.trim()) {
-            if (fallasEncontradas.length > 0) {
-              descripcionSeccion += fallasEncontradas.join(', ');
-            }
-            
-            if (seccionData.comentarios?.trim()) {
-              if (fallasEncontradas.length > 0) {
-                descripcionSeccion += '. Observaciones: ' + seccionData.comentarios.trim();
-              } else {
-                descripcionSeccion += 'Observaciones: ' + seccionData.comentarios.trim();
-              }
-            }
-            
-            result.diagnosticos.push({
-              seccion: seccion.nombre,
-              descripcion: descripcionSeccion
-            });
-          }
-        }
-      });
-      
-      // Crear observaciones generales
-      const todasLasObservaciones = Object.values(this.formData)
-        .map(seccion => seccion.comentarios)
-        .filter(comentario => comentario && comentario.trim())
-        .join('. ');
-      
-      if (todasLasObservaciones) {
-        result.observacionesGenerales = todasLasObservaciones;
+      // Solo incluir comentarios de las secciones seleccionadas
+      if (this.categoriesSelection.motor && this.formData.motor?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Motor: ${this.formData.motor.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.transmision && this.formData.transmision?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Transmisión: ${this.formData.transmision.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.frenos && this.formData.frenos?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Frenos: ${this.formData.frenos.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.sistemaElectrico && this.formData.sistemaElectrico?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Sistema Eléctrico: ${this.formData.sistemaElectrico.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.suspensionDireccion && this.formData.suspensionDireccion?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Suspensión y Dirección: ${this.formData.suspensionDireccion.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.sistemaEnfriamiento && this.formData.sistemaEnfriamiento?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Sistema de Enfriamiento: ${this.formData.sistemaEnfriamiento.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.sistemaEscape && this.formData.sistemaEscape?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Sistema de Escape: ${this.formData.sistemaEscape.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.sistemaClimatizacion && this.formData.sistemaClimatizacion?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Sistema de Climatización: ${this.formData.sistemaClimatizacion.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.carroceriaAccesorios && this.formData.carroceriaAccesorios?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Carrocería y Accesorios: ${this.formData.carroceriaAccesorios.comentarios.trim()}`);
+      }
+      if (this.categoriesSelection.llantasRines && this.formData.llantasRines?.comentarios?.trim()) {
+        todasLasObservaciones.push(`Llantas y Rines: ${this.formData.llantasRines.comentarios.trim()}`);
       }
       
-      console.log('Datos finales del diagnóstico:', result);
-      return result;
+      return todasLasObservaciones.join('. ');
     }
   },
   
@@ -1327,6 +1355,40 @@ export default {
         }
       },
       deep: true
+    },
+    
+    // Watcher para mostrar el JSON en tiempo real cuando cambian los datos
+    formData: {
+      deep: true,
+      handler(newVal) {
+        console.log('=== CAMBIO EN FORM DATA DETECTADO ===');
+        console.log('Datos del formulario actualizados:', newVal);
+        
+        // Forzar recálculo del JSON final
+        this.$nextTick(() => {
+          const currentJson = this.finalFormData;
+          console.log('=== JSON ACTUALIZADO EN TIEMPO REAL ===');
+          console.log(JSON.stringify(currentJson, null, 2));
+          console.log('=========================================');
+        });
+      }
+    },
+    
+    // Watcher para las selecciones de categorías
+    categoriesSelection: {
+      deep: true,
+      handler(newVal) {
+        console.log('=== CAMBIO EN CATEGORÍAS DETECTADO ===');
+        console.log('Categorías seleccionadas:', newVal);
+        
+        // Mostrar el JSON actualizado cuando cambian las categorías
+        this.$nextTick(() => {
+          const currentJson = this.finalFormData;
+          console.log('=== JSON ACTUALIZADO POR CAMBIO DE CATEGORÍAS ===');
+          console.log(JSON.stringify(currentJson, null, 2));
+          console.log('===============================================');
+        });
+      }
     }
   },
   
