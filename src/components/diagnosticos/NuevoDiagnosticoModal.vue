@@ -60,7 +60,7 @@
                   required
                 >
                   <option value="">
-                    {{ isLoadingRecepciones ? 'Cargando órdenes...' : 'Seleccionar folio...' }}
+                    {{ isLoadingRecepciones ? 'Cargando órdenes...' : 'Seleccionar orden...' }}
                   </option>
                   <option 
                     v-for="recepcion in recepciones" 
