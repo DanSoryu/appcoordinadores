@@ -139,6 +139,30 @@
           <div class="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-l-4 border-blue-500">
             <h4 class="text-lg font-semibold text-blue-800 mb-4">Motor</h4>
             <div class="space-y-4">
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-blue-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.motor.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-blue-600 focus:ring-blue-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.motor.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-blue-600 focus:ring-blue-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -213,6 +237,30 @@
           <div class="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border-l-4 border-green-500">
             <h4 class="text-lg font-semibold text-green-800 mb-4">Sistema de Transmisión</h4>
             <div class="space-y-4">
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-green-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.transmision.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-green-600 focus:ring-green-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.transmision.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-green-600 focus:ring-green-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -263,6 +311,30 @@
           <div class="mb-8 p-6 bg-gradient-to-r from-red-50 to-rose-50 rounded-xl border-l-4 border-red-500">
             <h4 class="text-lg font-semibold text-red-800 mb-4">Frenos</h4>
             <div class="space-y-4">
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-red-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.frenos.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-red-600 focus:ring-red-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.frenos.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-red-600 focus:ring-red-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -313,6 +385,31 @@
           <div class="mb-8 p-6 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border-l-4 border-yellow-500">
             <h4 class="text-lg font-semibold text-yellow-800 mb-4">Sistema Eléctrico</h4>
             <div class="space-y-6">
+              
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-yellow-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.sistemaElectrico.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-yellow-600 focus:ring-yellow-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.sistemaElectrico.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-yellow-600 focus:ring-yellow-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
               
               <!-- Subcategoría: Batería -->
               <div class="border-b border-yellow-200 pb-4">
@@ -382,6 +479,31 @@
             <h4 class="text-lg font-semibold text-orange-800 mb-4">Suspensión y Dirección</h4>
             <div class="space-y-6">
               
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-orange-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.suspensionDireccion.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-orange-600 focus:ring-orange-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.suspensionDireccion.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-orange-600 focus:ring-orange-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
+              
               <!-- Subcategoría: Amortiguadores -->
               <div class="border-b border-orange-200 pb-4">
                 <h5 class="text-md font-medium text-orange-700 mb-2">Amortiguadores</h5>
@@ -450,6 +572,31 @@
             <h4 class="text-lg font-semibold text-blue-800 mb-4">Sistema de Enfriamiento</h4>
             <div class="space-y-6">
               
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-blue-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.sistemaEnfriamiento.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-blue-600 focus:ring-blue-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.sistemaEnfriamiento.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-blue-600 focus:ring-blue-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
+              
               <!-- Subcategoría: Radiador -->
               <div class="border-b border-blue-200 pb-4">
                 <h5 class="text-md font-medium text-blue-700 mb-2">Radiador</h5>
@@ -513,6 +660,31 @@
           <div class="mb-8 p-6 bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl border-l-4 border-purple-500">
             <h4 class="text-lg font-semibold text-purple-800 mb-4">Sistema de Escape</h4>
             <div class="space-y-6">
+              
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-purple-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.sistemaEscape.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-purple-600 focus:ring-purple-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.sistemaEscape.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-purple-600 focus:ring-purple-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
               
               <!-- Subcategoría: Escape -->
               <div class="border-b border-purple-200 pb-4">
@@ -892,6 +1064,7 @@ export default {
       formData: {
         // STEP 1: Motor
         motor: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           empaques: false,
           sellos: false,
           desgasteAnillos: false,
@@ -909,6 +1082,7 @@ export default {
         
         // STEP 2: Sistema de Transmisión
         transmision: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           retenesDanados: false,
           juntasDanadas: false,
           nivelBajoFlujo: false,
@@ -921,6 +1095,7 @@ export default {
         
         // STEP 3: Sistema de frenos
         frenos: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           aireEnSistema: false,
           fugaLiquido: false,
           balatasDesgastadas: false,
@@ -933,6 +1108,7 @@ export default {
         
         // STEP 4: Sistema eléctrico (unificado)
         sistemaElectrico: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           // Batería
           celdasDanadas: false,
           alternadorDefectuoso: false,
@@ -948,6 +1124,7 @@ export default {
         
         // STEP 5: Suspensión y Dirección (unificado)
         suspensionDireccion: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           // Amortiguadores
           desgaste: false,
           rupturaRetenes: false,
@@ -963,6 +1140,7 @@ export default {
         
         // STEP 6: Sistema de enfriamiento (unificado)
         sistemaEnfriamiento: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           // Radiador
           manguerasPerforadas: false,
           nucleoPerforado: false,
@@ -977,6 +1155,7 @@ export default {
         
         // STEP 7: Sistema de Escape (unificado)
         sistemaEscape: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           // Escape
           fugasPerforaciones: false,
           corrosion: false,
@@ -992,6 +1171,7 @@ export default {
         
         // STEP 8: Sistema de Climatización (unificado)
         sistemaClimatizacion: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           // A/C
           acNoEnfria: false,
           fugaGas: false,
@@ -1008,6 +1188,7 @@ export default {
         
         // STEP 9: Carrocería y Accesorios (unificado)
         carroceriaAccesorios: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           // Carrocería
           rayonesAbolladuras: false,
           golpes: false,
@@ -1029,6 +1210,7 @@ export default {
         
         // STEP 10: Llantas y Rines (unificado)
         llantasRines: {
+          tipo_mantenimiento: 'correctivo', // preventivo o correctivo
           // Llantas
           desgasteIrregular: false,
           alineacion: false,
