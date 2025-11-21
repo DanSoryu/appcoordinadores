@@ -29,18 +29,25 @@
                   required
                 >
                   <option value="">
-                    {{ isLoadingMecanicos ? 'Cargando mecánicos...' : 'Seleccionar mecánico...' }}
+                    {{ isLoadingMecanicos ? 'Cargando mecánicos...' : `Seleccionar mecánico... (${mecanicos.length} disponibles)` }}
                   </option>
                   <option 
                     v-for="mecanico in mecanicos" 
                     :key="mecanico.id" 
                     :value="mecanico.id"
                   >
-                    {{ mecanico.nombre }}
+                    {{ mecanico.nombre }} (ID: {{ mecanico.id }})
                   </option>
                 </select>
+                <div v-if="!isLoadingMecanicos && mecanicos.length === 0" class="text-yellow-600 text-xs mt-1">
+                  No hay mecánicos disponibles
+                </div>
                 <div v-if="formData.mecanico_id && !mecanicoValid" class="text-red-500 text-xs mt-1">
                   Debe seleccionar un mecánico
+                </div>
+                <!-- DEBUG INFO -->
+                <div class="text-xs text-gray-500 mt-1 p-2 bg-gray-50 rounded">
+                  Debug: Loading={{ isLoadingMecanicos }}, Array length={{ mecanicos.length }}, Selected={{ formData.mecanico_id }}
                 </div>
               </div>
 
@@ -57,7 +64,7 @@
                   required
                 >
                   <option value="">
-                    {{ isLoadingRecepciones ? 'Cargando órdenes...' : 'Seleccionar folio...' }}
+                    {{ isLoadingRecepciones ? 'Cargando órdenes...' : `Seleccionar folio... (${recepciones.length} disponibles)` }}
                   </option>
                   <option 
                     v-for="recepcion in recepciones" 
@@ -67,11 +74,15 @@
                     Folio: {{ recepcion.id }} - {{ recepcion.numero_economico }} ({{ recepcion.placas }})
                   </option>
                 </select>
+                <div v-if="!isLoadingRecepciones && recepciones.length === 0" class="text-yellow-600 text-xs mt-1">
+                  No hay órdenes sin diagnóstico disponibles
+                </div>
                 <div v-if="formData.folio_recepcion && !folioValid" class="text-red-500 text-xs mt-1">
                   Debe seleccionar un folio de orden
                 </div>
-                <div v-if="recepciones.length === 0 && !isLoadingRecepciones" class="text-yellow-600 text-xs mt-1">
-                  No hay órdenes sin diagnóstico disponibles
+                <!-- DEBUG INFO -->
+                <div class="text-xs text-gray-500 mt-1 p-2 bg-gray-50 rounded">
+                  Debug: Loading={{ isLoadingRecepciones }}, Array length={{ recepciones.length }}, Selected={{ formData.folio_recepcion }}
                 </div>
               </div>
             </div>
@@ -164,172 +175,152 @@ export default {
     
     // Cargar mecánicos desde la API
     const cargarMecanicos = async () => {
+      console.log('🚀 INICIANDO CARGA DE MECÁNICOS')
       isLoadingMecanicos.value = true
       
       try {
-        console.log('=== INICIO CARGA MECÁNICOS ===')
-        console.log('Estado inicial - isLoadingMecanicos:', isLoadingMecanicos.value)
+        console.log('📡 Haciendo petición GET a /usuarios-mecanicos')
+        console.log('🔗 URL completa:', apiClient.defaults.baseURL + '/usuarios-mecanicos')
         
-        // Usar la nueva ruta específica para usuarios mecánicos
-        console.log('Haciendo petición a: /usuarios-mecanicos')
-        console.log('URL completa que se está llamando:', apiClient.defaults.baseURL + '/usuarios-mecanicos')
         const response = await apiClient.get('/usuarios-mecanicos')
         
-        console.log('Respuesta completa del servidor:', response)
-        console.log('Status de respuesta:', response.status)
-        console.log('Data de respuesta:', response.data)
+        console.log('✅ Respuesta recibida:')
+        console.log('   - Status:', response.status)
+        console.log('   - Headers:', response.headers)
+        console.log('   - Data completa:', JSON.stringify(response.data, null, 2))
         
-        // La respuesta viene con formato { usuarios_mecanicos: [...], total: X }
-        const usuariosMecanicos = response.data.usuarios_mecanicos || []
+        // Verificar estructura de respuesta
+        if (!response.data || typeof response.data !== 'object') {
+          throw new Error('Respuesta inválida del servidor')
+        }
         
-        console.log('Usuarios mecánicos extraídos:', usuariosMecanicos)
-        console.log('Cantidad de mecánicos:', usuariosMecanicos.length)
+        // Extraer usuarios mecánicos
+        const usuariosMecanicos = response.data.usuarios_mecanicos
         
-        // Mapear los datos al formato esperado
-        mecanicos.value = usuariosMecanicos.map(usuario => {
-          console.log('Procesando mecánico:', usuario)
+        console.log('🔍 Procesando datos:')
+        console.log('   - usuarios_mecanicos existe?', !!usuariosMecanicos)
+        console.log('   - Es array?', Array.isArray(usuariosMecanicos))
+        console.log('   - Cantidad:', usuariosMecanicos?.length || 0)
+        console.log('   - Datos:', usuariosMecanicos)
+        
+        if (!Array.isArray(usuariosMecanicos)) {
+          console.warn('⚠️ usuarios_mecanicos no es un array válido')
+          mecanicos.value = []
+          return
+        }
+        
+        // Mapear y procesar datos
+        console.log('🔄 Mapeando datos de mecánicos:')
+        mecanicos.value = usuariosMecanicos.map((usuario, index) => {
+          console.log(`   ${index + 1}. ID: ${usuario.id}, Nombre: "${usuario.nombre}"`)
           return {
             id: usuario.id,
             nombre: usuario.nombre
           }
         })
         
-        console.log('Mecánicos finales cargados:', mecanicos.value)
-        console.log('Cantidad final de mecánicos:', mecanicos.value.length)
-        console.log('=== FIN CARGA MECÁNICOS ===')
+        console.log('✨ MECÁNICOS CARGADOS EXITOSAMENTE:')
+        console.log('   - Total procesados:', mecanicos.value.length)
+        console.log('   - Array final:', mecanicos.value)
+        
+        // Forzar actualización reactiva
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
       } catch (error) {
-        console.error('=== ERROR EN CARGA MECÁNICOS ===')
-        console.error('Error completo:', error)
-        console.error('Response del error:', error.response)
-        console.error('Status del error:', error.response?.status)
-        console.error('Data del error:', error.response?.data)
-        console.error('Message del error:', error.message)
+        console.error('❌ ERROR CARGANDO MECÁNICOS:')
+        console.error('   - Tipo error:', error.name)
+        console.error('   - Mensaje:', error.message)
+        console.error('   - Status HTTP:', error.response?.status)
+        console.error('   - Respuesta servidor:', error.response?.data)
+        console.error('   - Error completo:', error)
         
         mecanicos.value = []
         toastStore.addToast({
-          message: `Error al cargar la lista de mecánicos: ${error.response?.data?.message || error.message}`,
+          message: `Error al cargar mecánicos: ${error.response?.data?.message || error.message}`,
           type: 'error',
           duration: 5000
         })
       } finally {
         isLoadingMecanicos.value = false
-        console.log('Estado final - isLoadingMecanicos:', isLoadingMecanicos.value)
+        console.log('🏁 Carga de mecánicos finalizada - Loading:', isLoadingMecanicos.value)
       }
     }
     
     // Cargar órdenes sin diagnóstico desde la API
     const cargarRecepciones = async () => {
+      console.log('🚀 INICIANDO CARGA DE ÓRDENES SIN DIAGNÓSTICO')
       isLoadingRecepciones.value = true
       
       try {
-        console.log('=== INICIO CARGA ÓRDENES SIN DIAGNÓSTICO ===')
-        console.log('Estado inicial - isLoadingRecepciones:', isLoadingRecepciones.value)
+        console.log('📡 Haciendo petición GET a /ordenes-sin-diagnosticos')
+        console.log('🔗 URL completa:', apiClient.defaults.baseURL + '/ordenes-sin-diagnosticos')
         
-        // Usar la nueva ruta específica para órdenes sin diagnóstico
-        console.log('Haciendo petición a: /ordenes-sin-diagnosticos')
-        console.log('URL completa que se está llamando:', apiClient.defaults.baseURL + '/ordenes-sin-diagnosticos')
-        const ordenesSinDiagnosticoResponse = await apiClient.get('/ordenes-sin-diagnosticos')
+        const response = await apiClient.get('/ordenes-sin-diagnosticos')
         
-        console.log('Respuesta completa de órdenes sin diagnóstico:', ordenesSinDiagnosticoResponse)
-        console.log('Status de respuesta:', ordenesSinDiagnosticoResponse.status)
-        console.log('Data de respuesta:', ordenesSinDiagnosticoResponse.data)
+        console.log('✅ Respuesta recibida:')
+        console.log('   - Status:', response.status)
+        console.log('   - Data completa:', JSON.stringify(response.data, null, 2))
         
-        // La respuesta viene con formato { ordenes_sin_diagnostico: [1, 2, 3], total: X }
-        const ordenesSinDiagnostico = ordenesSinDiagnosticoResponse.data.ordenes_sin_diagnostico || []
+        // Verificar estructura de respuesta
+        if (!response.data || typeof response.data !== 'object') {
+          throw new Error('Respuesta inválida del servidor')
+        }
         
-        console.log('IDs de órdenes sin diagnóstico extraídos:', ordenesSinDiagnostico)
-        console.log('Cantidad de órdenes sin diagnóstico:', ordenesSinDiagnostico.length)
+        // Extraer IDs de órdenes sin diagnóstico
+        const ordenesSinDiagnostico = response.data.ordenes_sin_diagnostico
         
-        if (ordenesSinDiagnostico.length === 0) {
+        console.log('🔍 Procesando datos:')
+        console.log('   - ordenes_sin_diagnostico existe?', !!ordenesSinDiagnostico)
+        console.log('   - Es array?', Array.isArray(ordenesSinDiagnostico))
+        console.log('   - Cantidad:', ordenesSinDiagnostico?.length || 0)
+        console.log('   - IDs:', ordenesSinDiagnostico)
+        
+        if (!Array.isArray(ordenesSinDiagnostico) || ordenesSinDiagnostico.length === 0) {
+          console.warn('⚠️ No hay órdenes sin diagnóstico disponibles')
           recepciones.value = []
-          console.log('No hay órdenes sin diagnóstico disponibles - terminando función')
-          console.log('=== FIN CARGA ÓRDENES (SIN DATOS) ===')
           return
         }
         
-        console.log('--- CARGANDO DATOS AUXILIARES ---')
-        // Ahora necesitamos obtener los detalles de estas recepciones específicas
-        // Cargar recepciones y vehículos para mostrar la información completa
-        let recepcionesData = []
-        let vehiculosData = []
-        
-        try {
-          console.log('Haciendo peticiones paralelas a /recepcion y /vehiculos')
-          const [recepcionResponse, vehiculosResponse] = await Promise.all([
-            apiClient.get('/recepcion'),
-            apiClient.get('/vehiculos')
-          ])
-          
-          recepcionesData = recepcionResponse.data
-          vehiculosData = vehiculosResponse.data
-          
-          console.log('Respuesta recepciones completa:', recepcionResponse.data)
-          console.log('Respuesta vehículos completa:', vehiculosResponse.data)
-          console.log('Datos auxiliares cargados - Recepciones:', recepcionesData.length, 'Vehículos:', vehiculosData.length)
-        } catch (auxiliarError) {
-          console.error('Error al cargar datos auxiliares:', auxiliarError)
-          console.error('Error auxiliar completo:', auxiliarError.response)
-          // Continuar con arrays vacíos si falla
-          recepcionesData = []
-          vehiculosData = []
-        }
-        
-        console.log('--- FILTRANDO RECEPCIONES ---')
-        // Filtrar solo las recepciones que están en la lista de órdenes sin diagnóstico
-        console.log('Filtrando recepciones con IDs:', ordenesSinDiagnostico)
-        console.log('De las recepciones disponibles:', recepcionesData.map(r => r.id))
-        
-        const recepcionesFiltradas = recepcionesData.filter(recepcion => {
-          const incluida = ordenesSinDiagnostico.includes(recepcion.id)
-          console.log(`Recepción ID ${recepcion.id} - ¿Incluida?: ${incluida}`)
-          return incluida
-        })
-        
-        console.log('Recepciones filtradas:', recepcionesFiltradas)
-        console.log('Cantidad de recepciones filtradas:', recepcionesFiltradas.length)
-        
-        console.log('--- COMBINANDO CON DATOS DE VEHÍCULOS ---')
-        // Combinar datos de recepción con datos de vehículos
-        recepciones.value = recepcionesFiltradas.map(recepcion => {
-          const vehiculo = vehiculosData.find(v => v.id === recepcion.vehiculo_id)
-          console.log(`Procesando recepción ID: ${recepcion.id}, vehiculo_id: ${recepcion.vehiculo_id}`)
-          console.log('Vehículo encontrado:', vehiculo)
-          
-          const resultado = {
-            id: recepcion.id,
-            numero_economico: vehiculo?.numero_economico || 'N/A',
-            placas: vehiculo?.placas || 'N/A'
+        // Crear opciones simplificadas usando solo los IDs
+        console.log('🔄 Creando opciones para el select:')
+        recepciones.value = ordenesSinDiagnostico.map((id, index) => {
+          console.log(`   ${index + 1}. Orden ID: ${id}`)
+          return {
+            id: id,
+            numero_economico: `Orden ${id}`,
+            placas: 'Pendiente de cargar'
           }
-          console.log('Resultado final para recepción:', resultado)
-          return resultado
         })
         
-        console.log('Recepciones finales (sin diagnóstico) cargadas:', recepciones.value)
-        console.log('Cantidad final de recepciones:', recepciones.value.length)
-        console.log('=== FIN CARGA ÓRDENES (CON DATOS) ===')
+        console.log('✨ ÓRDENES CARGADAS EXITOSAMENTE:')
+        console.log('   - Total procesadas:', recepciones.value.length)
+        console.log('   - Array final:', recepciones.value)
+        
+        // Forzar actualización reactiva
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
       } catch (error) {
-        console.error('=== ERROR EN CARGA ÓRDENES ===')
-        console.error('Error completo:', error)
-        console.error('Response del error:', error.response)
-        console.error('Status del error:', error.response?.status)
-        console.error('Data del error:', error.response?.data)
-        console.error('Message del error:', error.message)
+        console.error('❌ ERROR CARGANDO ÓRDENES:')
+        console.error('   - Tipo error:', error.name)
+        console.error('   - Mensaje:', error.message)
+        console.error('   - Status HTTP:', error.response?.status)
+        console.error('   - Respuesta servidor:', error.response?.data)
+        console.error('   - Error completo:', error)
         
         recepciones.value = []
         
         if (error.response?.status === 404) {
-          // No hay órdenes sin diagnóstico, no es un error crítico
-          console.log('No hay órdenes sin diagnóstico disponibles (404) - esto es normal')
+          console.log('ℹ️ No hay órdenes sin diagnóstico (404) - esto es normal')
         } else {
           toastStore.addToast({
-            message: `Error al cargar las órdenes disponibles: ${error.response?.data?.message || error.message}`,
+            message: `Error al cargar órdenes: ${error.response?.data?.message || error.message}`,
             type: 'error',
             duration: 5000
           })
         }
       } finally {
         isLoadingRecepciones.value = false
-        console.log('Estado final - isLoadingRecepciones:', isLoadingRecepciones.value)
+        console.log('🏁 Carga de órdenes finalizada - Loading:', isLoadingRecepciones.value)
       }
     }
     
@@ -391,24 +382,69 @@ export default {
     }
     
     // Cargar datos cuando se abre el modal
-    watch(() => props.show, (newValue, oldValue) => {
-      console.log('=== WATCHER DEL MODAL ===')
-      console.log('Valor anterior:', oldValue)
-      console.log('Valor nuevo:', newValue)
-      console.log('¿Modal se está abriendo?:', newValue === true)
+    watch(() => props.show, async (newValue, oldValue) => {
+      console.log('🔄 === WATCHER DEL MODAL ===')
+      console.log('   📋 Valor anterior:', oldValue)
+      console.log('   📋 Valor nuevo:', newValue)
+      console.log('   🚪 ¿Modal abriéndose?:', newValue === true)
       
       if (newValue) {
-        console.log('Modal abierto - iniciando carga de datos...')
+        console.log('🎯 MODAL ABIERTO - Iniciando secuencia de carga...')
+        
+        // Resetear formulario
         resetForm()
-        console.log('Formulario reseteado')
+        console.log('✅ Formulario reseteado')
         
-        console.log('Llamando cargarMecanicos()...')
-        cargarMecanicos()
+        // Limpiar arrays por seguridad
+        mecanicos.value = []
+        recepciones.value = []
+        console.log('🧹 Arrays limpiados')
         
-        console.log('Llamando cargarRecepciones()...')
-        cargarRecepciones()
+        console.log('⏳ Estado inicial de carga:')
+        console.log('   - Mecánicos array:', mecanicos.value.length)
+        console.log('   - Recepciones array:', recepciones.value.length)
+        console.log('   - Loading mecánicos:', isLoadingMecanicos.value)
+        console.log('   - Loading recepciones:', isLoadingRecepciones.value)
+        
+        // Cargar datos en paralelo
+        console.log('🔄 Iniciando carga de datos en paralelo...')
+        await Promise.all([
+          cargarMecanicos(),
+          cargarRecepciones()
+        ])
+        
+        console.log('✨ CARGA COMPLETA - Estado final:')
+        console.log('   - Mecánicos cargados:', mecanicos.value.length, mecanicos.value)
+        console.log('   - Órdenes cargadas:', recepciones.value.length, recepciones.value)
+        console.log('   - Loading mecánicos:', isLoadingMecanicos.value)
+        console.log('   - Loading recepciones:', isLoadingRecepciones.value)
       } else {
-        console.log('Modal cerrado - no se cargan datos')
+        console.log('🚪 Modal cerrado - limpiando estado')
+        // Opcional: limpiar datos cuando se cierra
+        // mecanicos.value = []
+        // recepciones.value = []
+      }
+    }, { immediate: false })
+    
+    // Cargar datos si el modal ya está abierto al montar el componente
+    onMounted(() => {
+      console.log('🎅 COMPONENTE MONTADO')
+      console.log('   - Modal show:', props.show)
+      console.log('   - Mecánicos:', mecanicos.value.length)
+      console.log('   - Recepciones:', recepciones.value.length)
+      
+      if (props.show) {
+        console.log('🚀 Modal ya abierto al montar - cargando datos...')
+        resetForm()
+        mecanicos.value = []
+        recepciones.value = []
+        
+        Promise.all([
+          cargarMecanicos(),
+          cargarRecepciones()
+        ]).then(() => {
+          console.log('✅ Datos cargados en onMounted')
+        })
       }
     })
     
