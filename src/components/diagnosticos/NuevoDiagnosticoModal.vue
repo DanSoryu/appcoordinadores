@@ -57,7 +57,7 @@
                   required
                 >
                   <option value="">
-                    {{ isLoadingRecepciones ? 'Cargando recepciones...' : 'Seleccionar folio...' }}
+                    {{ isLoadingRecepciones ? 'Cargando órdenes...' : 'Seleccionar folio...' }}
                   </option>
                   <option 
                     v-for="recepcion in recepciones" 
@@ -71,7 +71,7 @@
                   Debe seleccionar un folio de orden
                 </div>
                 <div v-if="recepciones.length === 0 && !isLoadingRecepciones" class="text-yellow-600 text-xs mt-1">
-                  No hay recepciones disponibles
+                  No hay órdenes sin diagnóstico disponibles
                 </div>
               </div>
             </div>
@@ -150,36 +150,24 @@ export default {
       isLoadingMecanicos.value = true
       
       try {
-        // Primero obtener los usuarios con rol de mecánico
-        const usuariosResponse = await apiClient.get('/users')
-        const usuariosMecanicos = usuariosResponse.data.filter(user => user.rol === 'mecanico')
+        console.log('Cargando usuarios mecánicos...')
         
-        // Luego obtener los detalles de cada mecánico
-        const mecanicosConDetalles = []
+        // Usar la nueva ruta específica para usuarios mecánicos
+        const response = await apiClient.get('/usuarios-mecanicos')
         
-        for (const usuario of usuariosMecanicos) {
-          try {
-            const detalleResponse = await apiClient.get(`/detalle-mecanico/${usuario.id}`)
-            mecanicosConDetalles.push({
-              id: usuario.id,
-              usuario: usuario.usuario,
-              nombre: detalleResponse.data.nombre || usuario.usuario
-            })
-          } catch (error) {
-            // Si no tiene detalles, usar el nombre de usuario
-            console.log(`No hay detalles para mecánico ${usuario.id}, usando nombre de usuario`)
-            mecanicosConDetalles.push({
-              id: usuario.id,
-              usuario: usuario.usuario,
-              nombre: usuario.usuario
-            })
-          }
-        }
+        // La respuesta viene con formato { usuarios_mecanicos: [...], total: X }
+        const usuariosMecanicos = response.data.usuarios_mecanicos || []
         
-        mecanicos.value = mecanicosConDetalles
+        // Mapear los datos al formato esperado
+        mecanicos.value = usuariosMecanicos.map(usuario => ({
+          id: usuario.id,
+          nombre: usuario.nombre
+        }))
+        
         console.log('Mecánicos cargados:', mecanicos.value)
       } catch (error) {
         console.error('Error al cargar mecánicos:', error)
+        mecanicos.value = []
         toastStore.addToast({
           message: 'Error al cargar la lista de mecánicos',
           type: 'error',
@@ -190,66 +178,80 @@ export default {
       }
     }
     
-    // Cargar recepciones desde la API
+    // Cargar órdenes sin diagnóstico desde la API
     const cargarRecepciones = async () => {
       isLoadingRecepciones.value = true
       
       try {
+        console.log('Cargando órdenes sin diagnóstico...')
+        
+        // Usar la nueva ruta específica para órdenes sin diagnóstico
+        const ordenesSinDiagnosticoResponse = await apiClient.get('/ordenes-sin-diagnosticos')
+        
+        // La respuesta viene con formato { ordenes_sin_diagnostico: [1, 2, 3], total: X }
+        const ordenesSinDiagnostico = ordenesSinDiagnosticoResponse.data.ordenes_sin_diagnostico || []
+        
+        console.log('Órdenes sin diagnóstico obtenidas:', ordenesSinDiagnostico)
+        
+        if (ordenesSinDiagnostico.length === 0) {
+          recepciones.value = []
+          console.log('No hay órdenes sin diagnóstico disponibles')
+          return
+        }
+        
+        // Ahora necesitamos obtener los detalles de estas recepciones específicas
+        // Cargar recepciones y vehículos para mostrar la información completa
         let recepcionesData = []
         let vehiculosData = []
         
-        console.log('Iniciando carga de recepciones...')
-        
-        // Cargar recepciones
         try {
-          const recepcionResponse = await apiClient.get('/recepcion')
+          const [recepcionResponse, vehiculosResponse] = await Promise.all([
+            apiClient.get('/recepcion'),
+            apiClient.get('/vehiculos')
+          ])
+          
           recepcionesData = recepcionResponse.data
-          console.log('Recepciones obtenidas:', recepcionesData.length, recepcionesData)
-        } catch (recepcionError) {
-          if (recepcionError.response?.status === 404) {
-            console.log('No hay recepciones disponibles (404)')
-            recepcionesData = []
-          } else {
-            throw recepcionError
-          }
+          vehiculosData = vehiculosResponse.data
+          
+          console.log('Datos auxiliares cargados - Recepciones:', recepcionesData.length, 'Vehículos:', vehiculosData.length)
+        } catch (auxiliarError) {
+          console.error('Error al cargar datos auxiliares:', auxiliarError)
+          // Continuar con arrays vacíos si falla
+          recepcionesData = []
+          vehiculosData = []
         }
         
-        // Cargar vehículos si hay recepciones
-        if (recepcionesData.length > 0) {
-          try {
-            const vehiculosResponse = await apiClient.get('/vehiculos')
-            vehiculosData = vehiculosResponse.data
-            console.log('Vehículos obtenidos:', vehiculosData.length, vehiculosData)
-          } catch (vehiculosError) {
-            console.error('Error al cargar vehículos:', vehiculosError)
-            vehiculosData = []
-          }
-        }
+        // Filtrar solo las recepciones que están en la lista de órdenes sin diagnóstico
+        const recepcionesFiltradas = recepcionesData.filter(recepcion => 
+          ordenesSinDiagnostico.includes(recepcion.id)
+        )
         
         // Combinar datos de recepción con datos de vehículos
-        if (recepcionesData.length > 0) {
-          recepciones.value = recepcionesData.map(recepcion => {
-            const vehiculo = vehiculosData.find(v => v.id === recepcion.vehiculo_id)
-            console.log(`Procesando recepción ID: ${recepcion.id}, vehiculo_id: ${recepcion.vehiculo_id}`, vehiculo)
-            return {
-              id: recepcion.id,
-              numero_economico: vehiculo?.numero_economico || 'N/A',
-              placas: vehiculo?.placas || 'N/A'
-            }
-          })
-        } else {
-          recepciones.value = []
-        }
-        
-        console.log('Recepciones finales cargadas:', recepciones.value)
-      } catch (error) {
-        console.error('Error al cargar recepciones:', error)
-        recepciones.value = []
-        toastStore.addToast({
-          message: 'Error al cargar la lista de recepciones',
-          type: 'error',
-          duration: 5000
+        recepciones.value = recepcionesFiltradas.map(recepcion => {
+          const vehiculo = vehiculosData.find(v => v.id === recepcion.vehiculo_id)
+          console.log(`Procesando recepción ID: ${recepcion.id}, vehiculo_id: ${recepcion.vehiculo_id}`, vehiculo)
+          return {
+            id: recepcion.id,
+            numero_economico: vehiculo?.numero_economico || 'N/A',
+            placas: vehiculo?.placas || 'N/A'
+          }
         })
+        
+        console.log('Recepciones finales (sin diagnóstico) cargadas:', recepciones.value)
+      } catch (error) {
+        console.error('Error al cargar órdenes sin diagnóstico:', error)
+        recepciones.value = []
+        
+        if (error.response?.status === 404) {
+          // No hay órdenes sin diagnóstico, no es un error crítico
+          console.log('No hay órdenes sin diagnóstico disponibles (404)')
+        } else {
+          toastStore.addToast({
+            message: 'Error al cargar las órdenes disponibles',
+            type: 'error',
+            duration: 5000
+          })
+        }
       } finally {
         isLoadingRecepciones.value = false
       }
