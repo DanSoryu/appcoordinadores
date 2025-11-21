@@ -743,6 +743,31 @@
             <h4 class="text-lg font-semibold text-teal-800 mb-4">Sistema de Climatización (A/C y Calefacción)</h4>
             <div class="space-y-6">
               
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-teal-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.sistemaClimatizacion.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-teal-600 focus:ring-teal-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.sistemaClimatizacion.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-teal-600 focus:ring-teal-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
+              
               <!-- Subcategoría: A/C -->
               <div class="border-b border-teal-200 pb-4">
                 <h5 class="text-md font-medium text-teal-700 mb-2">Aire Acondicionado (A/C)</h5>
@@ -799,6 +824,31 @@
           <div class="mb-8 p-6 bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl border-l-4 border-pink-500">
             <h4 class="text-lg font-semibold text-pink-800 mb-4">Carrocería y Accesorios</h4>
             <div class="space-y-6">
+              
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-pink-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.carroceriaAccesorios.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-pink-600 focus:ring-pink-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.carroceriaAccesorios.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-pink-600 focus:ring-pink-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
               
               <!-- Subcategoría: Carrocería -->
               <div class="border-b border-pink-200 pb-4">
@@ -882,6 +932,31 @@
           <div class="mb-8 p-6 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border-l-4 border-indigo-500">
             <h4 class="text-lg font-semibold text-indigo-800 mb-4">Llantas y Rines</h4>
             <div class="space-y-6">
+              
+              <!-- Tipo de Mantenimiento -->
+              <div class="mb-4 p-4 bg-white rounded-lg border border-indigo-200">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Tipo de Mantenimiento:</label>
+                <div class="flex space-x-6">
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.llantasRines.tipo_mantenimiento" 
+                      value="correctivo"
+                      class="text-indigo-600 focus:ring-indigo-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Correctivo</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input 
+                      type="radio" 
+                      v-model="formData.llantasRines.tipo_mantenimiento" 
+                      value="preventivo"
+                      class="text-indigo-600 focus:ring-indigo-500"
+                    >
+                    <span class="text-sm font-medium text-gray-700">Preventivo</span>
+                  </label>
+                </div>
+              </div>
               
               <!-- Subcategoría: Llantas -->
               <div class="border-b border-indigo-200 pb-4">
@@ -1324,14 +1399,13 @@ export default {
     finalFormData() {
       // Crear estructura JSON final con objetos anidados para cada sistema
       const result = {
-        folioRecepcion: this.diagnosticoData.folioRecepcion || '',
-        fechaCompletado: new Date().toISOString(),
-        estado: 'completado'
+        fechaCompletado: new Date().toISOString()
       };
       
       // --- MOTOR ---
       if (this.categoriesSelection.motor) {
         result.detalleMotor = {
+          tipo_mantenimiento: this.formData.motor?.tipo_mantenimiento || 'correctivo',
           motorEmpaques: this.formData.motor?.empaques || false,
           motorSellos: this.formData.motor?.sellos || false,
           motorDesgasteAnillos: this.formData.motor?.desgasteAnillos || false,
@@ -1351,6 +1425,7 @@ export default {
       // --- TRANSMISION ---
       if (this.categoriesSelection.transmision) {
         result.detalleTransmision = {
+          tipo_mantenimiento: this.formData.transmision?.tipo_mantenimiento || 'correctivo',
           transmisionRetenesDanados: this.formData.transmision?.retenesDanados || false,
           transmisionJuntasDanadas: this.formData.transmision?.juntasDanadas || false,
           transmisionNivelBajoFlujo: this.formData.transmision?.nivelBajoFlujo || false,
@@ -1365,6 +1440,7 @@ export default {
       // --- FRENOS ---
       if (this.categoriesSelection.frenos) {
         result.detalleFrenos = {
+          tipo_mantenimiento: this.formData.frenos?.tipo_mantenimiento || 'correctivo',
           frenosAireEnSistema: this.formData.frenos?.aireEnSistema || false,
           frenosFugaLiquido: this.formData.frenos?.fugaLiquido || false,
           frenosBalatasDesgastadas: this.formData.frenos?.balatasDesgastadas || false,
@@ -1379,6 +1455,7 @@ export default {
       // --- SISTEMA ELECTRICO ---
       if (this.categoriesSelection.sistemaElectrico) {
         result.detalleSistemaElectrico = {
+          tipo_mantenimiento: this.formData.sistemaElectrico?.tipo_mantenimiento || 'correctivo',
           electricoCeldasDanadas: this.formData.sistemaElectrico?.celdasDanadas || false,
           electricoAlternadorDefectuoso: this.formData.sistemaElectrico?.alternadorDefectuoso || false,
           electricoBandaSuelta: this.formData.sistemaElectrico?.bandaSuelta || false,
@@ -1393,6 +1470,7 @@ export default {
       // --- SUSPENSION Y DIRECCION ---
       if (this.categoriesSelection.suspensionDireccion) {
         result.detalleSuspensionDireccion = {
+          tipo_mantenimiento: this.formData.suspensionDireccion?.tipo_mantenimiento || 'correctivo',
           suspensionDesgaste: this.formData.suspensionDireccion?.desgaste || false,
           suspensionRupturaRetenes: this.formData.suspensionDireccion?.rupturaRetenes || false,
           direccionTerminales: this.formData.suspensionDireccion?.terminales || false,
@@ -1407,6 +1485,7 @@ export default {
       // --- SISTEMA ENFRIAMIENTO ---
       if (this.categoriesSelection.sistemaEnfriamiento) {
         result.detalleSistemaEnfriamiento = {
+          tipo_mantenimiento: this.formData.sistemaEnfriamiento?.tipo_mantenimiento || 'correctivo',
           enfriamientoManguerasPerforadas: this.formData.sistemaEnfriamiento?.manguerasPerforadas || false,
           enfriamientoNucleoPerforado: this.formData.sistemaEnfriamiento?.nucleoPerforado || false,
           enfriamientoDesgasteReten: this.formData.sistemaEnfriamiento?.desgasteReten || false,
@@ -1420,6 +1499,7 @@ export default {
       // --- SISTEMA ESCAPE ---
       if (this.categoriesSelection.sistemaEscape) {
         result.detalleSistemaEscape = {
+          tipo_mantenimiento: this.formData.sistemaEscape?.tipo_mantenimiento || 'correctivo',
           escapeFugasPerforaciones: this.formData.sistemaEscape?.fugasPerforaciones || false,
           escapeCorrosion: this.formData.sistemaEscape?.corrosion || false,
           escapeImpacto: this.formData.sistemaEscape?.impacto || false,
@@ -1435,6 +1515,7 @@ export default {
       // --- SISTEMA CLIMATIZACION ---
       if (this.categoriesSelection.sistemaClimatizacion) {
         result.detalleSistemaClimatizacion = {
+          tipo_mantenimiento: this.formData.sistemaClimatizacion?.tipo_mantenimiento || 'correctivo',
           climatizacionAcNoEnfria: this.formData.sistemaClimatizacion?.acNoEnfria || false,
           climatizacionFugaGas: this.formData.sistemaClimatizacion?.fugaGas || false,
           climatizacionCompresorDanado: this.formData.sistemaClimatizacion?.compresorDanado || false,
@@ -1451,6 +1532,7 @@ export default {
       // --- CARROCERIA Y ACCESORIOS ---
       if (this.categoriesSelection.carroceriaAccesorios) {
         result.detalleCarroceriaAccesorios = {
+          tipo_mantenimiento: this.formData.carroceriaAccesorios?.tipo_mantenimiento || 'correctivo',
           carroceriaRayonesAbolladuras: this.formData.carroceriaAccesorios?.rayonesAbolladuras || false,
           carroceriaGolpes: this.formData.carroceriaAccesorios?.golpes || false,
           carroceriaRoces: this.formData.carroceriaAccesorios?.roces || false,
@@ -1470,6 +1552,7 @@ export default {
       // --- LLANTAS Y RINES ---
       if (this.categoriesSelection.llantasRines) {
         result.detalleLlantasRines = {
+          tipo_mantenimiento: this.formData.llantasRines?.tipo_mantenimiento || 'correctivo',
           llantasDesgasteIrregular: this.formData.llantasRines?.desgasteIrregular || false,
           llantasAlineacion: this.formData.llantasRines?.alineacion || false,
           llantasBalanceoDeficiente: this.formData.llantasRines?.balanceoDeficiente || false,
@@ -1707,6 +1790,8 @@ export default {
         Object.keys(this.formData[seccion]).forEach(campo => {
           if (campo === 'comentarios') {
             this.formData[seccion][campo] = '';
+          } else if (campo === 'tipo_mantenimiento') {
+            this.formData[seccion][campo] = 'correctivo';
           } else {
             this.formData[seccion][campo] = false;
           }
