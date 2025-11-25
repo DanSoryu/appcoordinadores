@@ -20,11 +20,11 @@
               <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <label class="block mb-2 font-semibold text-gray-700">Mecánico *</label>
                 <select
-                  v-model="formData.mecanico_id"
+                  v-model="formData.usuario_mecasoft_id"
                   :disabled="isLoadingMecanicos"
                   :class="[
                     'input mb-2 w-full transition-colors',
-                    formData.mecanico_id ? (mecanicoValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+                    formData.usuario_mecasoft_id ? (mecanicoValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
                   ]"
                   required
                 >
@@ -42,7 +42,7 @@
                 <div v-if="!isLoadingMecanicos && mecanicos.length === 0" class="text-yellow-600 text-xs mt-1">
                   No hay mecánicos disponibles
                 </div>
-                <div v-if="formData.mecanico_id && !mecanicoValid" class="text-red-500 text-xs mt-1">
+                <div v-if="formData.usuario_mecasoft_id && !mecanicoValid" class="text-red-500 text-xs mt-1">
                   Debe seleccionar un mecánico
                 </div>
               </div>
@@ -51,11 +51,11 @@
               <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
                 <label class="block mb-2 font-semibold text-gray-700">Folio de Orden *</label>
                 <select
-                  v-model="formData.folio_recepcion"
+                  v-model="formData.recepcion_id"
                   :disabled="isLoadingRecepciones"
                   :class="[
                     'input mb-2 w-full transition-colors',
-                    formData.folio_recepcion ? (folioValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+                    formData.recepcion_id ? (folioValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
                   ]"
                   required
                 >
@@ -63,17 +63,17 @@
                     {{ isLoadingRecepciones ? 'Cargando órdenes...' : 'Seleccionar orden...' }}
                   </option>
                   <option 
-                    v-for="recepcion in recepciones" 
-                    :key="recepcion.id" 
-                    :value="recepcion.id"
+                    v-for="ordenId in recepciones" 
+                    :key="ordenId" 
+                    :value="ordenId"
                   >
-                    {{ recepcion.id }}
+                    Folio {{ ordenId }}
                   </option>
                 </select>
                 <div v-if="!isLoadingRecepciones && recepciones.length === 0" class="text-yellow-600 text-xs mt-1">
                   No hay órdenes sin diagnóstico disponibles
                 </div>
-                <div v-if="formData.folio_recepcion && !folioValid" class="text-red-500 text-xs mt-1">
+                <div v-if="formData.recepcion_id && !folioValid" class="text-red-500 text-xs mt-1">
                   Debe seleccionar un folio de orden
                 </div>
               </div>
@@ -122,8 +122,8 @@ export default {
     
     // Estados del formulario
     const formData = ref({
-      mecanico_id: '',
-      folio_recepcion: ''
+      usuario_mecasoft_id: '',
+      recepcion_id: ''
     })
     
     // Estados de carga
@@ -137,11 +137,11 @@ export default {
     
     // Computed properties para validaciones
     const mecanicoValid = computed(() => {
-      return formData.value.mecanico_id && formData.value.mecanico_id !== ''
+      return formData.value.usuario_mecasoft_id && formData.value.usuario_mecasoft_id !== ''
     })
     
     const folioValid = computed(() => {
-      return formData.value.folio_recepcion && formData.value.folio_recepcion !== ''
+      return formData.value.recepcion_id && formData.value.recepcion_id !== ''
     })
     
     const isStepValid = computed(() => {
@@ -202,17 +202,13 @@ export default {
         // Extraer IDs de órdenes sin diagnóstico
         const ordenesSinDiagnostico = response.data.ordenes_sin_diagnostico
         
-        if (!Array.isArray(ordenesSinDiagnostico) || ordenesSinDiagnostico.length === 0) {
+        if (!Array.isArray(ordenesSinDiagnostico)) {
           recepciones.value = []
           return
         }
         
-        // Crear opciones usando solo los IDs
-        recepciones.value = ordenesSinDiagnostico.map(id => ({
-          id: id,
-          numero_economico: `Folio ${id}`,
-          placas: ''
-        }))
+        // Los datos son solo IDs, almacenarlos directamente
+        recepciones.value = ordenesSinDiagnostico
         
       } catch (error) {
         console.error('Error cargando órdenes:', error.response?.data || error.message)
@@ -236,22 +232,17 @@ export default {
       
       try {
         await executeSubmit(async () => {
-          // Crear el nuevo diagnóstico con los datos del formulario
-          const nuevoDiagnostico = {
-            id: Math.max(...(recepciones.value.length > 0 ? recepciones.value.map(r => r.id) : [0])) + Math.floor(Math.random() * 1000), // ID temporal para datos de prueba
-            folioRecepcion: formData.value.folio_recepcion,
-            estado: 'pendiente',
-            fechaCreacion: new Date().toISOString(),
-            fechaCompletado: null,
-            diagnosticos: [],
-            observaciones: 'Diagnóstico pendiente de realizar'
+          // Preparar los datos para enviar a la API
+          const diagnosticoData = {
+            usuario_mecasoft_id: parseInt(formData.value.usuario_mecasoft_id),
+            recepcion_id: parseInt(formData.value.recepcion_id)
           }
           
-          // Simular delay de la API
-          await new Promise(resolve => setTimeout(resolve, 1000))
+          // Enviar a la API
+          const response = await apiClient.post('/diagnosticos', diagnosticoData)
           
-          // Emitir evento de diagnóstico creado
-          emit('diagnostico-creado', nuevoDiagnostico)
+          // Emitir evento de diagnóstico creado con los datos de la respuesta
+          emit('diagnostico-creado', response.data.diagnostico)
           
           toastStore.addToast({
             message: 'Diagnóstico creado exitosamente',
@@ -265,8 +256,16 @@ export default {
         })
       } catch (error) {
         console.error('Error al crear diagnóstico:', error)
+        
+        let errorMessage = 'Error al crear el diagnóstico'
+        if (error.response?.data?.error) {
+          errorMessage = error.response.data.error
+        } else if (error.response?.data?.message) {
+          errorMessage = error.response.data.message
+        }
+        
         toastStore.addToast({
-          message: 'Error al crear el diagnóstico',
+          message: errorMessage,
           type: 'error',
           duration: 5000
         })
@@ -276,8 +275,8 @@ export default {
     // Limpiar formulario
     const resetForm = () => {
       formData.value = {
-        mecanico_id: '',
-        folio_recepcion: ''
+        usuario_mecasoft_id: '',
+        recepcion_id: ''
       }
     }
     

@@ -1090,7 +1090,7 @@
 import BaseButton from '../global/BaseButton.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
-// import apiClient from '../../services/api.js'; // Comentado hasta implementar el endpoint
+import apiClient from '../../services/api.js'
 
 export default {
   name: 'DiagnosticosFormModal',
@@ -1736,11 +1736,33 @@ export default {
       try {
         await this.executeSubmit(async () => {
           await this.submitFormData();
+          
+          this.toastStore.addToast({
+            message: 'Diagnóstico completado exitosamente',
+            type: 'success',
+            duration: 3000
+          });
+          
+          // Emitir el evento con los datos del diagnóstico completado
+          this.$emit('diagnostico-guardado', this.diagnosticoData);
         });
         
         this.$emit('close');
       } catch (error) {
-        console.error('Error al completar diagnóstico:', error);
+        console.error('Error al guardar diagnóstico:', error);
+        
+        let errorMessage = 'Error al guardar el diagnóstico';
+        if (error.response?.data?.error) {
+          errorMessage = error.response.data.error;
+        } else if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+        }
+        
+        this.toastStore.addToast({
+          message: errorMessage,
+          type: 'error',
+          duration: 5000
+        });
       }
     },
     
@@ -1749,33 +1771,20 @@ export default {
       console.log('Datos finales:', JSON.stringify(this.finalFormData, null, 2));
       
       try {
-        // TODO: Reemplazar con llamada real a la API
-        // const response = await apiClient.put(`/diagnosticos/${this.diagnosticoData.id}`, this.finalFormData);
-        
-        // Simulación de guardado
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        this.toastStore.addToast({
-          message: 'Diagnóstico completado exitosamente',
-          type: 'success',
-          duration: 3000
-        });
-        
-        // Emitir evento con los datos guardados
-        this.$emit('diagnostico-guardado', {
-          id: this.diagnosticoData.id,
+        // Preparar los datos para enviar a la API
+        const dataToSend = {
+          fechaCompletado: new Date().toISOString(),
           ...this.finalFormData
-        });
+        };
         
+        // Enviar a la API usando PUT para actualizar el diagnóstico
+        const response = await apiClient.put(`/diagnosticos/${this.diagnosticoData.id}`, dataToSend);
+        
+        console.log('Respuesta de la API:', response.data);
         console.log('Diagnóstico completado exitosamente');
       } catch (error) {
-        console.error('Error al completar diagnóstico:', error);
-        this.toastStore.addToast({
-          message: 'Error al completar el diagnóstico',
-          type: 'error',
-          duration: 5000
-        });
-        throw error;
+        console.error('Error en submitFormData:', error);
+        throw error; // Re-lanzar el error para que lo maneje handleFinalSubmit
       }
     },
     

@@ -70,27 +70,29 @@
           <table class="min-w-full border-collapse table-fixed">
             <thead class="bg-gray-50">
               <tr class="divide-x divide-gray-200">
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">Folio Recepción</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">Estado</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">Acciones</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Folio Recepción</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Mecánico</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Estado</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Acciones</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="diagnostico in paginatedData" :key="diagnostico.id" 
                   :class="[
                     'hover:bg-gray-50 divide-x divide-gray-200',
-                    // Marcar como completado
                     diagnostico.estado === 'completado' ? 'bg-green-50' : ''
                   ]">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   <div class="flex items-center space-x-2">
                     <span>{{ diagnostico.folioRecepcion }}</span>
-                    <!-- Indicador de completado -->
                     <span v-if="diagnostico.estado === 'completado'" 
                           class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                       ✓ Completado
                     </span>
                   </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ diagnostico.mecanicoNombre || 'No asignado' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <span :class="[
@@ -132,25 +134,8 @@
               </tr>
               <!-- Mensaje cuando no hay datos -->
               <tr v-if="paginatedData.length === 0 && !isLoading">
-                <td colspan="3" class="px-6 py-8 text-center text-gray-500">
-                  <div v-if="error" :class="[
-                    'flex items-center justify-center space-x-2',
-                    error === 'No hay datos disponibles' ? 'text-gray-600' : 'text-red-600'
-                  ]">
-                    <svg v-if="error === 'No hay datos disponibles'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span>{{ error }}</span>
-                    <button v-if="error !== 'No hay datos disponibles'" @click="cargarDiagnosticos()" class="ml-2 text-blue-600 hover:text-blue-800 underline">
-                      Reintentar
-                    </button>
-                  </div>
-                  <div v-else>
-                    No se encontraron diagnósticos.
-                  </div>
+                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                  No se encontraron diagnósticos.
                 </td>
               </tr>
             </tbody>
@@ -253,6 +238,10 @@
                   <p class="text-sm text-gray-900 font-semibold">{{ currentDiagnostico.folioRecepcion }}</p>
                 </div>
                 <div>
+                  <label class="text-sm font-medium text-gray-500">Mecánico Asignado</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentDiagnostico.mecanicoNombre || 'No asignado' }}</p>
+                </div>
+                <div>
                   <label class="text-sm font-medium text-gray-500">Estado</label>
                   <span :class="[
                     'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium',
@@ -320,7 +309,7 @@
 
             <!-- Observaciones -->
             <div v-if="currentDiagnostico.observaciones" class="bg-yellow-50 p-4 rounded-lg">
-              <h4 class="text-lg font-semibold text-yellow-800 mb-3">Observaciones</h4>
+              <h4 class="text-lg font-semibold text-yellow-800 mb-3">Observaciones Generales</h4>
               <p class="text-sm text-gray-900">{{ currentDiagnostico.observaciones }}</p>
             </div>
 
@@ -335,7 +324,7 @@
                 <div class="ml-3">
                   <h3 class="text-sm font-medium text-blue-800">Diagnóstico Pendiente</h3>
                   <div class="mt-2 text-sm text-blue-700">
-                    <p>Este diagnóstico aún no ha sido completado. Use el botón "Terminar" en la tabla para marcarlo como completado.</p>
+                    <p>Este diagnóstico aún no ha sido completado. Use el botón "Terminar" en la tabla para completarlo.</p>
                   </div>
                 </div>
               </div>
@@ -369,7 +358,7 @@ import { useToastStore } from '../../stores/toast.js'
 import { useAuthStore } from '../../stores/auth.js'
 import DiagnosticosFormModal from './DiagnosticosFormModal.vue'
 import NuevoDiagnosticoModal from './NuevoDiagnosticoModal.vue'
-// import apiClient from '../../services/api.js' // Comentado hasta implementar el endpoint
+import apiClient from '../../services/api.js'
 
 export default {
   name: 'DiagnosticosTable',
@@ -409,243 +398,6 @@ export default {
     const isAdmin = computed(() => {
       return authStore.user?.rol === 'admin'
     })
-
-    // Datos de prueba - Quitar cuando se implemente el endpoint real
-    const datosPrueba = [
-      {
-        id: 1,
-        folioRecepcion: 'REC-2024-001',
-        estado: 'pendiente',
-        fechaCreacion: '2024-11-10T08:00:00Z',
-        fechaCompletado: null,
-        diagnosticos: [],
-        observaciones: 'Diagnóstico pendiente de realizar'
-      },
-      {
-        id: 2,
-        folioRecepcion: 'REC-2024-002',
-        estado: 'completado',
-        fechaCreacion: '2024-11-09T10:30:00Z',
-        fechaCompletado: '2024-11-11T14:20:00Z',
-        diagnosticos: [
-          { 
-            seccion: 'Motor',
-            descripcion: 'Motor: Empaques dañados, Falta de lubricación, Bujías defectuosas.',
-            comentarios: 'Se detectó filtración de aceite en empaques superiores. Recomendable cambio de bujías y revisión completa del sistema de lubricación.'
-          },
-          { 
-            seccion: 'Sistema de Frenos',
-            descripcion: 'Sistema de Frenos: Balatas desgastadas, Disco desgastado.',
-            comentarios: 'Desgaste severo en balatas delanteras al 85%. Discos con marcas profundas requieren rectificado.'
-          },
-          { 
-            seccion: 'Sistema Eléctrico',
-            descripcion: 'Sistema Eléctrico: Batería con problemas, Conectores sulfatados o flojos.',
-            comentarios: 'Batería con carga del 60%, vida útil próxima a terminar. Conectores del alternador presentan sulfatación.'
-          }
-        ],
-        observaciones: 'Vehículo requiere atención inmediata en sistema de frenos. Motor en condiciones aceptables con mantenimiento menor requerido.'
-      },
-      {
-        id: 3,
-        folioRecepcion: 'REC-2024-003',
-        estado: 'completado',
-        fechaCreacion: '2024-11-08T15:45:00Z',
-        fechaCompletado: '2024-11-10T11:30:00Z',
-        diagnosticos: [
-          { 
-            seccion: 'Sistema de Transmisión',
-            descripcion: 'Sistema de Transmisión: Retenes dañados, Nivel bajo de flujo.',
-            comentarios: 'Fuga menor en retén principal. Nivel de aceite de transmisión por debajo del mínimo recomendado.'
-          },
-          { 
-            seccion: 'Suspensión y Dirección',
-            descripcion: 'Suspensión y Dirección: Terminales dañados, Bujes dañados.',
-            comentarios: 'Terminales de dirección con juego excesivo. Bujes de suspensión delantera agrietados, afecta alineación.'
-          },
-          { 
-            seccion: 'Sistema de Enfriamiento',
-            descripcion: 'Sistema de Enfriamiento: Control de temperatura óptima.',
-            comentarios: 'Sistema funcionando correctamente. Temperatura estable en rangos normales. Próximo cambio de anticongelante en 6 meses.'
-          }
-        ],
-        observaciones: 'Prioridad en reparación de dirección y suspensión por seguridad. Transmisión requiere servicio preventivo.'
-      },
-      {
-        id: 4,
-        folioRecepcion: 'REC-2024-004',
-        estado: 'pendiente',
-        fechaCreacion: '2024-11-11T09:15:00Z',
-        fechaCompletado: null,
-        diagnosticos: [],
-        observaciones: null
-      },
-      {
-        id: 5,
-        folioRecepcion: 'REC-2024-005',
-        estado: 'completado',
-        fechaCreacion: '2024-11-07T13:20:00Z',
-        fechaCompletado: '2024-11-09T16:45:00Z',
-        diagnosticos: [
-          { 
-            seccion: 'Llantas y Rines',
-            descripcion: 'Llantas y Rines: Desgaste irregular, Problemas de alineación, Presión incorrecta.',
-            comentarios: 'Desgaste irregular en llanta delantera derecha indica desalineación. Presiones por debajo de especificaciones del fabricante.'
-          },
-          { 
-            seccion: 'Carrocería y Accesorios',
-            descripción: 'Carrocería y Accesorios: Rayones o abolladuras, Grietas o astilladuras.',
-            comentarios: 'Rayones menores en puerta del conductor. Astilladura pequeña en parabrisas lado pasajero, no obstruye visión.'
-          },
-          { 
-            seccion: 'Sistema de Climatización',
-            descripcion: 'Sistema de Climatización: Filtro de cabina sucio, Revisión de presiones y gas.',
-            comentarios: 'Filtro de cabina requiere cambio inmediato. Sistema de A/C funcionando correctamente, gas en niveles óptimos.'
-          }
-        ],
-        observaciones: 'Mantenimiento general requerido. Prioridad en alineación y balanceo. Elementos de carrocería no afectan funcionamiento.'
-      },
-      {
-        id: 6,
-        folioRecepcion: 'REC-2024-006',
-        estado: 'completado',
-        fechaCreacion: '2024-11-06T14:30:00Z',
-        fechaCompletado: '2024-11-08T10:15:00Z',
-        diagnosticos: [
-          { 
-            seccion: 'Sistema de Escape',
-            descripcion: 'Sistema de Escape: Fugas o perforaciones, Silenciador suelto, Corrosión.',
-            comentarios: 'Perforación menor en tubo intermedio. Silenciador con fijación floja. Corrosión generalizada por antigüedad del sistema.'
-          },
-          { 
-            seccion: 'Motor',
-            descripcion: 'Motor: Soportes de motor, Sellos dañados.',
-            comentarios: 'Soporte derecho del motor presenta agrietamiento. Sello de válvula de aceite con filtración menor.'
-          }
-        ],
-        observaciones: 'Sistema de escape requiere reemplazo por seguridad y emisiones. Motor estable con reparaciones menores requeridas.'
-      },
-      {
-        id: 7,
-        folioRecepcion: 'REC-2024-007',
-        estado: 'completado',
-        fechaCreacion: '2024-11-05T11:20:00Z',
-        fechaCompletado: '2024-11-07T16:45:00Z',
-        diagnosticos: [
-          { 
-            seccion: 'Motor',
-            descripcion: 'Motor: Empaques dañados, Desgaste de anillos, Bomba de gasolina.',
-            comentarios: 'Empaques de culata con filtración menor. Anillos con desgaste del 70%. Bomba de gasolina con presión baja.'
-          },
-          { 
-            seccion: 'Sistema de Transmisión',
-            descripcion: 'Sistema de Transmisión: Juntas dañadas, Desgaste interno.',
-            comentarios: 'Juntas de caja con filtración. Sincronizadores de tercera velocidad desgastados.'
-          },
-          { 
-            seccion: 'Sistema de Frenos',
-            descripcion: 'Sistema de Frenos: Aire en el sistema, Mangueras defectuosas.',
-            comentarios: 'Sistema requiere purga completa. Manguera trasera izquierda agrietada, requiere reemplazo inmediato.'
-          },
-          { 
-            seccion: 'Sistema Eléctrico',
-            descripcion: 'Sistema Eléctrico: Celdas dañadas, Foco fundido, Inspección periódica.',
-            comentarios: 'Batería con celda 3 dañada. Luz de freno trasera fundida. Sistema eléctrico necesita revisión completa.'
-          },
-          { 
-            seccion: 'Suspensión y Dirección',
-            descripcion: 'Suspensión y Dirección: Ruptura de retenes, Cremalleras desgastadas, Rótulas dañadas.',
-            comentarios: 'Amortiguadores traseros con retenes rotos. Cremallera de dirección con juego. Rótulas inferiores requieren cambio.'
-          },
-          { 
-            seccion: 'Sistema de Enfriamiento',
-            descripcion: 'Sistema de Enfriamiento: Mangueras perforadas, Desgaste del retén.',
-            comentarios: 'Manguera superior del radiador con micro fisuras. Bomba de agua con retén desgastado, goteo menor.'
-          },
-          { 
-            seccion: 'Sistema de Escape',
-            descripcion: 'Sistema de Escape: Catalizador obstruido o dañado, Ruido excesivo.',
-            comentarios: 'Catalizador con eficiencia reducida. Escape con ruido por perforación en silenciador principal.'
-          },
-          { 
-            seccion: 'Sistema de Climatización',
-            descripcion: 'Sistema de Climatización: A/C no enfría, Compresor dañado, Mal olor en ventilación.',
-            comentarios: 'Compresor de A/C no arranca. Evaporador sucio genera mal olor. Sistema requiere servicio completo.'
-          },
-          { 
-            seccion: 'Carrocería y Accesorios',
-            descripcion: 'Carrocería y Accesorios: Golpes, Cierre deficiente, Impacto en cristal.',
-            comentarios: 'Golpe menor en puerta trasera derecha. Cerradura de puerta conductor floja. Parabrisas con chip en esquina.'
-          },
-          { 
-            seccion: 'Llantas y Rines',
-            descripcion: 'Llantas y Rines: Desgaste irregular, Problemas de alineación, Rines golpeados o deformados.',
-            comentarios: 'Desgaste irregular indica desalineación severa. Rin delantero derecho con deformación menor por impacto.'
-          }
-        ],
-        observaciones: 'Vehículo requiere mantenimiento mayor. Prioridades: frenos, dirección y sistema eléctrico por seguridad. Estimado de reparación: 2-3 semanas.'
-      },
-      {
-        id: 8,
-        folioRecepcion: 'REC-2024-008',
-        estado: 'completado',
-        fechaCreacion: '2024-11-04T09:30:00Z',
-        fechaCompletado: '2024-11-06T14:20:00Z',
-        diagnosticos: [
-          { 
-            seccion: 'Motor',
-            descripcion: 'Motor: Falta de lubricación, Bujías defectuosas, Falla en termostato.',
-            comentarios: 'Aceite de motor vencido y sucio. Bujías con desgaste excesivo. Termostato bloqueado en posición cerrada.'
-          },
-          { 
-            seccion: 'Sistema de Transmisión',
-            descripcion: 'Sistema de Transmisión: Mantenimiento programado.',
-            comentarios: 'Transmisión funcionando correctamente. Programar cambio de aceite en 5,000 km.'
-          },
-          { 
-            seccion: 'Sistema de Frenos',
-            descripcion: 'Sistema de Frenos: Balatas desgastadas, Problema en calipers.',
-            comentarios: 'Balatas traseras al 90% de desgaste. Caliper izquierdo con pistón pegajoso.'
-          },
-          { 
-            seccion: 'Sistema Eléctrico',
-            descripcion: 'Sistema Eléctrico: Alternador defectuoso, Banda suelta.',
-            comentarios: 'Alternador genera solo 12V en lugar de 14V. Banda del alternador floja, requiere tensado.'
-          },
-          { 
-            seccion: 'Suspensión y Dirección',
-            descripcion: 'Suspensión y Dirección: Bujes dañados, Ajuste programado.',
-            comentarios: 'Bujes de brazos de control agrietados. Requiere alineación y balanceo posterior a reparación.'
-          },
-          { 
-            seccion: 'Sistema de Enfriamiento',
-            descripcion: 'Sistema de Enfriamiento: Núcleo perforado, Desgaste de rodamiento.',
-            comentarios: 'Radiador con fuga menor en núcleo. Bomba de agua con rodamiento ruidoso.'
-          },
-          { 
-            seccion: 'Sistema de Escape',
-            descripcion: 'Sistema de Escape: Corrosión, Mala combustión.',
-            comentarios: 'Sistema de escape con corrosión moderada. Mezcla rica genera hollín excesivo.'
-          },
-          { 
-            seccion: 'Sistema de Climatización',
-            descripcion: 'Sistema de Climatización: Filtro de cabina sucio, No calienta.',
-            comentarios: 'Filtro completamente obstruido. Sistema de calefacción no funciona, posible válvula dañada.'
-          },
-          { 
-            seccion: 'Carrocería y Accesorios',
-            descripcion: 'Carrocería y Accesorios: Rayones o abolladuras, Limpia parabrisas no funciona.',
-            comentarios: 'Rayones superficiales en capó. Motor de limpiaparabrisas quemado, no responde.'
-          },
-          { 
-            seccion: 'Llantas y Rines',
-            descripcion: 'Llantas y Rines: Presión incorrecta, Revisión de fecha de fabricación.',
-            comentarios: 'Presiones desiguales en las 4 llantas. Llantas traseras con fecha de fabricación 2019, próximas a vencer.'
-          }
-        ],
-        observaciones: 'Diagnóstico integral completado. Vehículo operativo con múltiples elementos de mantenimiento preventivo y correctivo requeridos.'
-      }
-    ]
 
     // Computed properties para filtrado
     const filteredData = computed(() => {
@@ -741,26 +493,130 @@ export default {
       error.value = null
       
       try {
-        // TODO: Reemplazar con llamada real a la API
-        // const response = await apiClient.get('/diagnosticos')
-        // diagnosticosData.value = response.data
+        const response = await apiClient.get('/diagnosticos')
         
-        // Simulación de carga de datos
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        diagnosticosData.value = datosPrueba
+        if (!response.data || !Array.isArray(response.data.diagnosticos)) {
+          throw new Error('Estructura de datos inválida')
+        }
+        
+        // Mapear datos de la API al formato esperado por el frontend
+        diagnosticosData.value = response.data.diagnosticos.map(diagnostico => ({
+          id: diagnostico.id,
+          folioRecepcion: `REC-${diagnostico.recepcion_id}`,
+          estado: diagnostico.fecha_completado ? 'completado' : 'pendiente',
+          fechaCreacion: diagnostico.created_at,
+          fechaCompletado: diagnostico.fecha_completado,
+          mecanicoNombre: diagnostico.mecanico_nombre,
+          mecanicoId: diagnostico.mecanico_id,
+          // Extraer diagnósticos de los campos JSON
+          diagnosticos: extraerDiagnosticos(diagnostico),
+          observaciones: generarObservaciones(diagnostico),
+          // Guardar los datos originales para el modal de edición
+          _original: diagnostico
+        }))
         
         console.log('Datos de diagnósticos cargados:', diagnosticosData.value.length, 'registros')
       } catch (err) {
         console.error('Error al cargar diagnósticos:', err)
-        error.value = 'Error al cargar los datos de diagnósticos'
+        error.value = err.response?.data?.message || 'Error al cargar los diagnósticos'
         toastStore.addToast({
-          message: 'Error al cargar los datos de diagnósticos',
+          message: error.value,
           type: 'error',
           duration: 5000
         })
       } finally {
         isLoading.value = false
       }
+    }
+
+    // Funciones auxiliares para procesar datos de la API
+    const extraerDiagnosticos = (diagnostico) => {
+      const diagnosticos = []
+      
+      // Mapear los campos JSON de la base de datos
+      const campos = [
+        { bd: 'detalle_motor', seccion: 'Motor' },
+        { bd: 'detalle_transmision', seccion: 'Transmisión' },
+        { bd: 'detalle_frenos', seccion: 'Frenos' },
+        { bd: 'detalle_sistema_electrico', seccion: 'Sistema Eléctrico' },
+        { bd: 'detalle_suspension_direccion', seccion: 'Suspensión y Dirección' },
+        { bd: 'detalle_sistema_enfriamiento', seccion: 'Sistema de Enfriamiento' },
+        { bd: 'detalle_sistema_escape', seccion: 'Sistema de Escape' },
+        { bd: 'detalle_sistema_climatizacion', seccion: 'Sistema de Climatización' },
+        { bd: 'detalle_carroceria_accesorios', seccion: 'Carrocería y Accesorios' },
+        { bd: 'detalle_llantas_rines', seccion: 'Llantas y Rines' }
+      ]
+      
+      campos.forEach(campo => {
+        if (diagnostico[campo.bd]) {
+          try {
+            const detalles = typeof diagnostico[campo.bd] === 'string' 
+              ? JSON.parse(diagnostico[campo.bd]) 
+              : diagnostico[campo.bd]
+            
+            if (detalles && typeof detalles === 'object') {
+              // Extraer fallas del objeto
+              const fallas = []
+              Object.keys(detalles).forEach(key => {
+                if (key !== 'comentarios' && detalles[key] === true) {
+                  fallas.push(key.replace(/_/g, ' '))
+                }
+              })
+              
+              if (fallas.length > 0 || (detalles.comentarios && detalles.comentarios.trim())) {
+                diagnosticos.push({
+                  seccion: campo.seccion,
+                  descripcion: fallas.length > 0 ? `${campo.seccion}: ${fallas.join(', ')}.` : `${campo.seccion}: Revisión completada.`,
+                  comentarios: detalles.comentarios || '',
+                  prioridad: 'media'
+                })
+              }
+            }
+          } catch (error) {
+            console.error(`Error al procesar ${campo.bd}:`, error)
+          }
+        }
+      })
+      
+      return diagnosticos
+    }
+    
+    const generarObservaciones = (diagnostico) => {
+      const observaciones = []
+      
+      // Campos de comentarios de cada sección
+      const camposComentarios = [
+        'detalle_motor',
+        'detalle_transmision', 
+        'detalle_frenos',
+        'detalle_sistema_electrico',
+        'detalle_suspension_direccion',
+        'detalle_sistema_enfriamiento',
+        'detalle_sistema_escape',
+        'detalle_sistema_climatizacion',
+        'detalle_carroceria_accesorios',
+        'detalle_llantas_rines'
+      ]
+      
+      camposComentarios.forEach(campo => {
+        if (diagnostico[campo]) {
+          try {
+            const detalles = typeof diagnostico[campo] === 'string' 
+              ? JSON.parse(diagnostico[campo]) 
+              : diagnostico[campo]
+            
+            if (detalles && detalles.comentarios && detalles.comentarios.trim()) {
+              observaciones.push(detalles.comentarios.trim())
+            }
+          } catch (error) {
+            console.error(`Error al procesar comentarios de ${campo}:`, error)
+          }
+        }
+      })
+      
+      return observaciones.length > 0 
+        ? observaciones.join('. ')
+        : (diagnostico.fecha_completado ? 'Diagnóstico completado sin observaciones adicionales' : 'Diagnóstico pendiente de realizar')
     }
 
     // Métodos de acciones
@@ -789,83 +645,42 @@ export default {
 
     const onDiagnosticoCreado = async (nuevoDiagnostico) => {
       try {
-        // Agregar el nuevo diagnóstico a la lista
-        diagnosticosData.value.push(nuevoDiagnostico)
-
+        // Recargar la lista completa desde la API para obtener datos actualizados
+        await cargarDiagnosticos()
+        
         toastStore.addToast({
-          message: `Diagnóstico creado exitosamente`,
-          type: 'success',
+          message: 'Diagnóstico creado exitosamente',
+          type: 'success', 
           duration: 3000
         })
-
+        
         cerrarModalNuevoDiagnostico()
       } catch (err) {
-        console.error('Error al procesar diagnóstico creado:', err)
+        console.error('Error al recargar diagnósticos:', err)
         toastStore.addToast({
-          message: 'Error al procesar el diagnóstico creado',
+          message: 'Error al actualizar la lista de diagnósticos',
           type: 'error',
           duration: 5000
         })
       }
     }
 
-    const onDiagnosticoGuardado = (diagnosticoCompletado) => {
+    const onDiagnosticoGuardado = async (diagnosticoCompletado) => {
       try {
-        // Actualizar el diagnóstico en la lista
-        const index = diagnosticosData.value.findIndex(d => d.id === diagnosticoCompletado.id)
-        if (index !== -1) {
-          diagnosticosData.value[index] = {
-            ...diagnosticosData.value[index],
-            ...diagnosticoCompletado
-          }
-        }
-
+        // Recargar la lista completa desde la API para obtener datos actualizados
+        await cargarDiagnosticos()
+        
         toastStore.addToast({
-          message: `Diagnóstico ${diagnosticoCompletado.folioRecepcion} completado exitosamente`,
+          message: 'Diagnóstico guardado exitosamente',
           type: 'success',
           duration: 3000
         })
-
+        
         cerrarModalDiagnostico()
       } catch (err) {
-        console.error('Error al procesar diagnóstico guardado:', err)
+        console.error('Error al recargar diagnósticos:', err)
         toastStore.addToast({
-          message: 'Error al procesar el diagnóstico completado',
-          type: 'error',
-          duration: 5000
-        })
-      }
-    }
-
-    // Método legacy mantenido por compatibilidad (ya no se usa directamente)
-    const terminarDiagnostico = async (diagnostico) => {
-      try {
-        // TODO: Reemplazar con llamada real a la API
-        // const response = await apiClient.put(`/diagnosticos/${diagnostico.id}/terminar`)
-        
-        // Simulación de actualización
-        const index = diagnosticosData.value.findIndex(d => d.id === diagnostico.id)
-        if (index !== -1) {
-          diagnosticosData.value[index] = {
-            ...diagnosticosData.value[index],
-            estado: 'completado',
-            fechaCompletado: new Date().toISOString(),
-            diagnosticos: [
-              { descripcion: 'Diagnóstico completado exitosamente' }
-            ],
-            observaciones: diagnosticosData.value[index].observaciones || 'Diagnóstico marcado como completado'
-          }
-        }
-
-        toastStore.addToast({
-          message: `Diagnóstico ${diagnostico.folioRecepcion} marcado como completado`,
-          type: 'success',
-          duration: 3000
-        })
-      } catch (err) {
-        console.error('Error al terminar diagnóstico:', err)
-        toastStore.addToast({
-          message: 'Error al terminar el diagnóstico',
+          message: 'Error al actualizar la lista de diagnósticos',
           type: 'error',
           duration: 5000
         })
@@ -887,16 +702,16 @@ export default {
 
     const getSectionColor = (seccion) => {
       const colores = {
-        'Motor': 'bg-blue-500',
-        'Sistema de Transmisión': 'bg-green-500',
-        'Sistema de Frenos': 'bg-red-500',
-        'Sistema Eléctrico': 'bg-yellow-500',
-        'Suspensión y Dirección': 'bg-orange-500',
+        'Motor': 'bg-red-500',
+        'Transmisión': 'bg-blue-500',
+        'Frenos': 'bg-yellow-500',
+        'Sistema Eléctrico': 'bg-purple-500',
+        'Suspensión y Dirección': 'bg-green-500',
         'Sistema de Enfriamiento': 'bg-cyan-500',
-        'Sistema de Escape': 'bg-purple-500',
-        'Sistema de Climatización': 'bg-teal-500',
+        'Sistema de Escape': 'bg-orange-500',
+        'Sistema de Climatización': 'bg-indigo-500',
         'Carrocería y Accesorios': 'bg-pink-500',
-        'Llantas y Rines': 'bg-indigo-500'
+        'Llantas y Rines': 'bg-gray-500'
       }
       return colores[seccion] || 'bg-gray-500'
     }
@@ -964,7 +779,6 @@ export default {
       abrirModalNuevoDiagnostico,
       cerrarModalNuevoDiagnostico,
       onDiagnosticoCreado,
-      terminarDiagnostico,
       previousPage,
       nextPage,
       goToPage,
