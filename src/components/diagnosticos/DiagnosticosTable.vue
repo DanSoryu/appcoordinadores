@@ -669,15 +669,20 @@ export default {
             if (detalles && typeof detalles === 'object') {
               // Extraer fallas del objeto
               const fallas = []
+              let comentarios = ''
+              
               Object.keys(detalles).forEach(key => {
-                if (key !== 'comentarios' && key !== 'tipo_mantenimiento' && detalles[key] === true) {
+                if (key !== 'tipo_mantenimiento' && !key.includes('Comentarios') && detalles[key] === true) {
                   // Convertir nombres de campos a texto legible
                   const fallaTexto = convertirCampoATexto(key)
                   fallas.push(fallaTexto)
+                } else if (key.includes('Comentarios') && detalles[key] && detalles[key].trim()) {
+                  // Capturar comentarios (motorComentarios, transmisionComentarios, etc.)
+                  comentarios = detalles[key].trim()
                 }
               })
               
-              if (fallas.length > 0 || (detalles.comentarios && detalles.comentarios.trim())) {
+              if (fallas.length > 0 || comentarios) {
                 let descripcion = ''
                 if (fallas.length > 0) {
                   descripcion = `${campo.seccion}: ${fallas.join(', ')}.`
@@ -686,14 +691,14 @@ export default {
                 }
                 
                 // Agregar comentarios a la descripción si existen
-                if (detalles.comentarios && detalles.comentarios.trim()) {
-                  descripcion += ` Observaciones: ${detalles.comentarios.trim()}`
+                if (comentarios) {
+                  descripcion += ` Observaciones: ${comentarios}`
                 }
                 
                 diagnosticos.push({
                   seccion: campo.seccion,
                   descripcion: descripcion,
-                  comentarios: detalles.comentarios || '',
+                  comentarios: comentarios,
                   prioridad: 'media'
                 })
               }
@@ -731,8 +736,13 @@ export default {
               ? JSON.parse(diagnostico[campo]) 
               : diagnostico[campo]
             
-            if (detalles && detalles.comentarios && detalles.comentarios.trim()) {
-              observaciones.push(detalles.comentarios.trim())
+            if (detalles && typeof detalles === 'object') {
+              // Buscar el campo de comentarios específico para cada sección
+              Object.keys(detalles).forEach(key => {
+                if (key.includes('Comentarios') && detalles[key] && detalles[key].trim()) {
+                  observaciones.push(detalles[key].trim())
+                }
+              })
             }
           } catch (error) {
             console.error(`Error al procesar comentarios de ${campo}:`, error)
