@@ -690,11 +690,7 @@ export default {
                   descripcion = `${campo.seccion}: Revisión completada.`
                 }
                 
-                // Agregar comentarios a la descripción si existen
-                if (comentarios) {
-                  descripcion += ` Observaciones: ${comentarios}`
-                }
-                
+                // No agregar comentarios a la descripción, solo mantenerlos separados
                 diagnosticos.push({
                   seccion: campo.seccion,
                   descripcion: descripcion,
