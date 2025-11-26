@@ -1777,8 +1777,8 @@ export default {
           ...this.finalFormData
         };
         
-        // Enviar a la API usando PUT para actualizar el diagnóstico
-        const response = await apiClient.put(`/diagnosticos/${this.diagnosticoData.id}`, dataToSend);
+        // Enviar a la API usando POST para actualizar el diagnóstico
+        const response = await apiClient.post(`/update/diagnosticos/${this.diagnosticoData.id}`, dataToSend);
         
         console.log('Respuesta de la API:', response.data);
         console.log('Diagnóstico completado exitosamente');

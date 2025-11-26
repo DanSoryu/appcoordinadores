@@ -11,8 +11,7 @@ const apiClient = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest'
+    'Accept': 'application/json'
   }
 })
 
@@ -24,12 +23,6 @@ apiClient.interceptors.request.use(
     // Añadir token si existe
     if (authStore.token) {
       config.headers.Authorization = `Bearer ${authStore.token}`
-    }
-    
-    // Asegurar headers CORS para métodos PUT/POST/DELETE
-    if (['PUT', 'POST', 'DELETE'].includes(config.method?.toUpperCase())) {
-      config.headers['Content-Type'] = 'application/json'
-      config.headers['Accept'] = 'application/json'
     }
     
     return config
