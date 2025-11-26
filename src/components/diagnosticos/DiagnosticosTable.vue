@@ -529,6 +529,118 @@ export default {
       }
     }
 
+    // Función auxiliar para convertir nombres de campos a texto legible
+    const convertirCampoATexto = (campo) => {
+      const mapeoTextos = {
+        // Motor
+        motorEmpaques: 'Empaques dañados',
+        motorSellos: 'Sellos desgastados',
+        motorDesgasteAnillos: 'Desgaste de anillos',
+        motorDesgasteValvulas: 'Desgaste de válvulas',
+        motorFaltaLubricacion: 'Falta de lubricación',
+        motorPiezasSueltas: 'Piezas sueltas',
+        motorBujias: 'Bujías defectuosas',
+        motorBateria: 'Problemas de batería',
+        motorBombaGasolina: 'Bomba de gasolina',
+        motorFallaRadiador: 'Falla en radiador',
+        motorFallaTermostato: 'Falla en termostato',
+        motorSoportes: 'Soportes dañados',
+        
+        // Transmisión
+        transmisionRetenesDanados: 'Retenes dañados',
+        transmisionJuntasDanadas: 'Juntas dañadas',
+        transmisionNivelBajoFlujo: 'Nivel bajo de fluido',
+        transmisionDesgasteInterno: 'Desgaste interno',
+        transmisionDesgasteDiscos: 'Desgaste de discos',
+        transmisionConvertidorTorque: 'Convertidor de torque',
+        transmisionMantenimientoProgramado: 'Mantenimiento programado',
+        
+        // Frenos
+        frenosAireEnSistema: 'Aire en el sistema',
+        frenosFugaLiquido: 'Fuga de líquido',
+        frenosBalatasDesgastadas: 'Balatas desgastadas',
+        frenosDiscoDesgastado: 'Disco desgastado',
+        frenosClipers: 'Calipers defectuosos',
+        frenosManguerasDefectuosas: 'Mangueras defectuosas',
+        frenosControlDesgastePeriodico: 'Control de desgaste periódico',
+        
+        // Sistema Eléctrico
+        electricoCeldasDanadas: 'Celdas de batería dañadas',
+        electricoAlternadorDefectuoso: 'Alternador defectuoso',
+        electricoBandaSuelta: 'Banda suelta',
+        electricoAlternadorDanado: 'Alternador dañado',
+        electricoFocoFundido: 'Foco fundido',
+        electricoConectoresSulfatados: 'Conectores sulfatados',
+        electricoInspeccionPeriodica: 'Inspección periódica',
+        
+        // Suspensión y Dirección
+        suspensionDesgaste: 'Desgaste en suspensión',
+        suspensionRupturaRetenes: 'Ruptura de retenes',
+        direccionTerminales: 'Terminales de dirección',
+        direccionCremalleras: 'Cremalleras dañadas',
+        suspensionBujesDanados: 'Bujes dañados',
+        suspensionRotulasDanadas: 'Rótulas dañadas',
+        suspensionAjusteProgramado: 'Ajuste programado',
+        
+        // Sistema de Enfriamiento
+        enfriamientoManguerasPerforadas: 'Mangueras perforadas',
+        enfriamientoNucleoPerforado: 'Núcleo perforado',
+        enfriamientoDesgasteReten: 'Desgaste de retén',
+        enfriamientoDesgasteRodamiento: 'Desgaste de rodamiento',
+        enfriamientoTermostatoBloqueado: 'Termostato bloqueado',
+        enfriamientoControlTemperatura: 'Control de temperatura',
+        
+        // Sistema de Escape
+        escapeFugasPerforaciones: 'Fugas y perforaciones',
+        escapeCorrosion: 'Corrosión',
+        escapeImpacto: 'Daños por impacto',
+        escapeRuidoExcesivo: 'Ruido excesivo',
+        escapeSilenciadorRoto: 'Silenciador roto',
+        escapeSilenciadorSuelto: 'Silenciador suelto',
+        escapeCatalizadorObstruido: 'Catalizador obstruido',
+        escapeMalaCombustion: 'Mala combustión',
+        
+        // Sistema de Climatización
+        climatizacionAcNoEnfria: 'A/C no enfría',
+        climatizacionFugaGas: 'Fuga de gas refrigerante',
+        climatizacionCompresorDanado: 'Compresor dañado',
+        climatizacionMalOlorVentilacion: 'Mal olor en ventilación',
+        climatizacionFiltroCabinaSucio: 'Filtro de cabina sucio',
+        climatizacionRevisionPresionesGas: 'Revisión de presiones de gas',
+        climatizacionNoCalienta: 'No calienta',
+        climatizacionFallaTermostato: 'Falla en termostato',
+        climatizacionRadiadorInterior: 'Radiador interior',
+        
+        // Carrocería y Accesorios
+        carroceriaRayonesAbolladuras: 'Rayones y abolladuras',
+        carroceriaGolpes: 'Golpes en carrocería',
+        carroceriaRoces: 'Roces',
+        puertasCierreDeficiente: 'Cierre deficiente de puertas',
+        puertasCerraduras: 'Cerraduras dañadas',
+        puertasBisagraDesajustada: 'Bisagras desajustadas',
+        cristalesGrietasAstilladuras: 'Grietas y astilladuras en cristales',
+        cristalesImpactoCristal: 'Impacto en cristal',
+        cristalesTensionTermica: 'Tensión térmica',
+        limpiaParabrisasNoFunciona: 'Limpiaparabrisas no funciona',
+        limpiaParabrisasMotorDanado: 'Motor de limpiaparabrisas dañado',
+        limpiaParabrisasFusibleDanado: 'Fusible dañado',
+        
+        // Llantas y Rines
+        llantasDesgasteIrregular: 'Desgaste irregular de llantas',
+        llantasAlineacion: 'Problemas de alineación',
+        llantasBalanceoDeficiente: 'Balanceo deficiente',
+        llantasPresionIncorrecta: 'Presión incorrecta',
+        llantasRevisionPeriodica: 'Revisión periódica',
+        llantasRevisionFechaFabricacion: 'Revisión de fecha de fabricación',
+        llantasControlVidaUtil: 'Control de vida útil',
+        rinesGolpeadosDeformados: 'Rines golpeados o deformados',
+        rinesImpactoBaches: 'Impacto por baches',
+        rinesImpactoBanquetas: 'Impacto por banquetas'
+      }
+      
+      return mapeoTextos[campo] || campo.replace(/_/g, ' ')
+    }
+
     // Funciones auxiliares para procesar datos de la API
     const extraerDiagnosticos = (diagnostico) => {
       const diagnosticos = []
@@ -558,15 +670,29 @@ export default {
               // Extraer fallas del objeto
               const fallas = []
               Object.keys(detalles).forEach(key => {
-                if (key !== 'comentarios' && detalles[key] === true) {
-                  fallas.push(key.replace(/_/g, ' '))
+                if (key !== 'comentarios' && key !== 'tipo_mantenimiento' && detalles[key] === true) {
+                  // Convertir nombres de campos a texto legible
+                  const fallaTexto = convertirCampoATexto(key)
+                  fallas.push(fallaTexto)
                 }
               })
               
               if (fallas.length > 0 || (detalles.comentarios && detalles.comentarios.trim())) {
+                let descripcion = ''
+                if (fallas.length > 0) {
+                  descripcion = `${campo.seccion}: ${fallas.join(', ')}.`
+                } else {
+                  descripcion = `${campo.seccion}: Revisión completada.`
+                }
+                
+                // Agregar comentarios a la descripción si existen
+                if (detalles.comentarios && detalles.comentarios.trim()) {
+                  descripcion += ` Observaciones: ${detalles.comentarios.trim()}`
+                }
+                
                 diagnosticos.push({
                   seccion: campo.seccion,
-                  descripcion: fallas.length > 0 ? `${campo.seccion}: ${fallas.join(', ')}.` : `${campo.seccion}: Revisión completada.`,
+                  descripcion: descripcion,
                   comentarios: detalles.comentarios || '',
                   prioridad: 'media'
                 })
