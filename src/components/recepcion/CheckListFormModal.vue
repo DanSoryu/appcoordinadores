@@ -2511,8 +2511,8 @@ export default {
       }
       
       try {
-        // Hacer PUT request al endpoint Laravel
-        const response = await apiClient.put(`/detalle-recepcion/${this.checklistData.id}`, this.finalFormData);
+        // Hacer POST request al endpoint Laravel actualizado
+        const response = await apiClient.post(`/actualizar/detalle-recepcion/${this.checklistData.id}`, this.finalFormData);
         
         console.log('Respuesta del servidor:', response.data);
         
