@@ -3,16 +3,6 @@
     <!-- Encabezado con título -->
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold text-gray-900">Diagnósticos</h2>
-      <button 
-        v-if="isAdmin"
-        @click="abrirModalNuevoDiagnostico"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
-        <span>Nuevo Diagnóstico</span>
-      </button>
     </div>
 
     <!-- Filtros de búsqueda -->
@@ -334,14 +324,6 @@
       </div>
     </div>
 
-    <!-- Modal de Nuevo Diagnóstico -->
-    <NuevoDiagnosticoModal
-      v-if="showNuevoDiagnosticoModal"
-      :show="showNuevoDiagnosticoModal"
-      @close="cerrarModalNuevoDiagnostico"
-      @diagnostico-creado="onDiagnosticoCreado"
-    />
-
     <!-- Modal de Formulario de Diagnóstico -->
     <DiagnosticosFormModal
       :show="showDiagnosticoModal"
@@ -357,14 +339,12 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useToastStore } from '../../stores/toast.js'
 import { useAuthStore } from '../../stores/auth.js'
 import DiagnosticosFormModal from './DiagnosticosFormModal.vue'
-import NuevoDiagnosticoModal from './NuevoDiagnosticoModal.vue'
 import apiClient from '../../services/api.js'
 
 export default {
   name: 'DiagnosticosTable',
   components: {
-    DiagnosticosFormModal,
-    NuevoDiagnosticoModal
+    DiagnosticosFormModal
   },
   setup() {
     const toastStore = useToastStore()
@@ -381,9 +361,6 @@ export default {
     const showDiagnosticoModal = ref(false)
     const diagnosticoParaCompletar = ref(null)
     
-    // Estados para el modal de nuevo diagnóstico
-    const showNuevoDiagnosticoModal = ref(false)
-    
     // Filtros
     const searchQuery = ref('')
     const estadoFilter = ref('')
@@ -393,11 +370,6 @@ export default {
     const itemsPerPage = 10
     const totalItems = ref(0)
     const totalPages = computed(() => Math.ceil(filteredData.value.length / itemsPerPage))
-
-    // Computed para verificar si el usuario es admin
-    const isAdmin = computed(() => {
-      return authStore.user?.rol === 'admin'
-    })
 
     // Computed properties para filtrado
     const filteredData = computed(() => {
@@ -767,36 +739,6 @@ export default {
       diagnosticoParaCompletar.value = null
     }
 
-    const abrirModalNuevoDiagnostico = () => {
-      showNuevoDiagnosticoModal.value = true
-    }
-
-    const cerrarModalNuevoDiagnostico = () => {
-      showNuevoDiagnosticoModal.value = false
-    }
-
-    const onDiagnosticoCreado = async (nuevoDiagnostico) => {
-      try {
-        // Recargar la lista completa desde la API para obtener datos actualizados
-        await cargarDiagnosticos()
-        
-        toastStore.addToast({
-          message: 'Diagnóstico creado exitosamente',
-          type: 'success', 
-          duration: 3000
-        })
-        
-        cerrarModalNuevoDiagnostico()
-      } catch (err) {
-        console.error('Error al recargar diagnósticos:', err)
-        toastStore.addToast({
-          message: 'Error al actualizar la lista de diagnósticos',
-          type: 'error',
-          duration: 5000
-        })
-      }
-    }
-
     const onDiagnosticoGuardado = async (diagnosticoCompletado) => {
       try {
         // Recargar la lista completa desde la API para obtener datos actualizados
@@ -886,9 +828,6 @@ export default {
       showDiagnosticoModal,
       diagnosticoParaCompletar,
       
-      // Estados del modal de nuevo diagnóstico
-      showNuevoDiagnosticoModal,
-      
       // Filtros
       searchQuery,
       estadoFilter,
@@ -908,16 +847,12 @@ export default {
       abrirModalDiagnostico,
       cerrarModalDiagnostico,
       onDiagnosticoGuardado,
-      abrirModalNuevoDiagnostico,
-      cerrarModalNuevoDiagnostico,
-      onDiagnosticoCreado,
       previousPage,
       nextPage,
       goToPage,
       formatDate,
       getSectionColor,
-      parseFallasFromDescription,
-      isAdmin
+      parseFallasFromDescription
     }
   }
 }
