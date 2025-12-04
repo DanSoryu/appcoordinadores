@@ -2074,9 +2074,14 @@ export default {
         
         // Buscar a qué sistema pertenece el field
         for (const [sistemaKey, sistemaName] of Object.entries(sistemaMapping)) {
-          if (field.includes(sistemaKey)) {
-            const imagenField = field.replace(sistemaKey, '').toLowerCase();
-            if (this.formData[sistemaName]) {
+          if (field.startsWith(sistemaKey)) {
+            // Obtener el nombre del campo sin el prefijo del sistema
+            // Ej: "motorEmpaquesImagen" -> "EmpaquesImagen" -> "empaquesImagen"
+            let imagenField = field.replace(sistemaKey, '');
+            // Convertir la primera letra a minúscula para que coincida con el formData
+            imagenField = imagenField.charAt(0).toLowerCase() + imagenField.slice(1);
+            
+            if (this.formData[sistemaName] && imagenField in this.formData[sistemaName]) {
               // Guardar tanto el base64 como el nombre de archivo
               this.formData[sistemaName][imagenField] = {
                 base64: photoData.base64,
@@ -2085,6 +2090,8 @@ export default {
               console.log(`Imagen asignada: ${sistemaName}.${imagenField}`);
               console.log(`Nombre de archivo: ${photoData.fileName}`);
               break;
+            } else {
+              console.warn(`Campo no encontrado: ${sistemaName}.${imagenField}`);
             }
           }
         }
