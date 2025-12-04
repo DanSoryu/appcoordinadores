@@ -175,12 +175,13 @@
                     <div v-if="formData.motor.empaques" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-empaques'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorEmpaquesImagen', file)"
                         :initial-photo="formData.motor.empaquesImagen"
                         custom-filename="foto_motor_empaques_danados"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -194,12 +195,13 @@
                     <div v-if="formData.motor.sellos" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-sellos'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorSellosImagen', file)"
                         :initial-photo="formData.motor.sellosImagen"
                         custom-filename="foto_motor_sellos_danados"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -213,12 +215,13 @@
                     <div v-if="formData.motor.desgasteAnillos" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-desgasteAnillos'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorDesgasteAnillosImagen', file)"
                         :initial-photo="formData.motor.desgasteAnillosImagen"
                         custom-filename="foto_motor_desgaste_anillos"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -232,12 +235,13 @@
                     <div v-if="formData.motor.desgasteValvulas" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-desgasteValvulas'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorDesgasteValvulasImagen', file)"
                         :initial-photo="formData.motor.desgasteValvulasImagen"
                         custom-filename="foto_motor_desgaste_valvulas"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -251,12 +255,13 @@
                     <div v-if="formData.motor.faltaLubricacion" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-faltaLubricacion'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorFaltaLubricacionImagen', file)"
                         :initial-photo="formData.motor.faltaLubricacionImagen"
                         custom-filename="foto_motor_falta_lubricacion"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -270,12 +275,13 @@
                     <div v-if="formData.motor.piezasSueltas" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-piezasSueltas'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorPiezasSueltasImagen', file)"
                         :initial-photo="formData.motor.piezasSueltasImagen"
                         custom-filename="foto_motor_piezas_sueltas"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -289,12 +295,13 @@
                     <div v-if="formData.motor.bujias" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-bujias'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorBujiasImagen', file)"
                         :initial-photo="formData.motor.bujiasImagen"
                         custom-filename="foto_motor_bujias_defectuosas"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -308,12 +315,13 @@
                     <div v-if="formData.motor.bateria" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-bateria'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorBateriaImagen', file)"
                         :initial-photo="formData.motor.bateriaImagen"
                         custom-filename="foto_motor_problemas_bateria"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -327,12 +335,13 @@
                     <div v-if="formData.motor.bombaGasolina" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-bombaGasolina'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorBombaGasolinaImagen', file)"
                         :initial-photo="formData.motor.bombaGasolinaImagen"
                         custom-filename="foto_motor_bomba_gasolina"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -346,12 +355,13 @@
                     <div v-if="formData.motor.fallaRadiador" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-fallaRadiador'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorFallaRadiadorImagen', file)"
                         :initial-photo="formData.motor.fallaRadiadorImagen"
                         custom-filename="foto_motor_falla_radiador"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -365,12 +375,13 @@
                     <div v-if="formData.motor.fallaTermostato" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-fallaTermostato'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorFallaTermostatoImagen', file)"
                         :initial-photo="formData.motor.fallaTermostatoImagen"
                         custom-filename="foto_motor_falla_termostato"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -384,12 +395,13 @@
                     <div v-if="formData.motor.soportes" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-soportes'"
-                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        button-class="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
                         @photo-captured="(file) => handlePhotoCaptured('motorSoportesImagen', file)"
                         :initial-photo="formData.motor.soportesImagen"
                         custom-filename="foto_motor_soportes_bujias"
                       >
                         <font-awesome-icon icon="camera" />
+                        <span>Tomar Fotografía</span>
                       </PhotoUploadAndPreview>
                     </div>
                   </div>
@@ -1208,6 +1220,26 @@
           </div>
         </div>
         
+        <!-- Alertas de fotos faltantes -->
+        <div v-if="currentStep > 1 && currentCategory && getPhotoAlerts().length > 0" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <font-awesome-icon icon="exclamation-triangle" class="h-5 w-5 text-yellow-400" />
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-yellow-800">
+                Fotografías Pendientes
+              </h3>
+              <div class="mt-2 text-sm text-yellow-700">
+                <p class="mb-2">Hace falta tomar fotografías de los siguientes elementos seleccionados:</p>
+                <ul class="list-disc list-inside space-y-1">
+                  <li v-for="alert in getPhotoAlerts()" :key="alert">{{ alert }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <!-- Navegación entre pasos -->
         <div class="mt-8 flex justify-between">
           <BaseButton 
@@ -1659,6 +1691,46 @@ export default {
         errors.push(`Debe seleccionar al menos una falla o agregar comentarios en ${categoryNames[category]}`);
       }
       
+      // Validar fotografías obligatorias para elementos seleccionados
+      if (category === 'motor') {
+        if (this.formData.motor.empaques && !this.formData.motor.empaquesImagen) {
+          errors.push('Debe tomar una fotografía de los empaques dañados');
+        }
+        if (this.formData.motor.sellos && !this.formData.motor.sellosImagen) {
+          errors.push('Debe tomar una fotografía de los sellos dañados');
+        }
+        if (this.formData.motor.desgasteAnillos && !this.formData.motor.desgasteAnillosImagen) {
+          errors.push('Debe tomar una fotografía del desgaste de anillos');
+        }
+        if (this.formData.motor.desgasteValvulas && !this.formData.motor.desgasteValvulasImagen) {
+          errors.push('Debe tomar una fotografía del desgaste de válvulas');
+        }
+        if (this.formData.motor.faltaLubricacion && !this.formData.motor.faltaLubricacionImagen) {
+          errors.push('Debe tomar una fotografía de la falta de lubricación');
+        }
+        if (this.formData.motor.piezasSueltas && !this.formData.motor.piezasSueltasImagen) {
+          errors.push('Debe tomar una fotografía de las piezas sueltas');
+        }
+        if (this.formData.motor.bujias && !this.formData.motor.bujiasImagen) {
+          errors.push('Debe tomar una fotografía de las bujías defectuosas');
+        }
+        if (this.formData.motor.bateria && !this.formData.motor.bateriaImagen) {
+          errors.push('Debe tomar una fotografía de los problemas con la batería');
+        }
+        if (this.formData.motor.bombaGasolina && !this.formData.motor.bombaGasolinaImagen) {
+          errors.push('Debe tomar una fotografía de los problemas con la bomba de gasolina');
+        }
+        if (this.formData.motor.fallaRadiador && !this.formData.motor.fallaRadiadorImagen) {
+          errors.push('Debe tomar una fotografía de la falla en el radiador');
+        }
+        if (this.formData.motor.fallaTermostato && !this.formData.motor.fallaTermostatoImagen) {
+          errors.push('Debe tomar una fotografía de la falla del termostato');
+        }
+        if (this.formData.motor.soportes && !this.formData.motor.soportesImagen) {
+          errors.push('Debe tomar una fotografía de los soportes de bujías defectuosas');
+        }
+      }
+      
       return errors;
 
     },
@@ -1674,17 +1746,29 @@ export default {
         result.detalleMotor = {
           tipo_mantenimiento: this.formData.motor?.tipo_mantenimiento || 'correctivo',
           motorEmpaques: this.formData.motor?.empaques || false,
+          foto_motor_empaques_danados: this.formData.motor?.empaquesImagen || null,
           motorSellos: this.formData.motor?.sellos || false,
+          foto_motor_sellos_danados: this.formData.motor?.sellosImagen || null,
           motorDesgasteAnillos: this.formData.motor?.desgasteAnillos || false,
+          foto_motor_desgaste_anillos: this.formData.motor?.desgasteAnillosImagen || null,
           motorDesgasteValvulas: this.formData.motor?.desgasteValvulas || false,
+          foto_motor_desgaste_valvulas: this.formData.motor?.desgasteValvulasImagen || null,
           motorFaltaLubricacion: this.formData.motor?.faltaLubricacion || false,
+          foto_motor_falta_lubricacion: this.formData.motor?.faltaLubricacionImagen || null,
           motorPiezasSueltas: this.formData.motor?.piezasSueltas || false,
+          foto_motor_piezas_sueltas: this.formData.motor?.piezasSueltasImagen || null,
           motorBujias: this.formData.motor?.bujias || false,
+          foto_motor_bujias_defectuosas: this.formData.motor?.bujiasImagen || null,
           motorBateria: this.formData.motor?.bateria || false,
+          foto_motor_problemas_bateria: this.formData.motor?.bateriaImagen || null,
           motorBombaGasolina: this.formData.motor?.bombaGasolina || false,
+          foto_motor_bomba_gasolina: this.formData.motor?.bombaGasolinaImagen || null,
           motorFallaRadiador: this.formData.motor?.fallaRadiador || false,
+          foto_motor_falla_radiador: this.formData.motor?.fallaRadiadorImagen || null,
           motorFallaTermostato: this.formData.motor?.fallaTermostato || false,
+          foto_motor_falla_termostato: this.formData.motor?.fallaTermostatoImagen || null,
           motorSoportes: this.formData.motor?.soportes || false,
+          foto_motor_soportes_bujias: this.formData.motor?.soportesImagen || null,
           motorComentarios: this.formData.motor?.comentarios || '',
           // Imágenes opcionales
           motorEmpaquesImagen: this.formData.motor?.empaquesImagen || null,
@@ -1996,6 +2080,56 @@ export default {
         llantasRines: 'Llantas y Rines'
       };
       return categoryNames[category] || category;
+    },
+    
+    // Método para obtener alertas de fotos faltantes
+    getPhotoAlerts() {
+      const alerts = [];
+      const category = this.currentCategory;
+      
+      if (!category || !this.formData[category]) return alerts;
+      
+      // Solo mostrar alertas para el sistema motor por ahora (se puede expandir después)
+      if (category === 'motor') {
+        if (this.formData.motor.empaques && !this.formData.motor.empaquesImagen) {
+          alerts.push('Empaques dañados');
+        }
+        if (this.formData.motor.sellos && !this.formData.motor.sellosImagen) {
+          alerts.push('Sellos dañados');
+        }
+        if (this.formData.motor.desgasteAnillos && !this.formData.motor.desgasteAnillosImagen) {
+          alerts.push('Desgaste de anillos');
+        }
+        if (this.formData.motor.desgasteValvulas && !this.formData.motor.desgasteValvulasImagen) {
+          alerts.push('Desgaste de válvulas');
+        }
+        if (this.formData.motor.faltaLubricacion && !this.formData.motor.faltaLubricacionImagen) {
+          alerts.push('Falta de lubricación');
+        }
+        if (this.formData.motor.piezasSueltas && !this.formData.motor.piezasSueltasImagen) {
+          alerts.push('Piezas sueltas');
+        }
+        if (this.formData.motor.bujias && !this.formData.motor.bujiasImagen) {
+          alerts.push('Bujías defectuosas');
+        }
+        if (this.formData.motor.bateria && !this.formData.motor.bateriaImagen) {
+          alerts.push('Problemas con la batería');
+        }
+        if (this.formData.motor.bombaGasolina && !this.formData.motor.bombaGasolinaImagen) {
+          alerts.push('Problemas con la bomba de gasolina');
+        }
+        if (this.formData.motor.fallaRadiador && !this.formData.motor.fallaRadiadorImagen) {
+          alerts.push('Falla en el radiador');
+        }
+        if (this.formData.motor.fallaTermostato && !this.formData.motor.fallaTermostatoImagen) {
+          alerts.push('Falla del termostato');
+        }
+        if (this.formData.motor.soportes && !this.formData.motor.soportesImagen) {
+          alerts.push('Soportes de bujías defectuosas');
+        }
+      }
+      
+      return alerts;
     },
     
     // Método para manejar las fotografías capturadas
