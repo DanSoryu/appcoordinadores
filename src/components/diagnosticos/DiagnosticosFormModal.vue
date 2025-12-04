@@ -165,55 +165,210 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.empaques" class="rounded">
-                    <span class="text-sm">Empaques dañados</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.sellos" class="rounded">
-                    <span class="text-sm">Sellos dañados</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.desgasteAnillos" class="rounded">
-                    <span class="text-sm">Desgaste de anillos</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.desgasteValvulas" class="rounded">
-                    <span class="text-sm">Desgaste válvulas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.faltaLubricacion" class="rounded">
-                    <span class="text-sm">Falta de lubricación</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.piezasSueltas" class="rounded">
-                    <span class="text-sm">Piezas sueltas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.bujias" class="rounded">
-                    <span class="text-sm">Bujías defectuosas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.bateria" class="rounded">
-                    <span class="text-sm">Problemas con la Batería</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.bombaGasolina" class="rounded">
-                    <span class="text-sm">Problemas con la Bomba de Gasolina</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.fallaRadiador" class="rounded">
-                    <span class="text-sm">Falla en el radiador</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.fallaTermostato" class="rounded">
-                    <span class="text-sm">Falla termostato</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.motor.soportes" class="rounded">
-                    <span class="text-sm">Soportes de bujías defectuosas</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Empaques dañados -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.empaques" class="rounded">
+                      <span class="text-sm">Empaques dañados</span>
+                    </label>
+                    <div v-if="formData.motor.empaques" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-empaques'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorEmpaquesImagen', file)"
+                        :initial-photo="formData.motor.empaquesImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Sellos dañados -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.sellos" class="rounded">
+                      <span class="text-sm">Sellos dañados</span>
+                    </label>
+                    <div v-if="formData.motor.sellos" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-sellos'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorSellosImagen', file)"
+                        :initial-photo="formData.motor.sellosImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Desgaste de anillos -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.desgasteAnillos" class="rounded">
+                      <span class="text-sm">Desgaste de anillos</span>
+                    </label>
+                    <div v-if="formData.motor.desgasteAnillos" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-desgasteAnillos'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorDesgasteAnillosImagen', file)"
+                        :initial-photo="formData.motor.desgasteAnillosImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Desgaste válvulas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.desgasteValvulas" class="rounded">
+                      <span class="text-sm">Desgaste válvulas</span>
+                    </label>
+                    <div v-if="formData.motor.desgasteValvulas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-desgasteValvulas'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorDesgasteValvulasImagen', file)"
+                        :initial-photo="formData.motor.desgasteValvulasImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Falta de lubricación -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.faltaLubricacion" class="rounded">
+                      <span class="text-sm">Falta de lubricación</span>
+                    </label>
+                    <div v-if="formData.motor.faltaLubricacion" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-faltaLubricacion'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorFaltaLubricacionImagen', file)"
+                        :initial-photo="formData.motor.faltaLubricacionImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Piezas sueltas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.piezasSueltas" class="rounded">
+                      <span class="text-sm">Piezas sueltas</span>
+                    </label>
+                    <div v-if="formData.motor.piezasSueltas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-piezasSueltas'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorPiezasSueltasImagen', file)"
+                        :initial-photo="formData.motor.piezasSueltasImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Bujías defectuosas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.bujias" class="rounded">
+                      <span class="text-sm">Bujías defectuosas</span>
+                    </label>
+                    <div v-if="formData.motor.bujias" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-bujias'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorBujiasImagen', file)"
+                        :initial-photo="formData.motor.bujiasImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Problemas con la Batería -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.bateria" class="rounded">
+                      <span class="text-sm">Problemas con la Batería</span>
+                    </label>
+                    <div v-if="formData.motor.bateria" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-bateria'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorBateriaImagen', file)"
+                        :initial-photo="formData.motor.bateriaImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Problemas con la Bomba de Gasolina -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.bombaGasolina" class="rounded">
+                      <span class="text-sm">Problemas con la Bomba de Gasolina</span>
+                    </label>
+                    <div v-if="formData.motor.bombaGasolina" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-bombaGasolina'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorBombaGasolinaImagen', file)"
+                        :initial-photo="formData.motor.bombaGasolinaImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Falla en el radiador -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.fallaRadiador" class="rounded">
+                      <span class="text-sm">Falla en el radiador</span>
+                    </label>
+                    <div v-if="formData.motor.fallaRadiador" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-fallaRadiador'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorFallaRadiadorImagen', file)"
+                        :initial-photo="formData.motor.fallaRadiadorImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Falla termostato -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.fallaTermostato" class="rounded">
+                      <span class="text-sm">Falla termostato</span>
+                    </label>
+                    <div v-if="formData.motor.fallaTermostato" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-fallaTermostato'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorFallaTermostatoImagen', file)"
+                        :initial-photo="formData.motor.fallaTermostatoImagen"
+                      />
+                    </div>
+                  </div>
+                  
+                  <!-- Soportes de bujías defectuosas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.motor.soportes" class="rounded">
+                      <span class="text-sm">Soportes de bujías defectuosas</span>
+                    </label>
+                    <div v-if="formData.motor.soportes" class="ml-2">
+                      <PhotoUploadAndPreview
+                        :key="'motor-soportes'"
+                        button-text="📷"
+                        button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                        @photo-captured="(file) => handlePhotoCaptured('motorSoportesImagen', file)"
+                        :initial-photo="formData.motor.soportesImagen"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div>
@@ -1088,6 +1243,7 @@
 
 <script>
 import BaseButton from '../global/BaseButton.vue';
+import PhotoUploadAndPreview from '../global/PhotoUploadAndPreview.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
 import apiClient from '../../services/api.js'
@@ -1095,7 +1251,8 @@ import apiClient from '../../services/api.js'
 export default {
   name: 'DiagnosticosFormModal',
   components: {
-    BaseButton
+    BaseButton,
+    PhotoUploadAndPreview
   },
   props: {
     show: {
@@ -1152,7 +1309,20 @@ export default {
           fallaRadiador: false,
           fallaTermostato: false,
           soportes: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          empaquesImagen: null,
+          sellosImagen: null,
+          desgasteAnillosImagen: null,
+          desgasteValvulasImagen: null,
+          faltaLubricacionImagen: null,
+          piezasSueltasImagen: null,
+          bujiasImagen: null,
+          bateriaImagen: null,
+          bombaGasolinaImagen: null,
+          fallaRadiadorImagen: null,
+          fallaTermostatoImagen: null,
+          soportesImagen: null
         },
         
         // STEP 2: Sistema de Transmisión
@@ -1165,7 +1335,14 @@ export default {
           desgasteDiscos: false,
           convertidorTorque: false,
           mantenimientoProgramado: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          retenesDanadosImagen: null,
+          juntasDanadasImagen: null,
+          nivelBajoFlujoImagen: null,
+          desgasteInternoImagen: null,
+          desgasteDiscosImagen: null,
+          convertidorTorqueImagen: null
         },
         
         // STEP 3: Sistema de frenos
@@ -1178,7 +1355,14 @@ export default {
           clipers: false,
           manguerasDefectuosas: false,
           controlDesgastePeriodico: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          aireEnSistemaImagen: null,
+          fugaLiquidoImagen: null,
+          balatasDesgastadasImagen: null,
+          discoDesgastadoImagen: null,
+          clipersImagen: null,
+          manguerasDefectuosasImagen: null
         },
         
         // STEP 4: Sistema eléctrico (unificado)
@@ -1194,7 +1378,14 @@ export default {
           focoFundido: false,
           conectoresSulfatados: false,
           inspeccionPeriodica: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          celdasDanadasImagen: null,
+          alternadorDefectuosoImagen: null,
+          bandaSueltaImagen: null,
+          alternadorDanadoImagen: null,
+          focoFundidoImagen: null,
+          conectoresSulfatadosImagen: null
         },
         
         // STEP 5: Suspensión y Dirección (unificado)
@@ -1210,7 +1401,14 @@ export default {
           bujesDanados: false,
           rotulasDanadas: false,
           ajusteProgramado: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          desgasteImagen: null,
+          rupturaRetenesImagen: null,
+          terminalesImagen: null,
+          cremallerasImagen: null,
+          bujesDanadosImagen: null,
+          rotulasDanadasImagen: null
         },
         
         // STEP 6: Sistema de enfriamiento (unificado)
@@ -1225,7 +1423,13 @@ export default {
           // Control de temperatura
           termostatoBloqueado: false,
           controlTemperatura: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          manguerasPerforadasImagen: null,
+          nucleoPerforadoImagen: null,
+          desgasteRetenImagen: null,
+          desgasteRodamientoImagen: null,
+          termostatoBloqueadoImagen: null
         },
         
         // STEP 7: Sistema de Escape (unificado)
@@ -1241,7 +1445,16 @@ export default {
           // Catalizador
           catalizadorObstruido: false,
           malaCombustion: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          fugasPerforacionesImagen: null,
+          corrosionImagen: null,
+          impactoImagen: null,
+          ruidoExcesivoImagen: null,
+          silenciadorRotoImagen: null,
+          silenciadorSueltoImagen: null,
+          catalizadorObstruidoImagen: null,
+          malaCombustionImagen: null
         },
         
         // STEP 8: Sistema de Climatización (unificado)
@@ -1258,7 +1471,16 @@ export default {
           noCalienta: false,
           fallaTermostato: false,
           radiadorInterior: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          acNoEnfriaImagen: null,
+          fugaGasImagen: null,
+          compresorDanadoImagen: null,
+          malOlorVentilacionImagen: null,
+          filtroCabinaSucioImagen: null,
+          noCalientaImagen: null,
+          fallaTermostatoImagen: null,
+          radiadorInteriorImagen: null
         },
         
         // STEP 9: Carrocería y Accesorios (unificado)
@@ -1280,7 +1502,20 @@ export default {
           limpiaNoFunciona: false,
           motorDanado: false,
           fusibleDanado: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          rayonesAbolladurasImagen: null,
+          golpesImagen: null,
+          rocesImagen: null,
+          cierreDeficienteImagen: null,
+          cerradurasImagen: null,
+          bisagraDesajustadaImagen: null,
+          grietasAstilladurasImagen: null,
+          impactoCristalImagen: null,
+          tensionTermicaImagen: null,
+          limpiaNoFuncionaImagen: null,
+          motorDanadoImagen: null,
+          fusibleDanadoImagen: null
         },
         
         // STEP 10: Llantas y Rines (unificado)
@@ -1298,7 +1533,15 @@ export default {
           rinesGolpeadosDeformados: false,
           impactoBaches: false,
           impactoBanquetas: false,
-          comentarios: ''
+          comentarios: '',
+          // Campos de imagen opcionales
+          desgasteIrregularImagen: null,
+          alineacionImagen: null,
+          balanceoDeficienteImagen: null,
+          presionIncorrectaImagen: null,
+          rinesGolpeadosDeformadosImagen: null,
+          impactoBachesImagen: null,
+          impactoBanquetasImagen: null
         }
       }
     };
@@ -1418,7 +1661,20 @@ export default {
           motorFallaRadiador: this.formData.motor?.fallaRadiador || false,
           motorFallaTermostato: this.formData.motor?.fallaTermostato || false,
           motorSoportes: this.formData.motor?.soportes || false,
-          motorComentarios: this.formData.motor?.comentarios || ''
+          motorComentarios: this.formData.motor?.comentarios || '',
+          // Imágenes opcionales
+          motorEmpaquesImagen: this.formData.motor?.empaquesImagen || null,
+          motorSellosImagen: this.formData.motor?.sellosImagen || null,
+          motorDesgasteAnillosImagen: this.formData.motor?.desgasteAnillosImagen || null,
+          motorDesgasteValvulasImagen: this.formData.motor?.desgasteValvulasImagen || null,
+          motorFaltaLubricacionImagen: this.formData.motor?.faltaLubricacionImagen || null,
+          motorPiezasSueltasImagen: this.formData.motor?.piezasSueltasImagen || null,
+          motorBujiasImagen: this.formData.motor?.bujiasImagen || null,
+          motorBateriaImagen: this.formData.motor?.bateriaImagen || null,
+          motorBombaGasolinaImagen: this.formData.motor?.bombaGasolinaImagen || null,
+          motorFallaRadiadorImagen: this.formData.motor?.fallaRadiadorImagen || null,
+          motorFallaTermostatoImagen: this.formData.motor?.fallaTermostatoImagen || null,
+          motorSoportesImagen: this.formData.motor?.soportesImagen || null
         };
       }
       
@@ -1433,7 +1689,14 @@ export default {
           transmisionDesgasteDiscos: this.formData.transmision?.desgasteDiscos || false,
           transmisionConvertidorTorque: this.formData.transmision?.convertidorTorque || false,
           transmisionMantenimientoProgramado: this.formData.transmision?.mantenimientoProgramado || false,
-          transmisionComentarios: this.formData.transmision?.comentarios || ''
+          transmisionComentarios: this.formData.transmision?.comentarios || '',
+          // Imágenes opcionales
+          transmisionRetenesDanadosImagen: this.formData.transmision?.retenesDanadosImagen || null,
+          transmisionJuntasDanadasImagen: this.formData.transmision?.juntasDanadasImagen || null,
+          transmisionNivelBajoFlujoImagen: this.formData.transmision?.nivelBajoFlujoImagen || null,
+          transmisionDesgasteInternoImagen: this.formData.transmision?.desgasteInternoImagen || null,
+          transmisionDesgasteDiscosImagen: this.formData.transmision?.desgasteDiscosImagen || null,
+          transmisionConvertidorTorqueImagen: this.formData.transmision?.convertidorTorqueImagen || null
         };
       }
       
@@ -1448,7 +1711,14 @@ export default {
           frenosClipers: this.formData.frenos?.clipers || false,
           frenosManguerasDefectuosas: this.formData.frenos?.manguerasDefectuosas || false,
           frenosControlDesgastePeriodico: this.formData.frenos?.controlDesgastePeriodico || false,
-          frenosComentarios: this.formData.frenos?.comentarios || ''
+          frenosComentarios: this.formData.frenos?.comentarios || '',
+          // Imágenes opcionales
+          frenosAireEnSistemaImagen: this.formData.frenos?.aireEnSistemaImagen || null,
+          frenosFugaLiquidoImagen: this.formData.frenos?.fugaLiquidoImagen || null,
+          frenosBalatasDesgastadasImagen: this.formData.frenos?.balatasDesgastadasImagen || null,
+          frenosDiscoDesgastadoImagen: this.formData.frenos?.discoDesgastadoImagen || null,
+          frenosClipersImagen: this.formData.frenos?.clipersImagen || null,
+          frenosManguerasDefectuosasImagen: this.formData.frenos?.manguerasDefectuosasImagen || null
         };
       }
       
@@ -1463,7 +1733,14 @@ export default {
           electricoFocoFundido: this.formData.sistemaElectrico?.focoFundido || false,
           electricoConectoresSulfatados: this.formData.sistemaElectrico?.conectoresSulfatados || false,
           electricoInspeccionPeriodica: this.formData.sistemaElectrico?.inspeccionPeriodica || false,
-          electricoComentarios: this.formData.sistemaElectrico?.comentarios || ''
+          electricoComentarios: this.formData.sistemaElectrico?.comentarios || '',
+          // Imágenes opcionales
+          electricoCeldasDanadasImagen: this.formData.sistemaElectrico?.celdasDanadasImagen || null,
+          electricoAlternadorDefectuosoImagen: this.formData.sistemaElectrico?.alternadorDefectuosoImagen || null,
+          electricoBandaSueltaImagen: this.formData.sistemaElectrico?.bandaSueltaImagen || null,
+          electricoAlternadorDanadoImagen: this.formData.sistemaElectrico?.alternadorDanadoImagen || null,
+          electricoFocoFundidoImagen: this.formData.sistemaElectrico?.focoFundidoImagen || null,
+          electricoConectoresSulfatadosImagen: this.formData.sistemaElectrico?.conectoresSulfatadosImagen || null
         };
       }
       
@@ -1697,6 +1974,46 @@ export default {
       return categoryNames[category] || category;
     },
     
+    // Método para manejar las fotografías capturadas
+    handlePhotoCaptured(field, photoData) {
+      console.log(`=== INICIO handlePhotoCaptured ===`);
+      console.log(`Field: ${field}`);
+      console.log(`PhotoData:`, photoData);
+      
+      // Si es el nuevo formato con base64, usar esos datos
+      if (photoData && typeof photoData === 'object' && photoData.base64) {
+        // Mapear los sistemas
+        const sistemaMapping = {
+          'motor': 'motor',
+          'transmision': 'transmision', 
+          'frenos': 'frenos',
+          'sistemaElectrico': 'sistemaElectrico',
+          'suspensionDireccion': 'suspensionDireccion',
+          'sistemaEnfriamiento': 'sistemaEnfriamiento',
+          'sistemaEscape': 'sistemaEscape',
+          'sistemaClimatizacion': 'sistemaClimatizacion',
+          'carroceriaAccesorios': 'carroceriaAccesorios',
+          'llantasRines': 'llantasRines'
+        };
+        
+        // Buscar a qué sistema pertenece el field
+        for (const [sistemaKey, sistemaName] of Object.entries(sistemaMapping)) {
+          if (field.includes(sistemaKey)) {
+            const imagenField = field.replace(sistemaKey, '').toLowerCase();
+            if (this.formData[sistemaName]) {
+              this.formData[sistemaName][imagenField] = photoData.base64;
+              console.log(`Imagen asignada: ${sistemaName}.${imagenField}`);
+              break;
+            }
+          }
+        }
+      } else {
+        console.warn('Formato de foto no reconocido:', photoData);
+      }
+      
+      console.log(`=== FIN handlePhotoCaptured ===`);
+    },
+
     loadDiagnosticoData() {
       if (!this.diagnosticoData || Object.keys(this.diagnosticoData).length === 0) return;
       
