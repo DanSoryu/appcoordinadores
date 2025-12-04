@@ -63,6 +63,10 @@ export default {
     fileNamePrefix: {
       type: String,
       default: 'photo'
+    },
+    customFilename: {
+      type: String,
+      default: null
     }
   },
   setup() {
@@ -201,9 +205,13 @@ export default {
       // Convertir el canvas a una URL de datos para la vista previa
       this.photoPreview = canvas.toDataURL('image/jpeg');
       
-      // Generar un nombre único para la foto usando el prefijo personalizado
+      // Generar un nombre único para la foto
       const timestamp = new Date().getTime();
-      this.photoName = `${this.fileNamePrefix}_${timestamp}.jpg`;
+      if (this.customFilename) {
+        this.photoName = `${this.customFilename}_${timestamp}.jpg`;
+      } else {
+        this.photoName = `${this.fileNamePrefix}_${timestamp}.jpg`;
+      }
       this.isPreloadedPhoto = false;
       
       // Obtener la imagen en formato base64 para el API
