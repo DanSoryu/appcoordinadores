@@ -37,7 +37,19 @@
 									<!-- Eliminado botón de registrar cliente -->
 								</div>
 							<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-								<label class="block mb-2 font-semibold text-gray-700">Marca *</label>
+								<div class="flex justify-between items-center mb-2">
+									<label class="font-semibold text-gray-700">Marca *</label>
+									<button 
+										v-if="isAdministrador"
+										@click="openAdminModal"
+										type="button"
+										class="text-xs bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 transition-colors"
+										title="Administrar marcas y modelos"
+									>
+										<font-awesome-icon icon="cog" class="mr-1" />
+										Admin
+									</button>
+								</div>
 								<select 
 									v-model="formData.marca" 
 									:class="[
@@ -171,22 +183,31 @@
 			</form>
 		</div>
 	</div>
-<!-- Eliminado modal de registrar cliente -->
+	
+	<!-- Modal de administración de vehículos -->
+	<VehiculosAdminModal 
+		:show="showAdminModal"
+		@close="showAdminModal = false"
+		@update-data="updateVehiculosData"
+	/>
 </template>
 
 <script>
 import BaseButton from '../global/BaseButton.vue';
 import ClientesFormModal from '../clientes/ClientesFormModal.vue';
+import VehiculosAdminModal from './VehiculosAdminModal.vue';
 import { useSubmitButton } from '../../composables/useSubmitButton.js';
 import { useToastStore } from '../../stores/toast.js';
 import { useAuthStore } from '../../stores/auth.js';
 import apiClient from '../../services/api.js';
+import vehiculosDataJson from '../../data/vehiculos-data.json';
 
 export default {
 	name: 'VehiculosFormModal',
 	components: {
 		BaseButton,
-		ClientesFormModal
+		ClientesFormModal,
+		VehiculosAdminModal
 	},
 	props: {
 		show: {
@@ -227,26 +248,14 @@ export default {
 								talleres: [],
 								clientesWithDetails: [], // Para mostrar supervisor y cope concatenado
 								tallerDelMecanico: null, // Para almacenar el taller del mecánico logueado
-								marcas: [
-									'Toyota', 'Honda', 'Ford', 'Chevrolet', 'Nissan', 'Hyundai', 'Kia',
-									'Volkswagen', 'Jeep', 'Dodge'
-								],
-								modelosPorMarca: {
-									'Ford': ['F-150'],
-									'Chevrolet': ['Spark'],
-									'Nissan': ['NP300'],
-									'Toyota': [],
-									'Honda': [],
-									'Hyundai': [],
-									'Kia': [],
-									'Volkswagen': [],
-									'Jeep': [],
-									'Dodge': []
-								},
-								años: []
+								marcas: [],
+								modelosPorMarca: {},
+								años: [],
+								showAdminModal: false
 		};
 	},
 	async created() {
+		this.loadVehiculosData();
 		this.loadVehiculoData();
 		await this.loadTallerInfo();
 		this.loadClientes();
@@ -326,9 +335,59 @@ export default {
 				numero_serie: this.formData.numero_serie,
 				numero_economico: this.formData.numero_economico.trim()
 			};
+		},
+		isAdministrador() {
+			return this.authStore.isAdmin;
+		},
+		isAdministrador() {
+			return this.authStore.isAdmin;
 		}
 	},
 	methods: {
+		// Cargar datos de vehículos desde localStorage o JSON
+		loadVehiculosData() {
+			const datosGuardados = localStorage.getItem('vehiculos-data');
+			if (datosGuardados) {
+				const datos = JSON.parse(datosGuardados);
+				this.marcas = [...datos.marcas];
+				this.modelosPorMarca = { ...datos.modelosPorMarca };
+			} else {
+				this.marcas = [...vehiculosDataJson.marcas];
+				this.modelosPorMarca = { ...vehiculosDataJson.modelosPorMarca };
+			}
+		},
+		// Actualizar datos cuando el administrador haga cambios
+		updateVehiculosData(nuevosDatos) {
+			this.marcas = [...nuevosDatos.marcas];
+			this.modelosPorMarca = { ...nuevosDatos.modelosPorMarca };
+		},
+		// Mostrar modal de administración
+		// Cargar datos de vehículos desde localStorage o JSON
+		loadVehiculosData() {
+			const datosGuardados = localStorage.getItem('vehiculos-data');
+			if (datosGuardados) {
+				const datos = JSON.parse(datosGuardados);
+				this.marcas = [...datos.marcas];
+				this.modelosPorMarca = { ...datos.modelosPorMarca };
+			} else {
+				this.marcas = [...vehiculosDataJson.marcas];
+				this.modelosPorMarca = { ...vehiculosDataJson.modelosPorMarca };
+			}
+		},
+		// Actualizar datos cuando el administrador haga cambios
+		updateVehiculosData(nuevosDatos) {
+			this.marcas = [...nuevosDatos.marcas];
+			this.modelosPorMarca = { ...nuevosDatos.modelosPorMarca };
+			
+			// Si la marca seleccionada ya no existe, resetearla
+			if (this.formData.marca && !this.marcas.includes(this.formData.marca)) {
+				this.formData.marca = '';
+				this.formData.modelo = '';
+			}
+		},
+		openAdminModal() {
+			this.showAdminModal = true;
+		},
 		// Helper: capitaliza la primera letra de cada palabra (separa por espacios)
 		capitalizeWords(value) {
 			if (!value) return '';

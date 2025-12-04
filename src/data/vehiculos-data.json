@@ -1,0 +1,28 @@
+{
+  "marcas": [
+    "Toyota",
+    "Honda", 
+    "Ford",
+    "Chevrolet",
+    "Nissan",
+    "Hyundai",
+    "Kia",
+    "Volkswagen",
+    "Jeep",
+    "Dodge",
+    "JAC"
+  ],
+  "modelosPorMarca": {
+    "Toyota": [],
+    "Honda": [],
+    "Ford": ["F-150", "RANGER"],
+    "Chevrolet": ["Spark", "BEAT", "CHEVY", "SILVERADO"],
+    "Nissan": ["NP300", "NP 300"],
+    "Hyundai": [],
+    "Kia": [],
+    "Volkswagen": [],
+    "Jeep": [],
+    "Dodge": ["RAM 1500"],
+    "JAC": ["E10X"]
+  }
+}
