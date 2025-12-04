@@ -398,7 +398,7 @@ export default {
 		},
 		generateYears() {
 			const currentYear = new Date().getFullYear();
-			for (let year = 2000; year <= currentYear; year++) {
+			for (let year = 1980; year <= currentYear; year++) {
 				this.años.push(year);
 			}
 		},

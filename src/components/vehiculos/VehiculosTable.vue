@@ -15,7 +15,7 @@
 
     <!-- Filtros -->
     <div class="bg-white p-4 rounded-lg shadow mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Buscar Vehículo
@@ -30,35 +30,16 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
-            Marca
+            COPE
           </label>
           <select
-            v-model="marcaFilter"
+            v-model="copeFilter"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Todas las marcas</option>
-            <option value="Toyota">Toyota</option>
-            <option value="Honda">Honda</option>
-            <option value="Ford">Ford</option>
-            <option value="Chevrolet">Chevrolet</option>
-            <option value="Nissan">Nissan</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Año
-          </label>
-          <select
-            v-model="anioFilter"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todos los años</option>
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-            <option value="2021">2021</option>
-            <option value="2020">2020</option>
+            <option value="">Todos los COPEs</option>
+            <option v-for="cope in copesWithDetails" :key="cope.id" :value="cope.id">
+              {{ cope.displayName }}
+            </option>
           </select>
         </div>
       </div>
@@ -338,6 +319,12 @@ export default {
     
     // Datos de vehículos desde API
     const vehiculos = ref([])
+    
+    // Datos para el filtro de COPE
+    const copes = ref([])
+    const areas = ref([])
+    const divisiones = ref([])
+    const copesWithDetails = ref([])
 
     // Modales
     const showVehiculoModal = ref(false)
@@ -349,8 +336,7 @@ export default {
 
     // Filtros
     const searchQuery = ref('')
-    const marcaFilter = ref('')
-    const anioFilter = ref('')
+    const copeFilter = ref('')
 
     // Paginación
     const currentPage = ref(1)
@@ -362,14 +348,9 @@ export default {
     const filteredData = computed(() => {
       let result = vehiculos.value
 
-      // Filtrar por marca
-      if (marcaFilter.value) {
-        result = result.filter(item => item.marca === marcaFilter.value)
-      }
-
-      // Filtrar por año
-      if (anioFilter.value) {
-        result = result.filter(item => item.año === anioFilter.value)
+      // Filtrar por COPE
+      if (copeFilter.value) {
+        result = result.filter(item => item.cope_id === copeFilter.value)
       }
 
       // Filtrar por búsqueda general
@@ -470,13 +451,24 @@ export default {
         ])
 
         const clientes = clientesResponse.data
-        const copes = copesResponse.data
-        const areas = areasResponse.data
-        const divisiones = divisionesResponse.data
+        copes.value = copesResponse.data
+        areas.value = areasResponse.data
+        divisiones.value = divisionesResponse.data
 
         console.log('Vehiculos desde API:', vehiculosResponse.data[0]) // Ver estructura del primer vehículo
         console.log('Clientes disponibles:', clientes.length)
-        console.log('COPEs disponibles:', copes.length)
+        console.log('COPEs disponibles:', copes.value.length)
+        
+        // Crear array de COPEs con información concatenada para el filtro
+        copesWithDetails.value = copes.value.map(cope => {
+          const area = areas.value.find(a => a.id === cope.area_id)
+          const division = area ? divisiones.value.find(d => d.id === area.division_id) : null
+          
+          return {
+            ...cope,
+            displayName: `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}`
+          }
+        })
         
         // Procesar vehículos para agregar información del COPE
         vehiculos.value = vehiculosResponse.data.map(vehiculo => {
@@ -484,9 +476,9 @@ export default {
           const cliente = clientes.find(c => c.id === vehiculo.cliente_id)
           
           // Luego buscar el COPE del cliente
-          const cope = cliente ? copes.find(c => c.id === cliente.cope_id) : null
-          const area = cope ? areas.find(a => a.id === cope.area_id) : null
-          const division = area ? divisiones.find(d => d.id === area.division_id) : null
+          const cope = cliente ? copes.value.find(c => c.id === cliente.cope_id) : null
+          const area = cope ? areas.value.find(a => a.id === cope.area_id) : null
+          const division = area ? divisiones.value.find(d => d.id === area.division_id) : null
           
           const copeInfo = cope ? `${division?.nombre || 'N/A'} - ${area?.nombre || 'N/A'} - ${cope.nombre}` : 'Sin COPE'
           
@@ -495,7 +487,8 @@ export default {
           return {
             ...vehiculo,
             cliente_supervisor: cliente?.supervisor || 'Sin supervisor',
-            cliente_cope_info: copeInfo
+            cliente_cope_info: copeInfo,
+            cope_id: cliente?.cope_id || null
           }
         })
       } catch (err) {
@@ -571,7 +564,7 @@ export default {
     }
 
     // Watchers para filtros
-    watch([searchQuery, marcaFilter, anioFilter], () => {
+    watch([searchQuery, copeFilter], () => {
       currentPage.value = 1
     })
 
@@ -585,8 +578,8 @@ export default {
       isLoading,
       error,
       searchQuery,
-      marcaFilter,
-      anioFilter,
+      copeFilter,
+      copesWithDetails,
       currentPage,
       totalItems,
       totalPages,
