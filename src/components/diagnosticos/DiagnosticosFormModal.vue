@@ -175,11 +175,13 @@
                     <div v-if="formData.motor.empaques" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-empaques'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorEmpaquesImagen', file)"
                         :initial-photo="formData.motor.empaquesImagen"
-                      />
+                        custom-filename="foto_motor_empaques_danados"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -192,11 +194,13 @@
                     <div v-if="formData.motor.sellos" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-sellos'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorSellosImagen', file)"
                         :initial-photo="formData.motor.sellosImagen"
-                      />
+                        custom-filename="foto_motor_sellos_danados"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -209,11 +213,13 @@
                     <div v-if="formData.motor.desgasteAnillos" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-desgasteAnillos'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorDesgasteAnillosImagen', file)"
                         :initial-photo="formData.motor.desgasteAnillosImagen"
-                      />
+                        custom-filename="foto_motor_desgaste_anillos"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -226,11 +232,13 @@
                     <div v-if="formData.motor.desgasteValvulas" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-desgasteValvulas'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorDesgasteValvulasImagen', file)"
                         :initial-photo="formData.motor.desgasteValvulasImagen"
-                      />
+                        custom-filename="foto_motor_desgaste_valvulas"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -243,11 +251,13 @@
                     <div v-if="formData.motor.faltaLubricacion" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-faltaLubricacion'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorFaltaLubricacionImagen', file)"
                         :initial-photo="formData.motor.faltaLubricacionImagen"
-                      />
+                        custom-filename="foto_motor_falta_lubricacion"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -260,11 +270,13 @@
                     <div v-if="formData.motor.piezasSueltas" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-piezasSueltas'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorPiezasSueltasImagen', file)"
                         :initial-photo="formData.motor.piezasSueltasImagen"
-                      />
+                        custom-filename="foto_motor_piezas_sueltas"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -277,11 +289,13 @@
                     <div v-if="formData.motor.bujias" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-bujias'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorBujiasImagen', file)"
                         :initial-photo="formData.motor.bujiasImagen"
-                      />
+                        custom-filename="foto_motor_bujias_defectuosas"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -294,11 +308,13 @@
                     <div v-if="formData.motor.bateria" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-bateria'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorBateriaImagen', file)"
                         :initial-photo="formData.motor.bateriaImagen"
-                      />
+                        custom-filename="foto_motor_problemas_bateria"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -311,11 +327,13 @@
                     <div v-if="formData.motor.bombaGasolina" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-bombaGasolina'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorBombaGasolinaImagen', file)"
                         :initial-photo="formData.motor.bombaGasolinaImagen"
-                      />
+                        custom-filename="foto_motor_bomba_gasolina"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -328,11 +346,13 @@
                     <div v-if="formData.motor.fallaRadiador" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-fallaRadiador'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorFallaRadiadorImagen', file)"
                         :initial-photo="formData.motor.fallaRadiadorImagen"
-                      />
+                        custom-filename="foto_motor_falla_radiador"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -345,11 +365,13 @@
                     <div v-if="formData.motor.fallaTermostato" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-fallaTermostato'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorFallaTermostatoImagen', file)"
                         :initial-photo="formData.motor.fallaTermostatoImagen"
-                      />
+                        custom-filename="foto_motor_falla_termostato"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                   
@@ -362,11 +384,13 @@
                     <div v-if="formData.motor.soportes" class="ml-2">
                       <PhotoUploadAndPreview
                         :key="'motor-soportes'"
-                        button-text="📷"
                         button-class="w-8 h-8 text-xs bg-blue-500 text-white rounded-full hover:bg-blue-600"
                         @photo-captured="(file) => handlePhotoCaptured('motorSoportesImagen', file)"
                         :initial-photo="formData.motor.soportesImagen"
-                      />
+                        custom-filename="foto_motor_soportes_bujias"
+                      >
+                        <font-awesome-icon icon="camera" />
+                      </PhotoUploadAndPreview>
                     </div>
                   </div>
                 </div>
