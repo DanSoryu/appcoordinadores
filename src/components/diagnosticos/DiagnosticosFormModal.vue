@@ -418,6 +418,24 @@
               </div>
             </div>
           </div>
+          
+          <!-- Alerta de validación para Motor -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Sistema de Transmisión -->
@@ -587,6 +605,24 @@
               </div>
             </div>
           </div>
+          
+          <!-- Alerta de validación para Transmisión -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Sistema de frenos -->
@@ -753,6 +789,24 @@
                   rows="3"
                   placeholder="Observaciones adicionales sobre los frenos..."
                 ></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Alerta de validación para Frenos -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -942,6 +996,24 @@
               </div>
             </div>
           </div>
+          
+          <!-- Alerta de validación para Sistema Eléctrico -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Suspensión y Dirección -->
@@ -1128,6 +1200,24 @@
               </div>
             </div>
           </div>
+          
+          <!-- Alerta de validación para Suspensión y Dirección -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Sistema de enfriamiento -->
@@ -1291,6 +1381,24 @@
                   rows="4"
                   placeholder="Observaciones generales sobre el sistema de enfriamiento..."
                 ></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Alerta de validación para Sistema de Enfriamiento -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -1514,6 +1622,24 @@
               </div>
             </div>
           </div>
+          
+          <!-- Alerta de validación para Sistema de Escape -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Sistema de Climatización -->
@@ -1731,6 +1857,24 @@
                   rows="4"
                   placeholder="Observaciones generales sobre el sistema de climatización..."
                 ></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Alerta de validación para Sistema de Climatización -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -2046,6 +2190,24 @@
               </div>
             </div>
           </div>
+          
+          <!-- Alerta de validación para Carrocería y Accesorios -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Llantas y Rines -->
@@ -2226,6 +2388,24 @@
               </div>
             </div>
           </div>
+          
+          <!-- Alerta de validación para Llantas y Rines -->
+          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
+              </div>
+              <div class="ml-3">
+                <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
+                <ul class="text-sm text-red-700 space-y-1">
+                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                    <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
+                    {{ error }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Recuadro de validación -->
@@ -2263,6 +2443,7 @@
             @click="handleNextStep"
             variant="primary"
             :disabled="!isStepValid"
+            :title="!isStepValid ? 'Complete todos los campos requeridos para continuar' : ''"
           >
             Siguiente
           </BaseButton>
@@ -2274,6 +2455,7 @@
             :disabled="!isStepValid"
             custom-loading-text="Guardando diagnóstico"
             :min-delay="1500"
+            :title="!isStepValid ? 'Complete todos los campos requeridos para enviar el diagnóstico' : ''"
           >
             Completar Diagnóstico
           </BaseButton>
@@ -2644,21 +2826,22 @@ export default {
     isStepValid() {
       // Step 1: Validar selección de categorías
       if (this.currentStep === 1) {
-        return this.selectedCategories.length > 0;
+        const isValid = this.selectedCategories.length > 0;
+        console.log('Validación Step 1 - Categorías seleccionadas:', this.selectedCategories.length, '- Válido:', isValid);
+        return isValid;
       }
       
-      // Steps de categorías: Validar que tenga al menos una selección o comentario
-      const category = this.currentCategory;
-      if (!category || !this.formData[category]) return false;
+      // Steps de categorías: Usar el método getCurrentSectionErrors para validar
+      const errors = this.getCurrentSectionErrors();
+      const isValid = errors.length === 0;
       
-      const categoryData = this.formData[category];
-      const hasSelection = Object.keys(categoryData).some(key => 
-        key !== 'comentarios' && categoryData[key]
-      );
-      const hasComments = categoryData.comentarios && categoryData.comentarios.trim();
+      if (!isValid) {
+        console.log(`Validación Step ${this.currentStep} - Errores encontrados:`, errors);
+      } else {
+        console.log(`Validación Step ${this.currentStep} - Éxito: sin errores`);
+      }
       
-      return hasSelection || hasComments;
-
+      return isValid;
     },
     
     validationErrors() {
@@ -2678,7 +2861,7 @@ export default {
       
       const categoryData = this.formData[category];
       const hasSelection = Object.keys(categoryData).some(key => 
-        key !== 'comentarios' && categoryData[key]
+        key !== 'comentarios' && !key.includes('Imagen') && categoryData[key]
       );
       const hasComments = categoryData.comentarios && categoryData.comentarios.trim();
       
@@ -2698,8 +2881,82 @@ export default {
         errors.push(`Debe seleccionar al menos una falla o agregar comentarios en ${categoryNames[category]}`);
       }
       
+      // Validar fotos faltantes para opciones seleccionadas
+      const selectedFields = Object.keys(categoryData).filter(key => 
+        key !== 'comentarios' && 
+        key !== 'tipo_mantenimiento' && 
+        !key.includes('Imagen') && 
+        categoryData[key] === true
+      );
+      
+      selectedFields.forEach(field => {
+        const imageField = this.getImageFieldName(field);
+        if (imageField && !categoryData[imageField]) {
+          const fieldDisplayName = this.getFieldDisplayName(field);
+          errors.push(`Falta fotografía de: ${fieldDisplayName}`);
+        }
+      });
+      
       return errors;
+    },
 
+    // Método para obtener errores específicos de cada sección
+    getCurrentSectionErrors() {
+      if (this.currentStep === 1) {
+        return this.validationErrors;
+      }
+      
+      const category = this.currentCategory;
+      if (!category || !this.formData[category]) {
+        console.warn('getCurrentSectionErrors: Categoría no encontrada', { category, currentStep: this.currentStep });
+        return ['Error interno: categoría no encontrada'];
+      }
+      
+      const errors = [];
+      const categoryData = this.formData[category];
+      
+      // Verificar si hay al menos una selección o comentario
+      const hasSelection = Object.keys(categoryData).some(key => 
+        key !== 'comentarios' && 
+        key !== 'tipo_mantenimiento' && 
+        !key.includes('Imagen') && 
+        categoryData[key] === true
+      );
+      const hasComments = categoryData.comentarios && categoryData.comentarios.trim();
+      
+      console.log(`Validando sección ${category}:`, {
+        hasSelection,
+        hasComments: !!hasComments,
+        selectedFields: Object.keys(categoryData).filter(key => 
+          key !== 'comentarios' && 
+          key !== 'tipo_mantenimiento' && 
+          !key.includes('Imagen') && 
+          categoryData[key] === true
+        )
+      });
+      
+      if (!hasSelection && !hasComments) {
+        errors.push('Debe seleccionar al menos una opción o escribir un comentario general');
+      }
+      
+      // Verificar fotos faltantes para opciones seleccionadas
+      const selectedFields = Object.keys(categoryData).filter(key => 
+        key !== 'comentarios' && 
+        key !== 'tipo_mantenimiento' && 
+        !key.includes('Imagen') && 
+        categoryData[key] === true
+      );
+      
+      selectedFields.forEach(field => {
+        const imageField = this.getImageFieldName(field);
+        if (imageField && !categoryData[imageField]) {
+          const fieldDisplayName = this.getFieldDisplayName(field);
+          errors.push(`No se ha subido la fotografía de: ${fieldDisplayName}`);
+        }
+      });
+      
+      console.log(`Errores encontrados en ${category}:`, errors);
+      return errors;
     },
     
     finalFormData() {
@@ -2989,6 +3246,29 @@ export default {
       },
       deep: true
     },
+
+    // Watcher para prevenir cambios de paso inválidos
+    currentStep: {
+      handler(newStep, oldStep) {
+        // Si el nuevo paso no es 1 (selección de categorías) y no es válido, revertir
+        if (newStep > 1 && oldStep !== undefined) {
+          // Validar el paso anterior antes de permitir el cambio
+          const previousStepValid = this.validateSpecificStep(oldStep);
+          if (!previousStepValid && newStep > oldStep) {
+            console.warn(`Cambio de paso bloqueado: Step ${oldStep} no es válido`);
+            this.$nextTick(() => {
+              this.currentStep = oldStep; // Revertir al paso anterior
+            });
+            
+            this.toastStore.addToast({
+              message: 'Complete todos los campos requeridos antes de continuar',
+              type: 'warning',
+              duration: 3000
+            });
+          }
+        }
+      }
+    },
     
     // Watcher para mostrar el JSON en tiempo real cuando cambian los datos
     formData: {
@@ -3152,6 +3432,17 @@ export default {
     },
     
     handleNextStep() {
+      // Validar que el paso actual sea válido antes de avanzar
+      if (!this.isStepValid) {
+        console.warn('No se puede avanzar: el paso actual tiene errores de validación');
+        this.toastStore.addToast({
+          message: 'Por favor complete todos los campos requeridos antes de continuar',
+          type: 'warning',
+          duration: 3000
+        });
+        return;
+      }
+      
       if (this.currentStep < this.dynamicTotalSteps) {
         this.currentStep++;
         this.scrollToTop();
@@ -3175,7 +3466,42 @@ export default {
     },
     
     async handleFinalSubmit() {
-      if (!this.isStepValid) return;
+      // Validación estricta antes del envío final
+      if (!this.isStepValid) {
+        console.warn('No se puede enviar: hay errores de validación');
+        this.toastStore.addToast({
+          message: 'Por favor complete todos los campos requeridos antes de enviar el diagnóstico',
+          type: 'error',
+          duration: 4000
+        });
+        return;
+      }
+      
+      // Validación adicional de que hay al menos una sección con datos
+      const hasAnyData = this.selectedCategories.some(category => {
+        const categoryData = this.formData[category];
+        if (!categoryData) return false;
+        
+        // Verificar si hay alguna selección o comentario
+        const hasSelection = Object.keys(categoryData).some(key => 
+          key !== 'comentarios' && 
+          key !== 'tipo_mantenimiento' && 
+          !key.includes('Imagen') && 
+          categoryData[key] === true
+        );
+        const hasComments = categoryData.comentarios && categoryData.comentarios.trim();
+        
+        return hasSelection || hasComments;
+      });
+      
+      if (!hasAnyData) {
+        this.toastStore.addToast({
+          message: 'Debe completar al menos una sección del diagnóstico',
+          type: 'error',
+          duration: 4000
+        });
+        return;
+      }
       
       try {
         await this.executeSubmit(async () => {
@@ -3253,6 +3579,161 @@ export default {
       
       // Resetear al primer paso
       this.currentStep = 1;
+    },
+
+    // Método para obtener el nombre del campo de imagen correspondiente
+    getImageFieldName(field) {
+      // Convertir el nombre del campo booleano al nombre del campo de imagen
+      return field + 'Imagen';
+    },
+
+    // Método para obtener el nombre de visualización de un campo
+    getFieldDisplayName(field) {
+      const fieldNames = {
+        // Motor
+        empaques: 'Empaques',
+        sellos: 'Sellos',
+        desgasteAnillos: 'Desgaste de anillos',
+        desgasteValvulas: 'Desgaste de válvulas',
+        faltaLubricacion: 'Falta de lubricación',
+        piezasSueltas: 'Piezas sueltas',
+        bujias: 'Bujías',
+        bateria: 'Batería',
+        bombaGasolina: 'Bomba de gasolina',
+        fallaRadiador: 'Falla en radiador',
+        fallaTermostato: 'Falla en termostato',
+        soportes: 'Soportes',
+        
+        // Transmisión
+        retenesDanados: 'Retenes dañados',
+        juntasDanadas: 'Juntas dañadas',
+        nivelBajoFlujo: 'Nivel bajo de fluido',
+        desgasteInterno: 'Desgaste interno',
+        desgasteDiscos: 'Desgaste de discos',
+        convertidorTorque: 'Convertidor de torque',
+        
+        // Frenos
+        aireEnSistema: 'Aire en sistema',
+        fugaLiquido: 'Fuga de líquido',
+        balatasDesgastadas: 'Balatas desgastadas',
+        discoDesgastado: 'Disco desgastado',
+        clipers: 'Clípers',
+        manguerasDefectuosas: 'Mangueras defectuosas',
+        
+        // Sistema Eléctrico
+        celdasDanadas: 'Celdas dañadas',
+        alternadorDefectuoso: 'Alternador defectuoso',
+        bandaSuelta: 'Banda suelta',
+        alternadorDanado: 'Alternador dañado',
+        focoFundido: 'Foco fundido',
+        conectoresSulfatados: 'Conectores sulfatados',
+        
+        // Suspensión y Dirección
+        desgaste: 'Desgaste',
+        rupturaRetenes: 'Ruptura de retenes',
+        terminales: 'Terminales',
+        cremalleras: 'Cremalleras',
+        bujesDanados: 'Bujes dañados',
+        rotulasDanadas: 'Rótulas dañadas',
+        
+        // Sistema de Enfriamiento
+        manguerasPerforadas: 'Mangueras perforadas',
+        nucleoPerforado: 'Núcleo perforado',
+        desgasteReten: 'Desgaste de retén',
+        desgasteRodamiento: 'Desgaste de rodamiento',
+        termostatoBloqueado: 'Termostato bloqueado',
+        
+        // Sistema de Escape
+        fugasPerforaciones: 'Fugas y perforaciones',
+        corrosion: 'Corrosión',
+        impacto: 'Impacto',
+        ruidoExcesivo: 'Ruido excesivo',
+        silenciadorRoto: 'Silenciador roto',
+        silenciadorSuelto: 'Silenciador suelto',
+        catalizadorObstruido: 'Catalizador obstruido',
+        malaCombustion: 'Mala combustión',
+        
+        // Sistema de Climatización
+        acNoEnfria: 'A/C no enfría',
+        fugaGas: 'Fuga de gas',
+        compresorDanado: 'Compresor dañado',
+        malOlorVentilacion: 'Mal olor en ventilación',
+        filtroCabinaSucio: 'Filtro de cabina sucio',
+        noCalienta: 'No calienta',
+        fallaTermostato: 'Falla en termostato',
+        radiadorInterior: 'Radiador interior',
+        
+        // Carrocería y Accesorios
+        rayonesAbolladuras: 'Rayones y abolladuras',
+        golpes: 'Golpes',
+        roces: 'Roces',
+        cierreDeficiente: 'Cierre deficiente',
+        cerraduras: 'Cerraduras',
+        bisagraDesajustada: 'Bisagra desajustada',
+        grietasAstilladuras: 'Grietas y astilladuras',
+        impactoCristal: 'Impacto en cristal',
+        tensionTermica: 'Tensión térmica',
+        limpiaNoFunciona: 'Limpia parabrisas no funciona',
+        motorDanado: 'Motor dañado',
+        fusibleDanado: 'Fusible dañado',
+        
+        // Llantas y Rines
+        alineacion: 'Alineación',
+        balanceoDeficiente: 'Balanceo deficiente',
+        presionIncorrecta: 'Presión incorrecta',
+        revisionFechaFabricacion: 'Revisión de fecha de fabricación',
+        impactoBaches: 'Impacto con baches',
+        impactoBanquetas: 'Impacto con banquetas'
+      };
+      
+      return fieldNames[field] || field;
+    },
+
+    // Método para validar un paso específico
+    validateSpecificStep(stepNumber) {
+      if (stepNumber === 1) {
+        return this.selectedCategories.length > 0;
+      }
+      
+      // Para pasos de categorías, necesitamos determinar qué categoría corresponde
+      const categoryIndex = stepNumber - 2; // -2 porque step 1 es selección
+      const category = this.selectedCategories[categoryIndex];
+      
+      if (!category || !this.formData[category]) {
+        return false;
+      }
+      
+      const categoryData = this.formData[category];
+      
+      // Verificar si hay al menos una selección o comentario
+      const hasSelection = Object.keys(categoryData).some(key => 
+        key !== 'comentarios' && 
+        key !== 'tipo_mantenimiento' && 
+        !key.includes('Imagen') && 
+        categoryData[key] === true
+      );
+      const hasComments = categoryData.comentarios && categoryData.comentarios.trim();
+      
+      if (!hasSelection && !hasComments) {
+        return false;
+      }
+      
+      // Verificar fotos faltantes para opciones seleccionadas
+      const selectedFields = Object.keys(categoryData).filter(key => 
+        key !== 'comentarios' && 
+        key !== 'tipo_mantenimiento' && 
+        !key.includes('Imagen') && 
+        categoryData[key] === true
+      );
+      
+      for (const field of selectedFields) {
+        const imageField = this.getImageFieldName(field);
+        if (imageField && !categoryData[imageField]) {
+          return false; // Falta una foto requerida
+        }
+      }
+      
+      return true; // Todas las validaciones pasaron
     }
   }
 };
