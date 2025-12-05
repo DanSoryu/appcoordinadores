@@ -2443,6 +2443,7 @@
             @click="handleNextStep"
             variant="primary"
             :disabled="!isStepValid"
+            :class="{ 'opacity-50 cursor-not-allowed': !isStepValid }"
             :title="!isStepValid ? 'Complete todos los campos requeridos para continuar' : ''"
           >
             Siguiente
@@ -2453,6 +2454,7 @@
             @click="handleFinalSubmit"
             variant="success"
             :disabled="!isStepValid"
+            :class="{ 'opacity-50 cursor-not-allowed': !isStepValid }"
             custom-loading-text="Guardando diagnóstico"
             :min-delay="1500"
             :title="!isStepValid ? 'Complete todos los campos requeridos para enviar el diagnóstico' : ''"
@@ -2827,7 +2829,13 @@ export default {
       // Step 1: Validar selección de categorías
       if (this.currentStep === 1) {
         const isValid = this.selectedCategories.length > 0;
-        console.log('Validación Step 1 - Categorías seleccionadas:', this.selectedCategories.length, '- Válido:', isValid);
+        console.log('=== VALIDACIÓN STEP 1 ===');
+        console.log('currentStep:', this.currentStep);
+        console.log('categoriesSelection:', this.categoriesSelection);
+        console.log('selectedCategories:', this.selectedCategories);
+        console.log('selectedCategories.length:', this.selectedCategories.length);
+        console.log('isValid:', isValid);
+        console.log('=========================');
         return isValid;
       }
       
@@ -2957,26 +2965,6 @@ export default {
       
       console.log(`Errores encontrados en ${category}:`, errors);
       return errors;
-    }
-  },
-
-  computed: {
-    // Obtener las categorías seleccionadas en orden
-    selectedCategories() {
-      const categories = [
-        'motor',
-        'transmision', 
-        'frenos',
-        'sistemaElectrico',
-        'suspensionDireccion',
-        'sistemaEnfriamiento',
-        'sistemaEscape',
-        'sistemaClimatizacion',
-        'carroceriaAccesorios',
-        'llantasRines'
-      ];
-      
-      return categories.filter(category => this.categoriesSelection[category]);
     },
     
     finalFormData() {
@@ -3304,6 +3292,8 @@ export default {
         console.log('currentStep:', this.currentStep);
         console.log('dynamicTotalSteps:', this.dynamicTotalSteps);
         console.log('currentCategory:', this.currentCategory);
+        console.log('isStepValid:', this.isStepValid);
+        console.log('===============================================');
         
         // Mostrar el JSON actualizado cuando cambian las categorías
         this.$nextTick(() => {
