@@ -420,7 +420,7 @@
           </div>
           
           <!-- Alerta de validación para Motor -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -428,7 +428,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -607,7 +607,7 @@
           </div>
           
           <!-- Alerta de validación para Transmisión -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -615,7 +615,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -794,7 +794,7 @@
           </div>
           
           <!-- Alerta de validación para Frenos -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -802,7 +802,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -998,7 +998,7 @@
           </div>
           
           <!-- Alerta de validación para Sistema Eléctrico -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -1006,7 +1006,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -1202,7 +1202,7 @@
           </div>
           
           <!-- Alerta de validación para Suspensión y Dirección -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -1210,7 +1210,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -1386,7 +1386,7 @@
           </div>
           
           <!-- Alerta de validación para Sistema de Enfriamiento -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -1394,7 +1394,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -1624,7 +1624,7 @@
           </div>
           
           <!-- Alerta de validación para Sistema de Escape -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -1632,7 +1632,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -1862,7 +1862,7 @@
           </div>
           
           <!-- Alerta de validación para Sistema de Climatización -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -1870,7 +1870,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -2192,7 +2192,7 @@
           </div>
           
           <!-- Alerta de validación para Carrocería y Accesorios -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -2200,7 +2200,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -2390,7 +2390,7 @@
           </div>
           
           <!-- Alerta de validación para Llantas y Rines -->
-          <div v-if="getCurrentSectionErrors().length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div v-if="currentSectionErrors.length > 0" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-start">
               <div class="flex-shrink-0">
                 <font-awesome-icon icon="exclamation-triangle" class="text-red-500 text-lg" />
@@ -2398,7 +2398,7 @@
               <div class="ml-3">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Campos faltantes:</h4>
                 <ul class="text-sm text-red-700 space-y-1">
-                  <li v-for="error in getCurrentSectionErrors()" :key="error" class="flex items-center">
+                  <li v-for="error in currentSectionErrors" :key="error" class="flex items-center">
                     <span class="w-2 h-2 bg-red-400 rounded-full mr-2"></span>
                     {{ error }}
                   </li>
@@ -2900,6 +2900,11 @@ export default {
       return errors;
     },
 
+    // Computed property para errores de la sección actual
+    currentSectionErrors() {
+      return this.getCurrentSectionErrors();
+    },
+
     // Método para obtener errores específicos de cada sección
     getCurrentSectionErrors() {
       if (this.currentStep === 1) {
@@ -3247,25 +3252,12 @@ export default {
       deep: true
     },
 
-    // Watcher para prevenir cambios de paso inválidos
+    // Watcher para el paso actual (simplificado para evitar conflictos)
     currentStep: {
       handler(newStep, oldStep) {
-        // Si el nuevo paso no es 1 (selección de categorías) y no es válido, revertir
-        if (newStep > 1 && oldStep !== undefined) {
-          // Validar el paso anterior antes de permitir el cambio
-          const previousStepValid = this.validateSpecificStep(oldStep);
-          if (!previousStepValid && newStep > oldStep) {
-            console.warn(`Cambio de paso bloqueado: Step ${oldStep} no es válido`);
-            this.$nextTick(() => {
-              this.currentStep = oldStep; // Revertir al paso anterior
-            });
-            
-            this.toastStore.addToast({
-              message: 'Complete todos los campos requeridos antes de continuar',
-              type: 'warning',
-              duration: 3000
-            });
-          }
+        // Solo log para debug, la validación se maneja en los métodos de navegación
+        if (newStep !== oldStep && oldStep !== undefined) {
+          console.log(`Cambio de paso: ${oldStep} → ${newStep}`);
         }
       }
     },
@@ -3458,9 +3450,14 @@ export default {
     
     scrollToTop() {
       this.$nextTick(() => {
-        const modalContent = this.$el.querySelector('.overflow-y-auto');
-        if (modalContent) {
-          modalContent.scrollTop = 0;
+        if (this.$el && typeof this.$el.querySelector === 'function') {
+          const modalContent = this.$el.querySelector('.overflow-y-auto');
+          if (modalContent) {
+            modalContent.scrollTop = 0;
+          }
+        } else {
+          // Fallback: scroll the window if $el is not available
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       });
     },
