@@ -3374,22 +3374,22 @@ export default {
       
       // Si es el nuevo formato con base64, usar esos datos
       if (photoData && typeof photoData === 'object' && photoData.base64) {
-        // Mapear los sistemas
+        // Mapear los sistemas con sus nombres de carpeta
         const sistemaMapping = {
-          'motor': 'motor',
-          'transmision': 'transmision', 
-          'frenos': 'frenos',
-          'sistemaElectrico': 'sistemaElectrico',
-          'suspensionDireccion': 'suspensionDireccion',
-          'sistemaEnfriamiento': 'sistemaEnfriamiento',
-          'sistemaEscape': 'sistemaEscape',
-          'sistemaClimatizacion': 'sistemaClimatizacion',
-          'carroceriaAccesorios': 'carroceriaAccesorios',
-          'llantasRines': 'llantasRines'
+          'motor': { key: 'motor', folder: 'motor' },
+          'transmision': { key: 'transmision', folder: 'transmision' }, 
+          'frenos': { key: 'frenos', folder: 'frenos' },
+          'sistemaElectrico': { key: 'sistemaElectrico', folder: 'sistema_electrico' },
+          'suspensionDireccion': { key: 'suspensionDireccion', folder: 'suspension_direccion' },
+          'sistemaEnfriamiento': { key: 'sistemaEnfriamiento', folder: 'sistema_enfriamiento' },
+          'sistemaEscape': { key: 'sistemaEscape', folder: 'sistema_escape' },
+          'sistemaClimatizacion': { key: 'sistemaClimatizacion', folder: 'sistema_climatizacion' },
+          'carroceriaAccesorios': { key: 'carroceriaAccesorios', folder: 'carroceria_accesorios' },
+          'llantasRines': { key: 'llantasRines', folder: 'llantas_rines' }
         };
         
         // Buscar a qué sistema pertenece el field
-        for (const [sistemaKey, sistemaName] of Object.entries(sistemaMapping)) {
+        for (const [sistemaKey, sistemaInfo] of Object.entries(sistemaMapping)) {
           if (field.startsWith(sistemaKey)) {
             // Obtener el nombre del campo sin el prefijo del sistema
             // Ej: "motorEmpaquesImagen" -> "EmpaquesImagen" -> "empaquesImagen"
@@ -3397,17 +3397,21 @@ export default {
             // Convertir la primera letra a minúscula para que coincida con el formData
             imagenField = imagenField.charAt(0).toLowerCase() + imagenField.slice(1);
             
-            if (this.formData[sistemaName] && imagenField in this.formData[sistemaName]) {
-              // Guardar tanto el base64 como el nombre de archivo
-              this.formData[sistemaName][imagenField] = {
+            if (this.formData[sistemaInfo.key] && imagenField in this.formData[sistemaInfo.key]) {
+              // Crear nombre de archivo con carpeta
+              const originalFileName = photoData.fileName || 'foto.jpg';
+              const fileNameWithFolder = `${sistemaInfo.folder}/${originalFileName}`;
+              
+              // Guardar tanto el base64 como el nombre de archivo con carpeta
+              this.formData[sistemaInfo.key][imagenField] = {
                 base64: photoData.base64,
-                fileName: photoData.fileName
+                fileName: fileNameWithFolder
               };
-              console.log(`Imagen asignada: ${sistemaName}.${imagenField}`);
-              console.log(`Nombre de archivo: ${photoData.fileName}`);
+              console.log(`Imagen asignada: ${sistemaInfo.key}.${imagenField}`);
+              console.log(`Nombre de archivo con carpeta: ${fileNameWithFolder}`);
               break;
             } else {
-              console.warn(`Campo no encontrado: ${sistemaName}.${imagenField}`);
+              console.warn(`Campo no encontrado: ${sistemaInfo.key}.${imagenField}`);
             }
           }
         }
