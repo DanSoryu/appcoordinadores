@@ -454,7 +454,7 @@ export default {
 			
 			if (this.clienteData?.id) {
 				// Actualizar cliente existente
-				const response = await apiClient.put(`/clientes/${this.clienteData.id}`, this.finalFormData);
+				const response = await apiClient.post(`/update/clientes/${this.clienteData.id}`, this.finalFormData);
 				console.log('Cliente actualizado:', response.data);
 			} else {
 				// Crear nuevo cliente

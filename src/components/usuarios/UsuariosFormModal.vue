@@ -578,7 +578,7 @@ export default {
 							rol: formData.value.rol
 						};
 						
-						response = await apiClient.put(`/users/${props.usuarioData.id}`, updateData);
+						response = await apiClient.post(`/update/users/${props.usuarioData.id}`, updateData);
 						console.log('Usuario actualizado:', response.data);
 						
 						// Si el usuario es mecánico, también actualizar su taller
@@ -609,8 +609,8 @@ export default {
 									
 									console.log('Actualizando detalle mecánico con:', updateDetalleData);
 									
-									const updateDetalleResponse = await apiClient.put(
-										`/detalle-mecanico/${detalleMecanicoResponse.data.id}`, 
+									const updateDetalleResponse = await apiClient.post(
+										`/update/detalle-mecanico/${detalleMecanicoResponse.data.id}`, 
 										updateDetalleData
 									);
 									

@@ -645,7 +645,7 @@ export default {
 			
 			if (this.vehiculoData?.id) {
 				// Actualizar vehículo existente
-				const response = await apiClient.put(`/vehiculos/${this.vehiculoData.id}`, this.finalFormData);
+				const response = await apiClient.post(`/update/vehiculos/${this.vehiculoData.id}`, this.finalFormData);
 				console.log('Vehículo actualizado:', response.data);
 			} else {
 				// Crear nuevo vehículo

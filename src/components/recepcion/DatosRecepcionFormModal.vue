@@ -375,7 +375,7 @@ export default {
 					let response;
 					if (this.recepcionData?.id) {
 						// Actualizar recepción existente
-						response = await apiClient.put(`/recepcion/${this.recepcionData.id}`, datosParaAPI);
+						response = await apiClient.post(`/update/recepcion/${this.recepcionData.id}`, datosParaAPI);
 						console.log('Recepción actualizada:', response.data);
 					} else {
 						// Crear nueva recepción
