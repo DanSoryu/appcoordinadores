@@ -454,31 +454,126 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.transmision.retenesDanados" class="rounded">
-                    <span class="text-sm">Retenes dañados</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.transmision.juntasDanadas" class="rounded">
-                    <span class="text-sm">Juntas dañadas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.transmision.nivelBajoFlujo" class="rounded">
-                    <span class="text-sm">Nivel bajo de flujo</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.transmision.desgasteInterno" class="rounded">
-                    <span class="text-sm">Desgaste interno</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.transmision.desgasteDiscos" class="rounded">
-                    <span class="text-sm">Desgaste de discos</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.transmision.convertidorTorque" class="rounded">
-                    <span class="text-sm">Problemas con el Convertidor de torque</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Retenes dañados -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.transmision.retenesDanados" class="rounded">
+                      <span class="text-sm">Retenes dañados</span>
+                    </label>
+                    <div v-if="formData.transmision.retenesDanados" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="transmision-retenes-danados"
+                        :key="'transmision-retenesDanados'"
+                        button-class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('transmisionRetenesDanadosImagen', file)"
+                        :initial-photo="formData.transmision.retenesDanadosImagen"
+                        custom-filename="foto_transmision_retenes_danados"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Juntas dañadas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.transmision.juntasDanadas" class="rounded">
+                      <span class="text-sm">Juntas dañadas</span>
+                    </label>
+                    <div v-if="formData.transmision.juntasDanadas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="transmision-juntas-danadas"
+                        :key="'transmision-juntasDanadas'"
+                        button-class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('transmisionJuntasDanadasImagen', file)"
+                        :initial-photo="formData.transmision.juntasDanadasImagen"
+                        custom-filename="foto_transmision_juntas_danadas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Nivel bajo de flujo -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.transmision.nivelBajoFlujo" class="rounded">
+                      <span class="text-sm">Nivel bajo de flujo</span>
+                    </label>
+                    <div v-if="formData.transmision.nivelBajoFlujo" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="transmision-nivel-bajo-flujo"
+                        :key="'transmision-nivelBajoFlujo'"
+                        button-class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('transmisionNivelBajoFlujoImagen', file)"
+                        :initial-photo="formData.transmision.nivelBajoFlujoImagen"
+                        custom-filename="foto_transmision_nivel_bajo_flujo"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Desgaste interno -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.transmision.desgasteInterno" class="rounded">
+                      <span class="text-sm">Desgaste interno</span>
+                    </label>
+                    <div v-if="formData.transmision.desgasteInterno" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="transmision-desgaste-interno"
+                        :key="'transmision-desgasteInterno'"
+                        button-class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('transmisionDesgasteInternoImagen', file)"
+                        :initial-photo="formData.transmision.desgasteInternoImagen"
+                        custom-filename="foto_transmision_desgaste_interno"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Desgaste de discos -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.transmision.desgasteDiscos" class="rounded">
+                      <span class="text-sm">Desgaste de discos</span>
+                    </label>
+                    <div v-if="formData.transmision.desgasteDiscos" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="transmision-desgaste-discos"
+                        :key="'transmision-desgasteDiscos'"
+                        button-class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('transmisionDesgasteDiscosImagen', file)"
+                        :initial-photo="formData.transmision.desgasteDiscosImagen"
+                        custom-filename="foto_transmision_desgaste_discos"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Problemas con el Convertidor de torque -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.transmision.convertidorTorque" class="rounded">
+                      <span class="text-sm">Problemas con el Convertidor de torque</span>
+                    </label>
+                    <div v-if="formData.transmision.convertidorTorque" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="transmision-convertidor-torque"
+                        :key="'transmision-convertidorTorque'"
+                        button-class="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('transmisionConvertidorTorqueImagen', file)"
+                        :initial-photo="formData.transmision.convertidorTorqueImagen"
+                        custom-filename="foto_transmision_convertidor_torque"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div>
@@ -528,31 +623,126 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.frenos.aireEnSistema" class="rounded">
-                    <span class="text-sm">Aire en el sistema</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.frenos.fugaLiquido" class="rounded">
-                    <span class="text-sm">Fuga de líquido</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.frenos.balatasDesgastadas" class="rounded">
-                    <span class="text-sm">Balatas desgastadas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.frenos.discoDesgastado" class="rounded">
-                    <span class="text-sm">Disco desgastado</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.frenos.clipers" class="rounded">
-                    <span class="text-sm">Clipers defectuosos</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.frenos.manguerasDefectuosas" class="rounded">
-                    <span class="text-sm">Mangueras defectuosas</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Aire en el sistema -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.frenos.aireEnSistema" class="rounded">
+                      <span class="text-sm">Aire en el sistema</span>
+                    </label>
+                    <div v-if="formData.frenos.aireEnSistema" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="frenos-aire-sistema"
+                        :key="'frenos-aireEnSistema'"
+                        button-class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('frenosAireEnSistemaImagen', file)"
+                        :initial-photo="formData.frenos.aireEnSistemaImagen"
+                        custom-filename="foto_frenos_aire_sistema"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Fuga de líquido -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.frenos.fugaLiquido" class="rounded">
+                      <span class="text-sm">Fuga de líquido</span>
+                    </label>
+                    <div v-if="formData.frenos.fugaLiquido" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="frenos-fuga-liquido"
+                        :key="'frenos-fugaLiquido'"
+                        button-class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('frenosFugaLiquidoImagen', file)"
+                        :initial-photo="formData.frenos.fugaLiquidoImagen"
+                        custom-filename="foto_frenos_fuga_liquido"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Balatas desgastadas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.frenos.balatasDesgastadas" class="rounded">
+                      <span class="text-sm">Balatas desgastadas</span>
+                    </label>
+                    <div v-if="formData.frenos.balatasDesgastadas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="frenos-balatas-desgastadas"
+                        :key="'frenos-balatasDesgastadas'"
+                        button-class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('frenosBalatasDesgastadasImagen', file)"
+                        :initial-photo="formData.frenos.balatasDesgastadasImagen"
+                        custom-filename="foto_frenos_balatas_desgastadas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Disco desgastado -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.frenos.discoDesgastado" class="rounded">
+                      <span class="text-sm">Disco desgastado</span>
+                    </label>
+                    <div v-if="formData.frenos.discoDesgastado" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="frenos-disco-desgastado"
+                        :key="'frenos-discoDesgastado'"
+                        button-class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('frenosDiscoDesgastadoImagen', file)"
+                        :initial-photo="formData.frenos.discoDesgastadoImagen"
+                        custom-filename="foto_frenos_disco_desgastado"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Clipers defectuosos -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.frenos.clipers" class="rounded">
+                      <span class="text-sm">Clipers defectuosos</span>
+                    </label>
+                    <div v-if="formData.frenos.clipers" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="frenos-clipers"
+                        :key="'frenos-clipers'"
+                        button-class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('frenosClipersImagen', file)"
+                        :initial-photo="formData.frenos.clipersImagen"
+                        custom-filename="foto_frenos_clipers_defectuosos"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Mangueras defectuosas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.frenos.manguerasDefectuosas" class="rounded">
+                      <span class="text-sm">Mangueras defectuosas</span>
+                    </label>
+                    <div v-if="formData.frenos.manguerasDefectuosas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="frenos-mangueras-defectuosas"
+                        :key="'frenos-manguerasDefectuosas'"
+                        button-class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('frenosManguerasDefectuosasImagen', file)"
+                        :initial-photo="formData.frenos.manguerasDefectuosasImagen"
+                        custom-filename="foto_frenos_mangueras_defectuosas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div>
@@ -605,45 +795,138 @@
               <!-- Subcategoría: Batería -->
               <div class="border-b border-yellow-200 pb-4">
                 <h5 class="text-md font-medium text-yellow-700 mb-2">Batería</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaElectrico.celdasDanadas" class="rounded">
-                    <span class="text-sm">Celdas dañadas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaElectrico.alternadorDefectuoso" class="rounded">
-                    <span class="text-sm">Alternador defectuoso</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Celdas dañadas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaElectrico.celdasDanadas" class="rounded">
+                      <span class="text-sm">Celdas dañadas</span>
+                    </label>
+                    <div v-if="formData.sistemaElectrico.celdasDanadas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="electrico-celdas-danadas"
+                        :key="'electrico-celdasDanadas'"
+                        button-class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('electricoCeldasDanadasImagen', file)"
+                        :initial-photo="formData.sistemaElectrico.celdasDanadasImagen"
+                        custom-filename="foto_electrico_celdas_danadas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Alternador defectuoso -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaElectrico.alternadorDefectuoso" class="rounded">
+                      <span class="text-sm">Alternador defectuoso</span>
+                    </label>
+                    <div v-if="formData.sistemaElectrico.alternadorDefectuoso" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="electrico-alternador-defectuoso"
+                        :key="'electrico-alternadorDefectuoso'"
+                        button-class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('electricoAlternadorDefectuosoImagen', file)"
+                        :initial-photo="formData.sistemaElectrico.alternadorDefectuosoImagen"
+                        custom-filename="foto_electrico_alternador_defectuoso"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Alternador -->
               <div class="border-b border-yellow-200 pb-4">
                 <h5 class="text-md font-medium text-yellow-700 mb-2">Alternador</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaElectrico.bandaSuelta" class="rounded">
-                    <span class="text-sm">Banda suelta</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaElectrico.alternadorDanado" class="rounded">
-                    <span class="text-sm">Alternador dañado</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Banda suelta -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaElectrico.bandaSuelta" class="rounded">
+                      <span class="text-sm">Banda suelta</span>
+                    </label>
+                    <div v-if="formData.sistemaElectrico.bandaSuelta" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="electrico-banda-suelta"
+                        :key="'electrico-bandaSuelta'"
+                        button-class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('electricoBandaSueltaImagen', file)"
+                        :initial-photo="formData.sistemaElectrico.bandaSueltaImagen"
+                        custom-filename="foto_electrico_banda_suelta"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Alternador dañado -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaElectrico.alternadorDanado" class="rounded">
+                      <span class="text-sm">Alternador dañado</span>
+                    </label>
+                    <div v-if="formData.sistemaElectrico.alternadorDanado" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="electrico-alternador-danado"
+                        :key="'electrico-alternadorDanado'"
+                        button-class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('electricoAlternadorDanadoImagen', file)"
+                        :initial-photo="formData.sistemaElectrico.alternadorDanadoImagen"
+                        custom-filename="foto_electrico_alternador_danado"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Luces y Conexiones -->
               <div class="border-b border-yellow-200 pb-4">
                 <h5 class="text-md font-medium text-yellow-700 mb-2">Luces y Conexiones</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaElectrico.focoFundido" class="rounded">
-                    <span class="text-sm">Foco fundido</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaElectrico.conectoresSulfatados" class="rounded">
-                    <span class="text-sm">Conectores sulfatados o flojos</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Foco fundido -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaElectrico.focoFundido" class="rounded">
+                      <span class="text-sm">Foco fundido</span>
+                    </label>
+                    <div v-if="formData.sistemaElectrico.focoFundido" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="electrico-foco-fundido"
+                        :key="'electrico-focoFundido'"
+                        button-class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('electricoFocoFundidoImagen', file)"
+                        :initial-photo="formData.sistemaElectrico.focoFundidoImagen"
+                        custom-filename="foto_electrico_foco_fundido"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Conectores sulfatados o flojos -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaElectrico.conectoresSulfatados" class="rounded">
+                      <span class="text-sm">Conectores sulfatados o flojos</span>
+                    </label>
+                    <div v-if="formData.sistemaElectrico.conectoresSulfatados" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="electrico-conectores-sulfatados"
+                        :key="'electrico-conectoresSulfatados'"
+                        button-class="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('electricoConectoresSulfatadosImagen', file)"
+                        :initial-photo="formData.sistemaElectrico.conectoresSulfatadosImagen"
+                        custom-filename="foto_electrico_conectores_sulfatados"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -698,45 +981,138 @@
               <!-- Subcategoría: Amortiguadores -->
               <div class="border-b border-orange-200 pb-4">
                 <h5 class="text-md font-medium text-orange-700 mb-2">Amortiguadores</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.suspensionDireccion.desgaste" class="rounded">
-                    <span class="text-sm">Desgaste</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.suspensionDireccion.rupturaRetenes" class="rounded">
-                    <span class="text-sm">Ruptura de retenes</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Desgaste -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.suspensionDireccion.desgaste" class="rounded">
+                      <span class="text-sm">Desgaste</span>
+                    </label>
+                    <div v-if="formData.suspensionDireccion.desgaste" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="suspension-desgaste"
+                        :key="'suspension-desgaste'"
+                        button-class="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('suspensionDesgasteImagen', file)"
+                        :initial-photo="formData.suspensionDireccion.desgasteImagen"
+                        custom-filename="foto_suspension_desgaste"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Ruptura de retenes -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.suspensionDireccion.rupturaRetenes" class="rounded">
+                      <span class="text-sm">Ruptura de retenes</span>
+                    </label>
+                    <div v-if="formData.suspensionDireccion.rupturaRetenes" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="suspension-ruptura-retenes"
+                        :key="'suspension-rupturaRetenes'"
+                        button-class="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('suspensionRupturaRetenesImagen', file)"
+                        :initial-photo="formData.suspensionDireccion.rupturaRetenesImagen"
+                        custom-filename="foto_suspension_ruptura_retenes"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Dirección -->
               <div class="border-b border-orange-200 pb-4">
                 <h5 class="text-md font-medium text-orange-700 mb-2">Dirección</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.suspensionDireccion.terminales" class="rounded">
-                    <span class="text-sm">Terminales dañados</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.suspensionDireccion.cremalleras" class="rounded">
-                    <span class="text-sm">Cremalleras desgastadas</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Terminales dañados -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.suspensionDireccion.terminales" class="rounded">
+                      <span class="text-sm">Terminales dañados</span>
+                    </label>
+                    <div v-if="formData.suspensionDireccion.terminales" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="direccion-terminales"
+                        :key="'direccion-terminales'"
+                        button-class="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('direccionTerminalesImagen', file)"
+                        :initial-photo="formData.suspensionDireccion.terminalesImagen"
+                        custom-filename="foto_direccion_terminales_danados"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Cremalleras desgastadas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.suspensionDireccion.cremalleras" class="rounded">
+                      <span class="text-sm">Cremalleras desgastadas</span>
+                    </label>
+                    <div v-if="formData.suspensionDireccion.cremalleras" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="direccion-cremalleras"
+                        :key="'direccion-cremalleras'"
+                        button-class="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('direccionCremallerasImagen', file)"
+                        :initial-photo="formData.suspensionDireccion.cremallerasImagen"
+                        custom-filename="foto_direccion_cremalleras_desgastadas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Suspensión General -->
               <div class="border-b border-orange-200 pb-4">
                 <h5 class="text-md font-medium text-orange-700 mb-2">Suspensión</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.suspensionDireccion.bujesDanados" class="rounded">
-                    <span class="text-sm">Bujes dañados</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.suspensionDireccion.rotulasDanadas" class="rounded">
-                    <span class="text-sm">Rótulas dañadas</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Bujes dañados -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.suspensionDireccion.bujesDanados" class="rounded">
+                      <span class="text-sm">Bujes dañados</span>
+                    </label>
+                    <div v-if="formData.suspensionDireccion.bujesDanados" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="suspension-bujes-danados"
+                        :key="'suspension-bujesDanados'"
+                        button-class="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('suspensionBujesDanadosImagen', file)"
+                        :initial-photo="formData.suspensionDireccion.bujesDanadosImagen"
+                        custom-filename="foto_suspension_bujes_danados"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Rótulas dañadas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.suspensionDireccion.rotulasDanadas" class="rounded">
+                      <span class="text-sm">Rótulas dañadas</span>
+                    </label>
+                    <div v-if="formData.suspensionDireccion.rotulasDanadas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="suspension-rotulas-danadas"
+                        :key="'suspension-rotulasDanadas'"
+                        button-class="px-3 py-1 text-xs bg-orange-500 text-white rounded hover:bg-orange-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('suspensionRotulasDanadasImagen', file)"
+                        :initial-photo="formData.suspensionDireccion.rotulasDanadasImagen"
+                        custom-filename="foto_suspension_rotulas_danadas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -791,41 +1167,118 @@
               <!-- Subcategoría: Radiador -->
               <div class="border-b border-blue-200 pb-4">
                 <h5 class="text-md font-medium text-blue-700 mb-2">Radiador</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEnfriamiento.manguerasPerforadas" class="rounded">
-                    <span class="text-sm">Mangueras perforadas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEnfriamiento.nucleoPerforado" class="rounded">
-                    <span class="text-sm">Núcleo perforado</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Mangueras perforadas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEnfriamiento.manguerasPerforadas" class="rounded">
+                      <span class="text-sm">Mangueras perforadas</span>
+                    </label>
+                    <div v-if="formData.sistemaEnfriamiento.manguerasPerforadas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="enfriamiento-mangueras-perforadas"
+                        :key="'enfriamiento-manguerasPerforadas'"
+                        button-class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('enfriamientoManguerasPerforadasImagen', file)"
+                        :initial-photo="formData.sistemaEnfriamiento.manguerasPerforadasImagen"
+                        custom-filename="foto_enfriamiento_mangueras_perforadas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Núcleo perforado -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEnfriamiento.nucleoPerforado" class="rounded">
+                      <span class="text-sm">Núcleo perforado</span>
+                    </label>
+                    <div v-if="formData.sistemaEnfriamiento.nucleoPerforado" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="enfriamiento-nucleo-perforado"
+                        :key="'enfriamiento-nucleoPerforado'"
+                        button-class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('enfriamientoNucleoPerforadoImagen', file)"
+                        :initial-photo="formData.sistemaEnfriamiento.nucleoPerforadoImagen"
+                        custom-filename="foto_enfriamiento_nucleo_perforado"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Bomba de Agua -->
               <div class="border-b border-blue-200 pb-4">
                 <h5 class="text-md font-medium text-blue-700 mb-2">Bomba de Agua</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEnfriamiento.desgasteReten" class="rounded">
-                    <span class="text-sm">Desgaste del retén</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEnfriamiento.desgasteRodamiento" class="rounded">
-                    <span class="text-sm">Desgaste rodamiento</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Desgaste del retén -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEnfriamiento.desgasteReten" class="rounded">
+                      <span class="text-sm">Desgaste del retén</span>
+                    </label>
+                    <div v-if="formData.sistemaEnfriamiento.desgasteReten" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="enfriamiento-desgaste-reten"
+                        :key="'enfriamiento-desgasteReten'"
+                        button-class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('enfriamientoDesgasteRetenImagen', file)"
+                        :initial-photo="formData.sistemaEnfriamiento.desgasteRetenImagen"
+                        custom-filename="foto_enfriamiento_desgaste_reten"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Desgaste rodamiento -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEnfriamiento.desgasteRodamiento" class="rounded">
+                      <span class="text-sm">Desgaste rodamiento</span>
+                    </label>
+                    <div v-if="formData.sistemaEnfriamiento.desgasteRodamiento" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="enfriamiento-desgaste-rodamiento"
+                        :key="'enfriamiento-desgasteRodamiento'"
+                        button-class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('enfriamientoDesgasteRodamientoImagen', file)"
+                        :initial-photo="formData.sistemaEnfriamiento.desgasteRodamientoImagen"
+                        custom-filename="foto_enfriamiento_desgaste_rodamiento"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Control de Temperatura -->
               <div class="border-b border-blue-200 pb-4">
                 <h5 class="text-md font-medium text-blue-700 mb-2">Control de Temperatura</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEnfriamiento.termostatoBloqueado" class="rounded">
-                    <span class="text-sm">Termostato bloqueado (Sobrecalentamiento)</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Termostato bloqueado -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEnfriamiento.termostatoBloqueado" class="rounded">
+                      <span class="text-sm">Termostato bloqueado (Sobrecalentamiento)</span>
+                    </label>
+                    <div v-if="formData.sistemaEnfriamiento.termostatoBloqueado" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="enfriamiento-termostato-bloqueado"
+                        :key="'enfriamiento-termostatoBloqueado'"
+                        button-class="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('enfriamientoTermostatoBloqueadoImagen', file)"
+                        :initial-photo="formData.sistemaEnfriamiento.termostatoBloqueadoImagen"
+                        custom-filename="foto_enfriamiento_termostato_bloqueado"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -880,34 +1333,172 @@
               <!-- Subcategoría: Escape -->
               <div class="border-b border-purple-200 pb-4">
                 <h5 class="text-md font-medium text-purple-700 mb-2">Escape</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEscape.corrosion" class="rounded">
-                    <span class="text-sm">Corrosión</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEscape.impacto" class="rounded">
-                    <span class="text-sm">Impacto</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEscape.silenciadorRoto" class="rounded">
-                    <span class="text-sm">Silenciador roto</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEscape.silenciadorSuelto" class="rounded">
-                    <span class="text-sm">Silenciador suelto</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Fugas o perforaciones -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEscape.fugasPerforaciones" class="rounded">
+                      <span class="text-sm">Fugas o perforaciones</span>
+                    </label>
+                    <div v-if="formData.sistemaEscape.fugasPerforaciones" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="escape-fugas-perforaciones"
+                        :key="'escape-fugasPerforaciones'"
+                        button-class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('escapeFugasPerforacionesImagen', file)"
+                        :initial-photo="formData.sistemaEscape.fugasPerforacionesImagen"
+                        custom-filename="foto_escape_fugas_perforaciones"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Corrosión -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEscape.corrosion" class="rounded">
+                      <span class="text-sm">Corrosión</span>
+                    </label>
+                    <div v-if="formData.sistemaEscape.corrosion" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="escape-corrosion"
+                        :key="'escape-corrosion'"
+                        button-class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('escapeCorrosionImagen', file)"
+                        :initial-photo="formData.sistemaEscape.corrosionImagen"
+                        custom-filename="foto_escape_corrosion"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Impacto -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEscape.impacto" class="rounded">
+                      <span class="text-sm">Impacto</span>
+                    </label>
+                    <div v-if="formData.sistemaEscape.impacto" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="escape-impacto"
+                        :key="'escape-impacto'"
+                        button-class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('escapeImpactoImagen', file)"
+                        :initial-photo="formData.sistemaEscape.impactoImagen"
+                        custom-filename="foto_escape_impacto"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Ruido excesivo -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEscape.ruidoExcesivo" class="rounded">
+                      <span class="text-sm">Ruido excesivo</span>
+                    </label>
+                    <div v-if="formData.sistemaEscape.ruidoExcesivo" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="escape-ruido-excesivo"
+                        :key="'escape-ruidoExcesivo'"
+                        button-class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('escapeRuidoExcesivoImagen', file)"
+                        :initial-photo="formData.sistemaEscape.ruidoExcesivoImagen"
+                        custom-filename="foto_escape_ruido_excesivo"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Silenciador roto -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEscape.silenciadorRoto" class="rounded">
+                      <span class="text-sm">Silenciador roto</span>
+                    </label>
+                    <div v-if="formData.sistemaEscape.silenciadorRoto" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="escape-silenciador-roto"
+                        :key="'escape-silenciadorRoto'"
+                        button-class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('escapeSilenciadorRotoImagen', file)"
+                        :initial-photo="formData.sistemaEscape.silenciadorRotoImagen"
+                        custom-filename="foto_escape_silenciador_roto"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Silenciador suelto -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEscape.silenciadorSuelto" class="rounded">
+                      <span class="text-sm">Silenciador suelto</span>
+                    </label>
+                    <div v-if="formData.sistemaEscape.silenciadorSuelto" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="escape-silenciador-suelto"
+                        :key="'escape-silenciadorSuelto'"
+                        button-class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('escapeSilenciadorSueltoImagen', file)"
+                        :initial-photo="formData.sistemaEscape.silenciadorSueltoImagen"
+                        custom-filename="foto_escape_silenciador_suelto"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Catalizador -->
               <div class="border-b border-purple-200 pb-4">
                 <h5 class="text-md font-medium text-purple-700 mb-2">Catalizador</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaEscape.malaCombustion" class="rounded">
-                    <span class="text-sm">Mala combustión</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Catalizador obstruido -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEscape.catalizadorObstruido" class="rounded">
+                      <span class="text-sm">Catalizador obstruido</span>
+                    </label>
+                    <div v-if="formData.sistemaEscape.catalizadorObstruido" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="escape-catalizador-obstruido"
+                        :key="'escape-catalizadorObstruido'"
+                        button-class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('escapeCatalizadorObstruidoImagen', file)"
+                        :initial-photo="formData.sistemaEscape.catalizadorObstruidoImagen"
+                        custom-filename="foto_escape_catalizador_obstruido"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Mala combustión -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaEscape.malaCombustion" class="rounded">
+                      <span class="text-sm">Mala combustión</span>
+                    </label>
+                    <div v-if="formData.sistemaEscape.malaCombustion" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="escape-mala-combustion"
+                        :key="'escape-malaCombustion'"
+                        button-class="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('escapeMalaCombustionImagen', file)"
+                        :initial-photo="formData.sistemaEscape.malaCombustionImagen"
+                        custom-filename="foto_escape_mala_combustion"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -962,34 +1553,172 @@
               <!-- Subcategoría: A/C -->
               <div class="border-b border-teal-200 pb-4">
                 <h5 class="text-md font-medium text-teal-700 mb-2">Aire Acondicionado (A/C)</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaClimatizacion.fugaGas" class="rounded">
-                    <span class="text-sm">Fuga de gas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaClimatizacion.compresorDanado" class="rounded">
-                    <span class="text-sm">Compresor dañado</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaClimatizacion.filtroCabinaSucio" class="rounded">
-                    <span class="text-sm">Filtro de cabina sucio</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- A/C no enfría -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaClimatizacion.acNoEnfria" class="rounded">
+                      <span class="text-sm">A/C no enfría</span>
+                    </label>
+                    <div v-if="formData.sistemaClimatizacion.acNoEnfria" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="climatizacion-ac-no-enfria"
+                        :key="'climatizacion-acNoEnfria'"
+                        button-class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('climatizacionAcNoEnfriaImagen', file)"
+                        :initial-photo="formData.sistemaClimatizacion.acNoEnfriaImagen"
+                        custom-filename="foto_climatizacion_ac_no_enfria"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Fuga de gas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaClimatizacion.fugaGas" class="rounded">
+                      <span class="text-sm">Fuga de gas</span>
+                    </label>
+                    <div v-if="formData.sistemaClimatizacion.fugaGas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="climatizacion-fuga-gas"
+                        :key="'climatizacion-fugaGas'"
+                        button-class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('climatizacionFugaGasImagen', file)"
+                        :initial-photo="formData.sistemaClimatizacion.fugaGasImagen"
+                        custom-filename="foto_climatizacion_fuga_gas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Compresor dañado -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaClimatizacion.compresorDanado" class="rounded">
+                      <span class="text-sm">Compresor dañado</span>
+                    </label>
+                    <div v-if="formData.sistemaClimatizacion.compresorDanado" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="climatizacion-compresor-danado"
+                        :key="'climatizacion-compresorDanado'"
+                        button-class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('climatizacionCompresorDanadoImagen', file)"
+                        :initial-photo="formData.sistemaClimatizacion.compresorDanadoImagen"
+                        custom-filename="foto_climatizacion_compresor_danado"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Mal olor ventilación -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaClimatizacion.malOlorVentilacion" class="rounded">
+                      <span class="text-sm">Mal olor en ventilación</span>
+                    </label>
+                    <div v-if="formData.sistemaClimatizacion.malOlorVentilacion" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="climatizacion-mal-olor-ventilacion"
+                        :key="'climatizacion-malOlorVentilacion'"
+                        button-class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('climatizacionMalOlorVentilacionImagen', file)"
+                        :initial-photo="formData.sistemaClimatizacion.malOlorVentilacionImagen"
+                        custom-filename="foto_climatizacion_mal_olor_ventilacion"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Filtro de cabina sucio -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaClimatizacion.filtroCabinaSucio" class="rounded">
+                      <span class="text-sm">Filtro de cabina sucio</span>
+                    </label>
+                    <div v-if="formData.sistemaClimatizacion.filtroCabinaSucio" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="climatizacion-filtro-cabina-sucio"
+                        :key="'climatizacion-filtroCabinaSucio'"
+                        button-class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('climatizacionFiltroCabinaSucioImagen', file)"
+                        :initial-photo="formData.sistemaClimatizacion.filtroCabinaSucioImagen"
+                        custom-filename="foto_climatizacion_filtro_cabina_sucio"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Calefacción -->
               <div class="border-b border-teal-200 pb-4">
                 <h5 class="text-md font-medium text-teal-700 mb-2">Calefacción</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaClimatizacion.fallaTermostato" class="rounded">
-                    <span class="text-sm">Falla en termostato</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.sistemaClimatizacion.radiadorInterior" class="rounded">
-                    <span class="text-sm">Falla en el Radiador interior</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- No calienta -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaClimatizacion.noCalienta" class="rounded">
+                      <span class="text-sm">No calienta</span>
+                    </label>
+                    <div v-if="formData.sistemaClimatizacion.noCalienta" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="climatizacion-no-calienta"
+                        :key="'climatizacion-noCalienta'"
+                        button-class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('climatizacionNoCalientaImagen', file)"
+                        :initial-photo="formData.sistemaClimatizacion.noCalientaImagen"
+                        custom-filename="foto_climatizacion_no_calienta"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Falla en termostato -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaClimatizacion.fallaTermostato" class="rounded">
+                      <span class="text-sm">Falla en termostato</span>
+                    </label>
+                    <div v-if="formData.sistemaClimatizacion.fallaTermostato" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="climatizacion-falla-termostato"
+                        :key="'climatizacion-fallaTermostato'"
+                        button-class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('climatizacionFallaTermostatoImagen', file)"
+                        :initial-photo="formData.sistemaClimatizacion.fallaTermostatoImagen"
+                        custom-filename="foto_climatizacion_falla_termostato"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Falla en el Radiador interior -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.sistemaClimatizacion.radiadorInterior" class="rounded">
+                      <span class="text-sm">Falla en el Radiador interior</span>
+                    </label>
+                    <div v-if="formData.sistemaClimatizacion.radiadorInterior" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="climatizacion-radiador-interior"
+                        :key="'climatizacion-radiadorInterior'"
+                        button-class="px-3 py-1 text-xs bg-teal-500 text-white rounded hover:bg-teal-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('climatizacionRadiadorInteriorImagen', file)"
+                        :initial-photo="formData.sistemaClimatizacion.radiadorInteriorImagen"
+                        custom-filename="foto_climatizacion_radiador_interior"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1044,60 +1773,264 @@
               <!-- Subcategoría: Carrocería -->
               <div class="border-b border-pink-200 pb-4">
                 <h5 class="text-md font-medium text-pink-700 mb-2">Carrocería</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.carroceriaAccesorios.golpes" class="rounded">
-                    <span class="text-sm">Golpes</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.carroceriaAccesorios.roces" class="rounded">
-                    <span class="text-sm">Roces</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Rayones y abolladuras -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.rayonesAbolladuras" class="rounded">
+                      <span class="text-sm">Rayones y abolladuras</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.rayonesAbolladuras" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="carroceria-rayones-abolladuras"
+                        :key="'carroceria-rayonesAbolladuras'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('carroceriaRayonesAbolladurasImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.rayonesAbolladurasImagen"
+                        custom-filename="foto_carroceria_rayones_abolladuras"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Golpes -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.golpes" class="rounded">
+                      <span class="text-sm">Golpes</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.golpes" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="carroceria-golpes"
+                        :key="'carroceria-golpes'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('carroceriaGolpesImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.golpesImagen"
+                        custom-filename="foto_carroceria_golpes"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Roces -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.roces" class="rounded">
+                      <span class="text-sm">Roces</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.roces" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="carroceria-roces"
+                        :key="'carroceria-roces'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('carroceriaRocesImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.rocesImagen"
+                        custom-filename="foto_carroceria_roces"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Puertas -->
               <div class="border-b border-pink-200 pb-4">
                 <h5 class="text-md font-medium text-pink-700 mb-2">Puertas</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.carroceriaAccesorios.cerraduras" class="rounded">
-                    <span class="text-sm">Cerraduras defectuosas</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.carroceriaAccesorios.bisagraDesajustada" class="rounded">
-                    <span class="text-sm">Bisagra desajustada</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Cierre deficiente -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.cierreDeficiente" class="rounded">
+                      <span class="text-sm">Cierre deficiente</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.cierreDeficiente" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="puertas-cierre-deficiente"
+                        :key="'puertas-cierreDeficiente'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('puertasCierreDeficienteImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.cierreDeficienteImagen"
+                        custom-filename="foto_puertas_cierre_deficiente"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Cerraduras defectuosas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.cerraduras" class="rounded">
+                      <span class="text-sm">Cerraduras defectuosas</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.cerraduras" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="puertas-cerraduras"
+                        :key="'puertas-cerraduras'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('puertasCerradurasImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.cerradurasImagen"
+                        custom-filename="foto_puertas_cerraduras_defectuosas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Bisagra desajustada -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.bisagraDesajustada" class="rounded">
+                      <span class="text-sm">Bisagra desajustada</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.bisagraDesajustada" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="puertas-bisagra-desajustada"
+                        :key="'puertas-bisagraDesajustada'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('puertasBisagraDesajustadaImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.bisagraDesajustadaImagen"
+                        custom-filename="foto_puertas_bisagra_desajustada"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Cristales -->
               <div class="border-b border-pink-200 pb-4">
                 <h5 class="text-md font-medium text-pink-700 mb-2">Cristales</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.carroceriaAccesorios.impactoCristal" class="rounded">
-                    <span class="text-sm">Impacto</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.carroceriaAccesorios.tensionTermica" class="rounded">
-                    <span class="text-sm">Tensión térmica</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Grietas y astilladuras -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.grietasAstilladuras" class="rounded">
+                      <span class="text-sm">Grietas y astilladuras</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.grietasAstilladuras" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="cristales-grietas-astilladuras"
+                        :key="'cristales-grietasAstilladuras'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('cristalesGrietasAstilladurasImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.grietasAstilladurasImagen"
+                        custom-filename="foto_cristales_grietas_astilladuras"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Impacto -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.impactoCristal" class="rounded">
+                      <span class="text-sm">Impacto</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.impactoCristal" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="cristales-impacto-cristal"
+                        :key="'cristales-impactoCristal'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('cristalesImpactoCristalImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.impactoCristalImagen"
+                        custom-filename="foto_cristales_impacto_cristal"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Tensión térmica -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.tensionTermica" class="rounded">
+                      <span class="text-sm">Tensión térmica</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.tensionTermica" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="cristales-tension-termica"
+                        :key="'cristales-tensionTermica'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('cristalesTensionTermicaImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.tensionTermicaImagen"
+                        custom-filename="foto_cristales_tension_termica"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Limpia parabrisas -->
               <div class="border-b border-pink-200 pb-4">
                 <h5 class="text-md font-medium text-pink-700 mb-2">Limpia parabrisas</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.carroceriaAccesorios.motorDanado" class="rounded">
-                    <span class="text-sm">Motor dañado</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.carroceriaAccesorios.fusibleDanado" class="rounded">
-                    <span class="text-sm">Fusible dañado</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Limpia no funciona -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.limpiaNoFunciona" class="rounded">
+                      <span class="text-sm">Limpia parabrisas no funciona</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.limpiaNoFunciona" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="limpia-parabrisas-no-funciona"
+                        :key="'limpia-limpiaNoFunciona'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('limpiaParabrisasNoFuncionaImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.limpiaNoFuncionaImagen"
+                        custom-filename="foto_limpia_parabrisas_no_funciona"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Motor dañado -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.motorDanado" class="rounded">
+                      <span class="text-sm">Motor dañado</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.motorDanado" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="limpia-parabrisas-motor-danado"
+                        :key="'limpia-motorDanado'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('limpiaParabrisasMotorDanadoImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.motorDanadoImagen"
+                        custom-filename="foto_limpia_parabrisas_motor_danado"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Fusible dañado -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.carroceriaAccesorios.fusibleDanado" class="rounded">
+                      <span class="text-sm">Fusible dañado</span>
+                    </label>
+                    <div v-if="formData.carroceriaAccesorios.fusibleDanado" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="limpia-parabrisas-fusible-danado"
+                        :key="'limpia-fusibleDanado'"
+                        button-class="px-3 py-1 text-xs bg-pink-500 text-white rounded hover:bg-pink-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('limpiaParabrisasFusibleDanadoImagen', file)"
+                        :initial-photo="formData.carroceriaAccesorios.fusibleDanadoImagen"
+                        custom-filename="foto_limpia_parabrisas_fusible_danado"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1152,38 +2085,132 @@
               <!-- Subcategoría: Llantas -->
               <div class="border-b border-indigo-200 pb-4">
                 <h5 class="text-md font-medium text-indigo-700 mb-2">Llantas</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.llantasRines.alineacion" class="rounded">
-                    <span class="text-sm">Alineación</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.llantasRines.balanceoDeficiente" class="rounded">
-                    <span class="text-sm">Balanceo deficiente</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.llantasRines.presionIncorrecta" class="rounded">
-                    <span class="text-sm">Presión incorrecta</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.llantasRines.revisionFechaFabricacion" class="rounded">
-                    <span class="text-sm">Revisión de fecha de fabricación</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Alineación -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.llantasRines.alineacion" class="rounded">
+                      <span class="text-sm">Alineación</span>
+                    </label>
+                    <div v-if="formData.llantasRines.alineacion" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="llantas-alineacion"
+                        :key="'llantas-alineacion'"
+                        button-class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('llantasAlineacionImagen', file)"
+                        :initial-photo="formData.llantasRines.alineacionImagen"
+                        custom-filename="foto_llantas_alineacion"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Balanceo deficiente -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.llantasRines.balanceoDeficiente" class="rounded">
+                      <span class="text-sm">Balanceo deficiente</span>
+                    </label>
+                    <div v-if="formData.llantasRines.balanceoDeficiente" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="llantas-balanceo-deficiente"
+                        :key="'llantas-balanceoDeficiente'"
+                        button-class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('llantasBalanceoDeficienteImagen', file)"
+                        :initial-photo="formData.llantasRines.balanceoDeficienteImagen"
+                        custom-filename="foto_llantas_balanceo_deficiente"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Presión incorrecta -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.llantasRines.presionIncorrecta" class="rounded">
+                      <span class="text-sm">Presión incorrecta</span>
+                    </label>
+                    <div v-if="formData.llantasRines.presionIncorrecta" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="llantas-presion-incorrecta"
+                        :key="'llantas-presionIncorrecta'"
+                        button-class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('llantasPresionIncorrectaImagen', file)"
+                        :initial-photo="formData.llantasRines.presionIncorrectaImagen"
+                        custom-filename="foto_llantas_presion_incorrecta"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Revisión de fecha de fabricación -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.llantasRines.revisionFechaFabricacion" class="rounded">
+                      <span class="text-sm">Revisión de fecha de fabricación</span>
+                    </label>
+                    <div v-if="formData.llantasRines.revisionFechaFabricacion" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="llantas-revision-fecha-fabricacion"
+                        :key="'llantas-revisionFechaFabricacion'"
+                        button-class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('llantasRevisionFechaFabricacionImagen', file)"
+                        :initial-photo="formData.llantasRines.revisionFechaFabricacionImagen"
+                        custom-filename="foto_llantas_revision_fecha_fabricacion"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               <!-- Subcategoría: Rines -->
               <div class="border-b border-indigo-200 pb-4">
                 <h5 class="text-md font-medium text-indigo-700 mb-2">Rines</h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.llantasRines.impactoBaches" class="rounded">
-                    <span class="text-sm">Impacto con baches</span>
-                  </label>
-                  <label class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="formData.llantasRines.impactoBanquetas" class="rounded">
-                    <span class="text-sm">Impacto banquetas</span>
-                  </label>
+                <div class="space-y-3">
+                  <!-- Impacto con baches -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.llantasRines.impactoBaches" class="rounded">
+                      <span class="text-sm">Impacto con baches</span>
+                    </label>
+                    <div v-if="formData.llantasRines.impactoBaches" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="rines-impacto-baches"
+                        :key="'rines-impactoBaches'"
+                        button-class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('rinesImpactoBachesImagen', file)"
+                        :initial-photo="formData.llantasRines.impactoBachesImagen"
+                        custom-filename="foto_rines_impacto_baches"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
+                  
+                  <!-- Impacto banquetas -->
+                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                    <label class="flex items-center space-x-2">
+                      <input type="checkbox" v-model="formData.llantasRines.impactoBanquetas" class="rounded">
+                      <span class="text-sm">Impacto banquetas</span>
+                    </label>
+                    <div v-if="formData.llantasRines.impactoBanquetas" class="ml-2">
+                      <PhotoUploadAndPreview
+                        id="rines-impacto-banquetas"
+                        :key="'rines-impactoBanquetas'"
+                        button-class="px-3 py-1 text-xs bg-indigo-500 text-white rounded hover:bg-indigo-600 flex items-center gap-1"
+                        @photo-captured="(file) => handlePhotoCaptured('rinesImpactoBanquetasImagen', file)"
+                        :initial-photo="formData.llantasRines.impactoBanquetasImagen"
+                        custom-filename="foto_rines_impacto_banquetas"
+                      >
+                        <font-awesome-icon icon="camera" /> Tomar Fotografía
+                      </PhotoUploadAndPreview>
+                    </div>
+                  </div>
                 </div>
               </div>
 

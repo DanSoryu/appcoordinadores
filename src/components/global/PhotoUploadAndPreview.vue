@@ -205,12 +205,11 @@ export default {
       // Convertir el canvas a una URL de datos para la vista previa
       this.photoPreview = canvas.toDataURL('image/jpeg');
       
-      // Generar un nombre único para la foto
-      const timestamp = new Date().getTime();
+      // Generar nombre para la foto (sin timestamp)
       if (this.customFilename) {
-        this.photoName = `${this.customFilename}_${timestamp}.jpg`;
+        this.photoName = `${this.customFilename}.jpg`;
       } else {
-        this.photoName = `${this.fileNamePrefix}_${timestamp}.jpg`;
+        this.photoName = `${this.fileNamePrefix}.jpg`;
       }
       this.isPreloadedPhoto = false;
       
