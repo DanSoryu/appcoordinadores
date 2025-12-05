@@ -2831,8 +2831,8 @@ export default {
         return isValid;
       }
       
-      // Steps de categorías: Usar el método getCurrentSectionErrors para validar
-      const errors = this.getCurrentSectionErrors();
+      // Steps de categorías: Usar currentSectionErrors computed para validar
+      const errors = this.currentSectionErrors;
       const isValid = errors.length === 0;
       
       if (!isValid) {
@@ -2902,18 +2902,13 @@ export default {
 
     // Computed property para errores de la sección actual
     currentSectionErrors() {
-      return this.getCurrentSectionErrors();
-    },
-
-    // Método para obtener errores específicos de cada sección
-    getCurrentSectionErrors() {
       if (this.currentStep === 1) {
         return this.validationErrors;
       }
       
       const category = this.currentCategory;
       if (!category || !this.formData[category]) {
-        console.warn('getCurrentSectionErrors: Categoría no encontrada', { category, currentStep: this.currentStep });
+        console.warn('currentSectionErrors computed: Categoría no encontrada', { category, currentStep: this.currentStep });
         return ['Error interno: categoría no encontrada'];
       }
       
@@ -2962,6 +2957,26 @@ export default {
       
       console.log(`Errores encontrados en ${category}:`, errors);
       return errors;
+    }
+  },
+
+  computed: {
+    // Obtener las categorías seleccionadas en orden
+    selectedCategories() {
+      const categories = [
+        'motor',
+        'transmision', 
+        'frenos',
+        'sistemaElectrico',
+        'suspensionDireccion',
+        'sistemaEnfriamiento',
+        'sistemaEscape',
+        'sistemaClimatizacion',
+        'carroceriaAccesorios',
+        'llantasRines'
+      ];
+      
+      return categories.filter(category => this.categoriesSelection[category]);
     },
     
     finalFormData() {
