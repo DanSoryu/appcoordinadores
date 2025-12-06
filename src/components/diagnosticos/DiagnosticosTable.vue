@@ -303,6 +303,32 @@
               <p class="text-sm text-gray-900">{{ currentDiagnostico.observaciones }}</p>
             </div>
 
+            <!-- Imágenes del Diagnóstico -->
+            <div v-if="hasAnyImages(currentDiagnostico)" class="bg-purple-50 p-4 rounded-lg">
+              <h4 class="text-lg font-semibold text-purple-800 mb-3">Fotografías del Diagnóstico</h4>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div 
+                  v-for="(image, index) in extractImagesFromDiagnostico(currentDiagnostico)" 
+                  :key="index"
+                  class="relative group cursor-pointer"
+                  @click="openImageModal(image.url)"
+                >
+                  <img 
+                    :src="image.url" 
+                    :alt="image.campo"
+                    class="w-full h-32 object-cover rounded-lg border-2 border-purple-200 hover:border-purple-400 transition-all"
+                    @error="(e) => e.target.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext fill=%22%23999%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3EImagen no disponible%3C/text%3E%3C/svg%3E'"
+                  />
+                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all rounded-lg flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                    </svg>
+                  </div>
+                  <p class="mt-1 text-xs text-gray-600 text-center truncate">{{ image.seccion }}</p>
+                </div>
+              </div>
+            </div>
+
             <!-- Mensaje para diagnósticos pendientes -->
             <div v-if="currentDiagnostico.estado !== 'completado'" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div class="flex items-start">
@@ -331,6 +357,13 @@
       @close="cerrarModalDiagnostico"
       @diagnostico-guardado="onDiagnosticoGuardado"
     />
+
+    <!-- Modal de Imagen -->
+    <ImageModal
+      :show="showImageModal"
+      :imageUrl="currentImageUrl"
+      @close="closeImageModal"
+    />
   </div>
 </template>
 
@@ -339,12 +372,14 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useToastStore } from '../../stores/toast.js'
 import { useAuthStore } from '../../stores/auth.js'
 import DiagnosticosFormModal from './DiagnosticosFormModal.vue'
+import ImageModal from '../global/ImageModal.vue'
 import apiClient from '../../services/api.js'
 
 export default {
   name: 'DiagnosticosTable',
   components: {
-    DiagnosticosFormModal
+    DiagnosticosFormModal,
+    ImageModal
   },
   setup() {
     const toastStore = useToastStore()
@@ -360,6 +395,10 @@ export default {
     // Estados para el modal de diagnóstico
     const showDiagnosticoModal = ref(false)
     const diagnosticoParaCompletar = ref(null)
+    
+    // Estados para el modal de imagen
+    const showImageModal = ref(false)
+    const currentImageUrl = ref(null)
     
     // Filtros
     const searchQuery = ref('')
@@ -806,6 +845,80 @@ export default {
       return cleanText.split(',').map(falla => falla.trim()).filter(falla => falla.length > 0)
     }
 
+    // Función para abrir el modal de imagen
+    const openImageModal = (imageUrl) => {
+      currentImageUrl.value = imageUrl
+      showImageModal.value = true
+    }
+
+    // Función para cerrar el modal de imagen
+    const closeImageModal = () => {
+      showImageModal.value = false
+      currentImageUrl.value = null
+    }
+
+    // Helper para obtener la URL completa de una imagen de diagnóstico
+    const getImageUrl = (imageName) => {
+      if (!imageName) return null
+      // Las imágenes se guardan en: Mecasoft/detalle_diagnostico/{diagnosticoId}/{seccion}/{nombreArchivo}
+      // La ruta guardada en BD ya incluye: {diagnosticoId}/{seccion}/{nombreArchivo}
+      return `https://api.ed-intra.com/Mecasoft/detalle_diagnostico/${imageName}`
+    }
+
+    // Helper para extraer todas las imágenes de los detalles JSON de un diagnóstico
+    const extractImagesFromDiagnostico = (diagnostico) => {
+      if (!diagnostico || !diagnostico._original) return []
+      
+      const images = []
+      const original = diagnostico._original
+      
+      // Campos JSON que pueden contener imágenes
+      const detalleCampos = [
+        'detalle_motor',
+        'detalle_transmision',
+        'detalle_frenos',
+        'detalle_sistema_electrico',
+        'detalle_suspension_direccion',
+        'detalle_sistema_enfriamiento',
+        'detalle_sistema_escape',
+        'detalle_sistema_climatizacion',
+        'detalle_carroceria_accesorios',
+        'detalle_llantas_rines'
+      ]
+      
+      detalleCampos.forEach(campo => {
+        if (original[campo]) {
+          try {
+            const detalles = typeof original[campo] === 'string' 
+              ? JSON.parse(original[campo]) 
+              : original[campo]
+            
+            if (detalles && typeof detalles === 'object') {
+              // Buscar campos que terminen en 'Imagen' y tengan valor
+              Object.keys(detalles).forEach(key => {
+                if (key.endsWith('Imagen') && detalles[key]) {
+                  images.push({
+                    seccion: campo.replace('detalle_', '').replace(/_/g, ' '),
+                    campo: key,
+                    url: getImageUrl(detalles[key])
+                  })
+                }
+              })
+            }
+          } catch (error) {
+            console.error(`Error al procesar imágenes de ${campo}:`, error)
+          }
+        }
+      })
+      
+      return images
+    }
+
+    // Helper para verificar si un diagnóstico tiene imágenes
+    const hasAnyImages = (diagnostico) => {
+      return extractImagesFromDiagnostico(diagnostico).length > 0
+    }
+
     // Watchers para reiniciar paginación cuando cambian los filtros
     watch([searchQuery, estadoFilter], () => {
       currentPage.value = 1
@@ -852,7 +965,15 @@ export default {
       goToPage,
       formatDate,
       getSectionColor,
-      parseFallasFromDescription
+      parseFallasFromDescription,
+      // Funciones para imágenes
+      showImageModal,
+      currentImageUrl,
+      openImageModal,
+      closeImageModal,
+      getImageUrl,
+      extractImagesFromDiagnostico,
+      hasAnyImages
     }
   }
 }
