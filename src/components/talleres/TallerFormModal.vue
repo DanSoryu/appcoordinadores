@@ -37,22 +37,41 @@
 						</div>
 						
 						<div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-							<label class="block mb-2 font-semibold text-gray-700">COPE *</label>
-							<select 
-								v-model="formData.cope_id" 
+							<label class="block mb-2 font-semibold text-gray-700">COPEs *</label>
+							<div class="text-sm text-gray-600 mb-3">
+								Selecciona uno o más COPEs para asignar al taller
+							</div>
+							<div 
 								:class="[
-									'input w-full',
-									formData.cope_id ? (copeValid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50') : 'border-gray-300'
+									'copes-list max-h-64 overflow-y-auto border rounded-lg p-3',
+									formData.cope_ids.length > 0 ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'
 								]"
-								required
 							>
-								<option value="">Seleccione una COPE</option>
-								<option v-for="cope in copesWithDetails" :key="cope.id" :value="cope.id">
-									{{ cope.displayName }}
-								</option>
-							</select>
-							<div v-if="formData.cope_id && !copeValid" class="text-red-500 text-xs mt-1">
-								Debe seleccionar una COPE
+								<div 
+									v-for="cope in copesWithDetails" 
+									:key="cope.id" 
+									class="cope-item flex items-center p-2 hover:bg-gray-100 rounded transition-colors"
+								>
+									<input 
+										type="checkbox" 
+										:id="'cope' + cope.id"
+										:value="cope.id"
+										v-model="formData.cope_ids"
+										class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
+									>
+									<label 
+										:for="'cope' + cope.id" 
+										class="ml-3 text-sm text-gray-700 cursor-pointer flex-1"
+									>
+										{{ cope.displayName }}
+									</label>
+								</div>
+							</div>
+							<div v-if="formData.cope_ids.length === 0" class="text-red-500 text-xs mt-1">
+								Debe seleccionar al menos un COPE
+							</div>
+							<div v-else class="text-green-600 text-xs mt-1">
+								{{ formData.cope_ids.length }} COPE(s) seleccionado(s)
 							</div>
 							<div class="mt-2">
 								<button type="button" @click="abrirCopeModal" class="text-blue-600 hover:underline focus:outline-none">
@@ -117,7 +136,7 @@ export default {
 		return {
 			formData: {
 				nombre: '',
-				cope_id: ''
+				cope_ids: []
 			},
 			copes: [],
 			areas: [],
@@ -136,7 +155,7 @@ export default {
 		},
 		
 		copeValid() {
-			return this.formData.cope_id && this.formData.cope_id !== '';
+			return this.formData.cope_ids && this.formData.cope_ids.length > 0;
 		},
 		
 		isFormValid() {
@@ -146,7 +165,7 @@ export default {
 		finalFormData() {
 			return {
 				nombre: this.formData.nombre.trim(),
-				cope_id: parseInt(this.formData.cope_id)
+				cope_ids: this.formData.cope_ids.map(id => parseInt(id))
 			};
 		}
 	},
@@ -198,8 +217,10 @@ export default {
 		async handleCopeGuardado(nuevoCope) {
 			// Recargar la lista de COPEs para incluir el nuevo
 			await this.loadCopesData();
-			// Seleccionar automáticamente el nuevo COPE
-			this.formData.cope_id = nuevoCope.id;
+			// Agregar automáticamente el nuevo COPE a la selección
+			if (!this.formData.cope_ids.includes(nuevoCope.id)) {
+				this.formData.cope_ids.push(nuevoCope.id);
+			}
 		},
 		
 		// Formatear nombre: mantener formato original
@@ -270,7 +291,7 @@ export default {
 		resetForm() {
 			this.formData = {
 				nombre: '',
-				cope_id: ''
+				cope_ids: []
 			};
 		}
 	}
@@ -300,5 +321,42 @@ export default {
 }
 .input.bg-red-50 {
 	background-color: #fef2f2;
+}
+
+.copes-list {
+	scrollbar-width: thin;
+	scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.copes-list::-webkit-scrollbar {
+	width: 8px;
+}
+
+.copes-list::-webkit-scrollbar-track {
+	background: #f1f5f9;
+	border-radius: 4px;
+}
+
+.copes-list::-webkit-scrollbar-thumb {
+	background: #cbd5e1;
+	border-radius: 4px;
+}
+
+.copes-list::-webkit-scrollbar-thumb:hover {
+	background: #94a3b8;
+}
+
+.cope-item {
+	transition: background-color 0.15s ease;
+}
+
+.form-checkbox {
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.form-checkbox:checked {
+	background-color: #3b82f6;
+	border-color: #3b82f6;
 }
 </style>
