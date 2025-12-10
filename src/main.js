@@ -44,7 +44,8 @@ import {
   faStethoscope,
   faClock,
   faCamera,
-  faScrewdriverWrench
+  faScrewdriverWrench,
+  faClipboardCheck
 } from '@fortawesome/free-solid-svg-icons'
 
 // Agregar iconos a la librería
@@ -83,7 +84,8 @@ library.add(
   faStethoscope,
   faClock,
   faCamera,
-  faScrewdriverWrench
+  faScrewdriverWrench,
+  faClipboardCheck
 )
 
 const app = createApp(App)

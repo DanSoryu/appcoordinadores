@@ -113,7 +113,7 @@ const allRoutes = [
   { path: '/dashboard', name: 'Dashboard', icon: 'tachometer-alt', roles: ['admin', 'mecanico'] },
   { path: '/recepciones', name: 'Recepciones', icon: 'clipboard-list', roles: ['admin', 'mecanico'] },
   { path: '/diagnosticos', name: 'Diagnósticos', icon: 'screwdriver-wrench', roles: ['admin', 'mecanico'] },
-  { path: '/solicitud-refacciones', name: 'Solicitud Refacciones', icon: 'box-open', roles: ['admin', 'mecanico'] },
+  { path: '/solicitud-refacciones', name: 'Solicitud Refacciones', icon: 'clipboard-check', roles: ['admin', 'mecanico'] },
   { path: '/vehiculos', name: 'Vehículos', icon: 'car', roles: ['admin'] },
   { path: '/clientes', name: 'Clientes', icon: 'id-card', roles: ['admin'] },
   { path: '/usuarios', name: 'Usuarios', icon: 'users', roles: ['admin'] }
