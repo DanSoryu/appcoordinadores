@@ -3,6 +3,7 @@ import Dashboard from '../components/Dashboard.vue'
 import Login from '../components/Login.vue'
 import Recepciones from '../components/Recepciones.vue'
 import Diagnosticos from '../components/Diagnosticos.vue'
+import SolicitudRefacciones from '../components/SolicitudRefacciones.vue'
 import Vehiculos from '../components/Vehiculos.vue'
 import Clientes from '../components/Clientes.vue'
 import Usuarios from '../components/Usuarios.vue'
@@ -32,6 +33,14 @@ const routes = [
   {
     path: '/diagnosticos',
     component: Diagnosticos,
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin', 'mecanico']
+    }
+  },
+  {
+    path: '/solicitud-refacciones',
+    component: SolicitudRefacciones,
     meta: { 
       requiresAuth: true,
       allowedRoles: ['admin', 'mecanico']
