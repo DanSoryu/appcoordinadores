@@ -9,13 +9,13 @@
     <div class="bg-white p-4 rounded-lg shadow mb-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
-          <input
+          <label class="block text-sm font-medium text-gray-700 mb-1">Búsqueda General</label>
+          <input 
             v-model="searchQuery"
-            type="text"
-            placeholder="Buscar por folio de orden..."
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+            type="text" 
+            placeholder="Buscar por folio de diagnóstico..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
         </div>
       </div>
     </div>
@@ -31,8 +31,11 @@
         error === 'No hay datos disponibles' ? 'text-gray-600 bg-gray-50' : 'text-red-600 bg-red-50'
       ]">
         <div class="flex items-center justify-center space-x-2">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+          <svg v-if="error === 'No hay datos disponibles'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <span>{{ error }}</span>
         </div>
@@ -42,42 +45,57 @@
       </div>
       <div v-else>
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
+          <table class="min-w-full border-collapse table-fixed">
             <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Folio Diagnóstico</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+              <tr class="divide-x divide-gray-200">
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">Folio Diagnóstico</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">Acciones</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="solicitud in paginatedData" :key="solicitud.id" class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <span class="font-semibold text-lg">{{ solicitud.folio_diagnostico }}</span>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-blue-100 rounded-full">
+                      <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                      </svg>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-bold text-gray-900">Folio: {{ solicitud.folio_diagnostico }}</div>
+                    </div>
+                  </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                   <div class="flex items-center justify-center space-x-2">
                     <button
                       @click="verDetalles(solicitud)"
-                      class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      class="inline-flex items-center px-3 py-2 border border-blue-600 rounded-md text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                       title="Ver detalles"
                     >
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                       </svg>
-                      Ver
+                      Ver Detalles
                     </button>
                     <button
                       @click="abrirModalSolicitud(solicitud)"
-                      class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      class="inline-flex items-center px-3 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
                       title="Agregar refacciones"
                     >
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                       </svg>
                       Solicitar
                     </button>
                   </div>
+                </td>
+              </tr>
+              <!-- Mensaje cuando no hay datos -->
+              <tr v-if="paginatedData.length === 0 && !isLoading">
+                <td colspan="2" class="px-6 py-8 text-center text-gray-500">
+                  No se encontraron solicitudes de refacciones
                 </td>
               </tr>
             </tbody>
@@ -87,17 +105,17 @@
         <!-- Paginación -->
         <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
           <div class="flex-1 flex justify-between sm:hidden">
-            <button
+            <button 
               @click="previousPage"
               :disabled="currentPage === 1"
-              class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Anterior
             </button>
-            <button
+            <button 
               @click="nextPage"
               :disabled="currentPage === totalPages"
-              class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Siguiente
             </button>
@@ -105,27 +123,22 @@
           <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p class="text-sm text-gray-700">
-                Mostrando
-                <span class="font-medium">{{ startRecord }}</span>
-                a
-                <span class="font-medium">{{ endRecord }}</span>
-                de
-                <span class="font-medium">{{ totalItems }}</span>
-                resultados
+                Mostrando <span class="font-medium">{{ startRecord }}</span> a <span class="font-medium">{{ endRecord }}</span> de <span class="font-medium">{{ totalItems }}</span> resultados
               </p>
             </div>
             <div>
-              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                 <button
                   @click="previousPage"
                   :disabled="currentPage === 1"
-                  class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span class="sr-only">Anterior</span>
                   <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
                   </svg>
                 </button>
+                
                 <button
                   v-for="page in visiblePages"
                   :key="page"
@@ -139,10 +152,11 @@
                 >
                   {{ page }}
                 </button>
+                
                 <button
                   @click="nextPage"
                   :disabled="currentPage === totalPages"
-                  class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span class="sr-only">Siguiente</span>
                   <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -158,23 +172,24 @@
 
     <!-- Modal de Detalles de Solicitud -->
     <div v-if="showDetallesModal" class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div class="bg-white w-[90%] max-w-3xl max-h-[90vh] rounded-lg shadow-xl">
+      <div class="bg-white w-[90%] max-w-2xl max-h-[90vh] rounded-lg shadow-xl">
         <!-- Encabezado del modal -->
         <div class="bg-blue-600 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
-          <h3 class="text-xl font-bold">Detalles de Solicitud #{{ currentSolicitud?.id }}</h3>
+          <h3 class="text-xl font-semibold">Detalles de la Solicitud</h3>
           <button @click="showDetallesModal = false" class="text-white hover:text-gray-200">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </button>
         </div>
         
         <!-- Contenido del modal -->
         <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 80px);">
-          <div v-if="currentSolicitud">
+          <div v-if="currentSolicitud" class="space-y-6">
+            
             <!-- Información general -->
-            <div class="mb-6 bg-gray-50 p-4 rounded-lg">
-              <h4 class="font-semibold text-lg mb-3 text-gray-800">Información General</h4>
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h4 class="text-lg font-semibold text-blue-800 mb-3">Información General</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <span class="text-sm text-gray-600">Folio Diagnóstico:</span>
@@ -196,14 +211,14 @@
             </div>
 
             <!-- Lista de refacciones agrupadas por tipo -->
-            <div class="mb-6">
-              <h4 class="font-semibold text-lg mb-3 text-gray-800">Refacciones Solicitadas</h4>
-              <div v-if="currentSolicitud.refacciones && currentSolicitud.refacciones.length > 0">
-                <div v-for="(items, tipo) in refaccionesAgrupadasPorTipo" :key="tipo" class="mb-4">
-                  <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-t-lg border-l-4" :class="getTipoColor(tipo)">
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h4 class="text-lg font-semibold text-gray-800 mb-3">Refacciones Solicitadas</h4>
+              <div v-if="currentSolicitud.refacciones && currentSolicitud.refacciones.length > 0" class="space-y-4">
+                <div v-for="(items, tipo) in refaccionesAgrupadasPorTipo" :key="tipo" class="border rounded-lg overflow-hidden">
+                  <div class="p-3 border-l-4" :class="getTipoColorClass(tipo)">
                     <h5 class="font-bold text-gray-800">{{ tipo }}</h5>
                   </div>
-                  <div class="border border-t-0 rounded-b-lg p-4">
+                  <div class="bg-white p-4">
                     <ul class="space-y-2">
                       <li v-for="refaccion in items" :key="refaccion.id" class="flex items-start space-x-3 p-2 hover:bg-gray-50 rounded">
                         <svg class="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -470,6 +485,16 @@ export default {
       return colores[tipo] || 'border-gray-500'
     }
 
+    const getTipoColorClass = (tipo) => {
+      const colores = {
+        'REFACCION': 'bg-blue-50 border-blue-500',
+        'INSUMO': 'bg-green-50 border-green-500',
+        'HERRAMIENTA': 'bg-yellow-50 border-yellow-500',
+        'SERVICIO': 'bg-purple-50 border-purple-500'
+      }
+      return colores[tipo] || 'bg-gray-50 border-gray-500'
+    }
+
     // Watchers para reiniciar paginación cuando cambian los filtros
     watch([searchQuery], () => {
       currentPage.value = 1
@@ -517,7 +542,8 @@ export default {
       nextPage,
       goToPage,
       formatDate,
-      getTipoColor
+      getTipoColor,
+      getTipoColorClass
     }
   }
 }
