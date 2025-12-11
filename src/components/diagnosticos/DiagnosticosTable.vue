@@ -107,6 +107,24 @@
                       Ver
                     </button>
                     
+                    <!-- Botón Generar PDF - Solo cuando está completado -->
+                    <button 
+                      v-if="diagnostico.estado === 'completado'"
+                      @click="generarPDF(diagnostico)"
+                      :disabled="generandoPDF"
+                      class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Generar reporte PDF"
+                    >
+                      <svg v-if="!generandoPDF" class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                      <svg v-else class="animate-spin w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ generandoPDF ? 'Generando...' : 'PDF' }}
+                    </button>
+                    
                     <!-- Botón Terminar - Solo cuando está pendiente -->
                     <button 
                       v-if="diagnostico.estado !== 'completado'"
@@ -399,6 +417,9 @@ export default {
     // Estados para el modal de imagen
     const showImageModal = ref(false)
     const currentImageUrl = ref(null)
+    
+    // Estado de generación de PDF
+    const generandoPDF = ref(false)
     
     // Filtros
     const searchQuery = ref('')
@@ -854,9 +875,8 @@ export default {
     // Función para cerrar el modal de imagen
     const closeImageModal = () => {
       showImageModal.value = false
-      currentImageUrl.value = null
     }
-
+    
     // Helper para obtener la URL completa de una imagen de diagnóstico
     const getImageUrl = (imageName) => {
       if (!imageName) return null
@@ -864,6 +884,260 @@ export default {
       // La ruta guardada en BD ya incluye: {diagnosticoId}/{seccion}/{nombreArchivo}
       return `https://api.ed-intra.com/Mecasoft/detalle_diagnostico/${imageName}`
     }
+    
+    // Función para convertir imagen a base64
+    const getImageAsBase64 = async (imageUrl) => {
+      try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      } catch (error) {
+        console.error('Error al cargar imagen:', error);
+        return null;
+      }
+    };
+    
+    // Función para generar el PDF
+    const generarPDF = async (diagnostico) => {
+      generandoPDF.value = true;
+      
+      try {
+        // Importar jsPDF y autoTable dinámicamente
+        const { default: jsPDF } = await import('jspdf');
+        await import('jspdf-autotable');
+        
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 15;
+        const contentWidth = pageWidth - (2 * margin);
+        let yPosition = margin;
+        
+        // Función auxiliar para agregar nueva página si es necesario
+        const checkAddPage = (requiredSpace = 20) => {
+          if (yPosition + requiredSpace > pageHeight - margin) {
+            doc.addPage();
+            yPosition = margin;
+            return true;
+          }
+          return false;
+        };
+        
+        // Encabezado del documento
+        doc.setFillColor(59, 130, 246); // bg-blue-600
+        doc.rect(0, 0, pageWidth, 40, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(22);
+        doc.setFont(undefined, 'bold');
+        doc.text('REPORTE DE DIAGNÓSTICO', pageWidth / 2, 20, { align: 'center' });
+        
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'normal');
+        doc.text('Diagnóstico Técnico Vehicular', pageWidth / 2, 30, { align: 'center' });
+        
+        yPosition = 50;
+        
+        // Información general
+        doc.setTextColor(0, 0, 0);
+        doc.setFillColor(239, 246, 255); // bg-blue-50
+        doc.roundedRect(margin, yPosition, contentWidth, 35, 3, 3, 'F');
+        
+        yPosition += 8;
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(30, 64, 175); // text-blue-800
+        doc.text('Información General', margin + 5, yPosition);
+        
+        yPosition += 8;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Folio: ${diagnostico.folioRecepcion}`, margin + 5, yPosition);
+        doc.text(`Estado: ${diagnostico.estado.toUpperCase()}`, margin + 70, yPosition);
+        
+        yPosition += 6;
+        doc.text(`Mecánico: ${diagnostico.mecanicoNombre || 'No asignado'}`, margin + 5, yPosition);
+        
+        yPosition += 6;
+        doc.text(`Fecha de Creación: ${formatDate(diagnostico.fechaCreacion)}`, margin + 5, yPosition);
+        
+        if (diagnostico.fechaCompletado) {
+          yPosition += 6;
+          doc.text(`Fecha de Completado: ${formatDate(diagnostico.fechaCompletado)}`, margin + 5, yPosition);
+        }
+        
+        yPosition += 15;
+        
+        // Función auxiliar para crear secciones
+        const crearSeccion = (titulo, color, contenido) => {
+          checkAddPage(30);
+          
+          doc.setFillColor(color[0], color[1], color[2]);
+          doc.roundedRect(margin, yPosition, contentWidth, 8, 2, 2, 'F');
+          
+          doc.setFontSize(12);
+          doc.setFont(undefined, 'bold');
+          doc.setTextColor(255, 255, 255);
+          doc.text(titulo, margin + 5, yPosition + 5.5);
+          
+        yPosition += 12;
+        
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(0, 0, 0);
+        
+        if (contenido) {
+          contenido();
+        }
+      };
+      
+      // Función auxiliar para agregar fallas
+      const agregarFallas = (fallas) => {
+        if (!fallas || fallas.length === 0) {
+          doc.setFont(undefined, 'italic');
+          doc.text('No se detectaron fallas', margin + 10, yPosition);
+          yPosition += 6;
+          return;
+        }
+        
+        fallas.forEach(falla => {
+          checkAddPage();
+          doc.setFont(undefined, 'normal');
+          doc.text(`• ${falla}`, margin + 10, yPosition);
+          yPosition += 5;
+        });
+      };        // Función auxiliar para agregar imagen
+        const agregarImagen = async (etiqueta, imagePath) => {
+          if (!imagePath) return;
+          
+          checkAddPage(50);
+          
+          doc.setFont(undefined, 'bold');
+          doc.text(etiqueta, margin + 5, yPosition);
+          yPosition += 5;
+          
+          const imageUrl = getImageUrl(imagePath);
+          const imageData = await getImageAsBase64(imageUrl);
+          
+          if (imageData) {
+            try {
+              doc.addImage(imageData, 'JPEG', margin + 5, yPosition, 60, 40);
+              yPosition += 45;
+            } catch (error) {
+              console.error('Error al agregar imagen al PDF:', error);
+              doc.setFont(undefined, 'italic');
+              doc.text('(Imagen no disponible)', margin + 5, yPosition);
+              yPosition += 6;
+            }
+          } else {
+            doc.setFont(undefined, 'italic');
+            doc.text('(Imagen no disponible)', margin + 5, yPosition);
+            yPosition += 6;
+          }
+        };
+        
+        // Procesar cada sección de diagnóstico
+        if (diagnostico.diagnosticos && diagnostico.diagnosticos.length > 0) {
+          for (const diag of diagnostico.diagnosticos) {
+            const colorMap = {
+              'Motor': [239, 68, 68],
+              'Transmisión': [59, 130, 246],
+              'Frenos': [234, 179, 8],
+              'Sistema Eléctrico': [168, 85, 247],
+              'Suspensión y Dirección': [34, 197, 94],
+              'Sistema de Enfriamiento': [6, 182, 212],
+              'Sistema de Escape': [249, 115, 22],
+              'Sistema de Climatización': [99, 102, 241],
+              'Carrocería y Accesorios': [236, 72, 153],
+              'Llantas y Rines': [107, 114, 128]
+            };
+            
+            const color = colorMap[diag.seccion] || [107, 114, 128];
+            
+            crearSeccion(diag.seccion.toUpperCase(), color, () => {
+              if (diag.descripcion) {
+                const fallas = parseFallasFromDescription(diag.descripcion);
+                agregarFallas(fallas);
+              }
+              
+              if (diag.comentarios) {
+                checkAddPage();
+                doc.setFont(undefined, 'bold');
+                doc.text('Comentarios:', margin + 5, yPosition);
+                yPosition += 5;
+                doc.setFont(undefined, 'normal');
+                const splitText = doc.splitTextToSize(diag.comentarios, contentWidth - 10);
+                splitText.forEach(line => {
+                  checkAddPage();
+                  doc.text(line, margin + 10, yPosition);
+                  yPosition += 5;
+                });
+                yPosition += 3;
+              }
+            });
+          }
+        }
+        
+        // Agregar imágenes del diagnóstico
+        const imagenes = extractImagesFromDiagnostico(diagnostico);
+        if (imagenes.length > 0) {
+          crearSeccion('FOTOGRAFÍAS DEL DIAGNÓSTICO', [168, 85, 247], () => {
+            // Sección header ya creada
+          });
+          
+          for (const imagen of imagenes) {
+            await agregarImagen(`${imagen.seccion} - ${imagen.campo}:`, imagen.path);
+          }
+        }
+        
+        // Observaciones generales
+        if (diagnostico.observaciones) {
+          crearSeccion('OBSERVACIONES GENERALES', [156, 163, 175], () => {
+            const splitText = doc.splitTextToSize(diagnostico.observaciones, contentWidth - 10);
+            splitText.forEach(line => {
+              checkAddPage();
+              doc.text(line, margin + 5, yPosition);
+              yPosition += 5;
+            });
+          });
+        }
+        
+        // Pie de página en todas las páginas
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+          doc.setPage(i);
+          doc.setFontSize(8);
+          doc.setTextColor(128, 128, 128);
+          doc.text(`Página ${i} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+          doc.text(`Generado el ${new Date().toLocaleDateString('es-ES')} a las ${new Date().toLocaleTimeString('es-ES')}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
+        }
+        
+        // Guardar PDF
+        doc.save(`Reporte_Diagnostico_${diagnostico.folioRecepcion}_${new Date().getTime()}.pdf`);
+        
+        toastStore.addToast({
+          message: 'Reporte PDF generado exitosamente',
+          type: 'success',
+          duration: 3000
+        });
+        
+      } catch (error) {
+        console.error('Error al generar PDF:', error);
+        toastStore.addToast({
+          message: 'Error al generar el reporte PDF',
+          type: 'error',
+          duration: 5000
+        });
+      } finally {
+        generandoPDF.value = false;
+      }
+    };
 
     // Helper para extraer todas las imágenes de los detalles JSON de un diagnóstico
     const extractImagesFromDiagnostico = (diagnostico) => {
@@ -973,7 +1247,10 @@ export default {
       closeImageModal,
       getImageUrl,
       extractImagesFromDiagnostico,
-      hasAnyImages
+      hasAnyImages,
+      // Funciones para PDF
+      generarPDF,
+      generandoPDF
     }
   }
 }
