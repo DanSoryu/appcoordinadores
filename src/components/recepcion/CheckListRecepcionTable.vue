@@ -139,6 +139,24 @@
                     Ver
                   </button>
                   
+                  <!-- Botón Generar PDF - Solo cuando está completado -->
+                  <button 
+                    v-if="isCompleted(item)"
+                    @click="generarPDF(item)"
+                    :disabled="generandoPDF"
+                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Generar reporte PDF"
+                  >
+                    <svg v-if="!generandoPDF" class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <svg v-else class="animate-spin w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {{ generandoPDF ? 'Generando...' : 'PDF' }}
+                  </button>
+                  
                   <!-- Botón Completar - Solo cuando está pendiente -->
                   <button 
                     v-if="!isCompleted(item)"
@@ -865,6 +883,9 @@ export default {
     // Modal de imagen
     const showImageModal = ref(false);
     const currentImageUrl = ref(null);
+    
+    // Estado de generación de PDF
+    const generandoPDF = ref(false);
 
     // Cargar datos desde la API
     const cargarChecklistData = async (page = 1) => {
@@ -1118,6 +1139,341 @@ export default {
       // return `http://127.0.0.1:8000/Mecasoft/detalles_ordenes/${imageName}`;
       return `https://api.ed-intra.com/Mecasoft/detalles_ordenes/${imageName}`;
     };
+    
+    // Función para convertir imagen a base64
+    const getImageAsBase64 = async (imageUrl) => {
+      try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      } catch (error) {
+        console.error('Error al cargar imagen:', error);
+        return null;
+      }
+    };
+    
+    // Función para generar el PDF
+    const generarPDF = async (item) => {
+      generandoPDF.value = true;
+      
+      try {
+        // Importar jsPDF y autoTable dinámicamente
+        const { default: jsPDF } = await import('jspdf');
+        await import('jspdf-autotable');
+        
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 15;
+        const contentWidth = pageWidth - (2 * margin);
+        let yPosition = margin;
+        
+        // Función auxiliar para agregar nueva página si es necesario
+        const checkAddPage = (requiredSpace = 20) => {
+          if (yPosition + requiredSpace > pageHeight - margin) {
+            doc.addPage();
+            yPosition = margin;
+            return true;
+          }
+          return false;
+        };
+        
+        // Encabezado del documento
+        doc.setFillColor(59, 130, 246); // bg-blue-600
+        doc.rect(0, 0, pageWidth, 40, 'F');
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(22);
+        doc.setFont(undefined, 'bold');
+        doc.text('REPORTE DE RECEPCIÓN', pageWidth / 2, 20, { align: 'center' });
+        
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'normal');
+        doc.text('CheckList de Inspección Vehicular', pageWidth / 2, 30, { align: 'center' });
+        
+        yPosition = 50;
+        
+        // Información general
+        doc.setTextColor(0, 0, 0);
+        doc.setFillColor(239, 246, 255); // bg-blue-50
+        doc.roundedRect(margin, yPosition, contentWidth, 30, 3, 3, 'F');
+        
+        yPosition += 8;
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(30, 64, 175); // text-blue-800
+        doc.text('Información General', margin + 5, yPosition);
+        
+        yPosition += 8;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Folio: ${item.id}`, margin + 5, yPosition);
+        doc.text(`Estado: ${isCompleted(item) ? 'COMPLETADO' : 'PENDIENTE'}`, margin + 70, yPosition);
+        
+        yPosition += 6;
+        doc.text(`Fecha de Creación: ${formatDate(item.created_at)}`, margin + 5, yPosition);
+        
+        yPosition += 6;
+        doc.text(`Última Actualización: ${formatDate(item.updated_at)}`, margin + 5, yPosition);
+        
+        yPosition += 12;
+        
+        // Función auxiliar para crear secciones
+        const crearSeccion = (titulo, color, contenido) => {
+          checkAddPage(30);
+          
+          doc.setFillColor(color[0], color[1], color[2]);
+          doc.roundedRect(margin, yPosition, contentWidth, 8, 2, 2, 'F');
+          
+          doc.setFontSize(12);
+          doc.setFont(undefined, 'bold');
+          doc.setTextColor(255, 255, 255);
+          doc.text(titulo, margin + 5, yPosition + 5.5);
+          
+          yPosition += 12;
+          
+          doc.setFontSize(10);
+          doc.setFont(undefined, 'normal');
+          doc.setTextColor(0, 0, 0);
+          
+          contenido();
+        };
+        
+        // Función auxiliar para agregar campo con valor
+        const agregarCampo = (etiqueta, valor, xOffset = 0) => {
+          checkAddPage();
+          doc.setFont(undefined, 'bold');
+          doc.text(`${etiqueta}:`, margin + 5 + xOffset, yPosition);
+          doc.setFont(undefined, 'normal');
+          doc.text(String(valor || 'No especificado'), margin + 5 + xOffset + doc.getTextWidth(`${etiqueta}: `), yPosition);
+          yPosition += 6;
+        };
+        
+        // Función auxiliar para agregar imagen
+        const agregarImagen = async (etiqueta, imageName) => {
+          if (!imageName) return;
+          
+          checkAddPage(50);
+          
+          doc.setFont(undefined, 'bold');
+          doc.text(etiqueta, margin + 5, yPosition);
+          yPosition += 5;
+          
+          const imageUrl = getImageUrl(imageName);
+          const imageData = await getImageAsBase64(imageUrl);
+          
+          if (imageData) {
+            try {
+              doc.addImage(imageData, 'JPEG', margin + 5, yPosition, 60, 40);
+              yPosition += 45;
+            } catch (error) {
+              console.error('Error al agregar imagen al PDF:', error);
+              doc.setFont(undefined, 'italic');
+              doc.text('(Imagen no disponible)', margin + 5, yPosition);
+              yPosition += 6;
+            }
+          } else {
+            doc.setFont(undefined, 'italic');
+            doc.text('(Imagen no disponible)', margin + 5, yPosition);
+            yPosition += 6;
+          }
+        };
+        
+        // Recepción - Llaves
+        crearSeccion('RECEPCIÓN - LLAVES', [16, 185, 129], () => {
+          agregarCampo('Cantidad de Llaves', item.cantidadLlaves);
+        });
+        
+        // Documentos
+        crearSeccion('DOCUMENTOS', [14, 165, 233], () => {
+          agregarCampo('Tarjeta de Circulación', item.tarjetaCirculacion ? 'SÍ' : 'NO');
+          agregarCampo('Póliza de Seguro', item.polizaSeguro ? 'SÍ' : 'NO');
+        });
+        
+        if (item.polizaSeguroImagen) {
+          await agregarImagen('Imagen Póliza de Seguro:', item.polizaSeguroImagen);
+        }
+        
+        // Accesorios/Herramienta
+        crearSeccion('ACCESORIOS/HERRAMIENTA', [34, 197, 94], () => {
+          if (item.descripcionAccesorios) {
+            agregarCampo('Descripción', item.descripcionAccesorios);
+          }
+        });
+        
+        if (item.accesoriosHerramientaImagen) {
+          await agregarImagen('Imagen Accesorios:', item.accesoriosHerramientaImagen);
+        }
+        
+        // Cluster
+        crearSeccion('CLUSTER', [234, 179, 8], () => {
+          agregarCampo('Nivel de Combustible', item.nivelCombustible);
+        });
+        
+        if (item.odometroImagen) await agregarImagen('Odómetro:', item.odometroImagen);
+        if (item.combustibleImagen) await agregarImagen('Combustible:', item.combustibleImagen);
+        
+        if (item.testigosEncendidos && item.testigosEncendidos.length > 0) {
+          checkAddPage();
+          doc.setFont(undefined, 'bold');
+          doc.text('Testigos Encendidos:', margin + 5, yPosition);
+          yPosition += 5;
+          doc.setFont(undefined, 'normal');
+          item.testigosEncendidos.forEach(testigo => {
+            checkAddPage();
+            doc.text(`• ${testigo}`, margin + 10, yPosition);
+            yPosition += 5;
+          });
+        }
+        
+        if (item.testigosImagen) await agregarImagen('Imagen Testigos:', item.testigosImagen);
+        
+        // Tablero
+        crearSeccion('TABLERO', [245, 158, 11], () => {
+          agregarCampo('Estereo', item.estereo !== null ? (item.estereo ? 'SÍ' : 'NO') : 'No especificado');
+          agregarCampo('Cantidad de Bocinas', item.cantidadBocinas);
+        });
+        
+        // Puertas
+        crearSeccion('PUERTAS', [20, 184, 166], () => {
+          agregarCampo('Manijas', item.manijas !== null ? (item.manijas ? 'SÍ' : 'NO') : 'No especificado');
+          agregarCampo('Estado Seguros', item.estadoSeguros?.replace('_', ' ').toUpperCase());
+          agregarCampo('Estado Cristales', item.estadoCristales?.replace('_', ' ').toUpperCase());
+        });
+        
+        if (item.segurosImagen) await agregarImagen('Seguros:', item.segurosImagen);
+        if (item.cristalesImagen) await agregarImagen('Cristales de Puertas:', item.cristalesImagen);
+        
+        // Asientos
+        crearSeccion('ASIENTOS', [168, 85, 247], () => {
+          agregarCampo('Estado Vestiduras', item.estadoVestiduras?.replace('_', ' ').toUpperCase());
+          agregarCampo('Estado Cabeceras', item.estadoCabeceras?.replace('_', ' ').toUpperCase());
+        });
+        
+        if (item.vestidurasImagen) await agregarImagen('Vestiduras:', item.vestidurasImagen);
+        if (item.cabecerasImagen) await agregarImagen('Cabeceras:', item.cabecerasImagen);
+        
+        // Cinturones de Seguridad
+        crearSeccion('CINTURONES DE SEGURIDAD', [244, 63, 94], () => {
+          agregarCampo('Funcionalidad', item.funcionalidadCinturones?.replace('_', ' ').toUpperCase());
+        });
+        
+        // Carrocería
+        crearSeccion('CARROCERÍA', [239, 68, 68], () => {
+          agregarCampo('Lado Derecho', item.carroceriaLadoDerecho?.replace('_', ' ').toUpperCase());
+          agregarCampo('Lado Izquierdo', item.carroceriaLadoIzquierdo?.replace('_', ' ').toUpperCase());
+          agregarCampo('Lado Trasero', item.carroceriaLadoTrasero?.replace('_', ' ').toUpperCase());
+          agregarCampo('Lado Frontal', item.carroceriaLadoFrontal?.replace('_', ' ').toUpperCase());
+        });
+        
+        if (item.carroceriaLadoDerechoImagen) await agregarImagen('Lado Derecho:', item.carroceriaLadoDerechoImagen);
+        if (item.carroceriaLadoIzquierdoImagen) await agregarImagen('Lado Izquierdo:', item.carroceriaLadoIzquierdoImagen);
+        if (item.carroceriaLadoTraseroImagen) await agregarImagen('Lado Trasero:', item.carroceriaLadoTraseroImagen);
+        if (item.carroceriaLadoFrontalImagen) await agregarImagen('Lado Frontal:', item.carroceriaLadoFrontalImagen);
+        
+        // Neumáticos
+        crearSeccion('NEUMÁTICOS', [107, 114, 128], () => {
+          agregarCampo('Lado Piloto', item.neumaticosLadoPiloto?.replace('_', ' ').toUpperCase());
+          agregarCampo('Atrás Piloto', item.neumaticosLadoAtrasPiloto?.replace('_', ' ').toUpperCase());
+          agregarCampo('Lado Copiloto', item.neumaticosLadoCopiloto?.replace('_', ' ').toUpperCase());
+          agregarCampo('Atrás Copiloto', item.neumaticosLadoAtrasCopiloto?.replace('_', ' ').toUpperCase());
+        });
+        
+        if (item.neumaticosLadoPilotoImagen) await agregarImagen('Lado Piloto:', item.neumaticosLadoPilotoImagen);
+        if (item.neumaticosLadoAtrasPilotoImagen) await agregarImagen('Atrás Piloto:', item.neumaticosLadoAtrasPilotoImagen);
+        if (item.neumaticosLadoCopilotoImagen) await agregarImagen('Lado Copiloto:', item.neumaticosLadoCopilotoImagen);
+        if (item.neumaticosLadoAtrasCopilotoImagen) await agregarImagen('Atrás Copiloto:', item.neumaticosLadoAtrasCopilotoImagen);
+        
+        // Cristales del Vehículo
+        crearSeccion('CRISTALES DEL VEHÍCULO', [6, 182, 212], () => {
+          agregarCampo('Parabrisas', item.cristalesParabrisas?.replace('_', ' ').toUpperCase());
+          agregarCampo('Medallón Trasero', item.cristalesMedallonTrasero?.replace('_', ' ').toUpperCase());
+          agregarCampo('Limpiaparabrisas', item.cristalesLimpiadores?.replace('_', ' ').toUpperCase());
+        });
+        
+        if (item.cristalesParabrisasImagen) await agregarImagen('Parabrisas:', item.cristalesParabrisasImagen);
+        if (item.cristalesMedallonTraseroImagen) await agregarImagen('Medallón Trasero:', item.cristalesMedallonTraseroImagen);
+        if (item.cristalesLimpiadoresImagen) await agregarImagen('Limpiaparabrisas:', item.cristalesLimpiadoresImagen);
+        
+        // Motor
+        crearSeccion('MOTOR', [249, 115, 22], () => {
+          agregarCampo('Tapones', item.motorTapones?.replace('_', ' ').toUpperCase());
+          agregarCampo('Batería', item.motorBateria?.replace('_', ' ').toUpperCase());
+          agregarCampo('Nivel de Aceite', item.motorNivelAceite);
+          agregarCampo('Nivel Líquido Frenos', item.motorNivelLiquidoFrenos);
+          agregarCampo('Nivel Anticongelante', item.motorNivelAnticongelante);
+        });
+        
+        if (item.motorTaponesImagen) await agregarImagen('Tapones:', item.motorTaponesImagen);
+        if (item.motorBateriaImagen) await agregarImagen('Batería:', item.motorBateriaImagen);
+        if (item.motorNivelAceiteImagen) await agregarImagen('Nivel Aceite:', item.motorNivelAceiteImagen);
+        if (item.motorNivelLiquidoFrenosImagen) await agregarImagen('Líquido Frenos:', item.motorNivelLiquidoFrenosImagen);
+        if (item.motorNivelAnticongelanteImagen) await agregarImagen('Anticongelante:', item.motorNivelAnticongelanteImagen);
+        
+        // Depósito Gasolina
+        crearSeccion('DEPÓSITO GASOLINA', [99, 102, 241], () => {
+          agregarCampo('Depósito Puerta', item.depositoPuerta !== null ? (item.depositoPuerta ? 'SÍ' : 'NO') : 'No especificado');
+          agregarCampo('Depósito Tapón', item.depositoTapon !== null ? (item.depositoTapon ? 'SÍ' : 'NO') : 'No especificado');
+        });
+        
+        // Escape
+        crearSeccion('ESCAPE', [100, 116, 139], () => {
+          agregarCampo('Silenciador', item.escapeSilenciador !== null ? (item.escapeSilenciador ? 'SÍ' : 'NO') : 'No especificado');
+          agregarCampo('Catalizador', item.escapeCatalizador !== null ? (item.escapeCatalizador ? 'SÍ' : 'NO') : 'No especificado');
+        });
+        
+        if (item.escapeSilenciadorImagen) await agregarImagen('Silenciador:', item.escapeSilenciadorImagen);
+        if (item.escapeCatalizadorImagen) await agregarImagen('Catalizador:', item.escapeCatalizadorImagen);
+        
+        // Comentarios Generales
+        if (item.comentarioGeneral) {
+          crearSeccion('COMENTARIOS GENERALES', [156, 163, 175], () => {
+            const splitText = doc.splitTextToSize(item.comentarioGeneral, contentWidth - 10);
+            splitText.forEach(line => {
+              checkAddPage();
+              doc.text(line, margin + 5, yPosition);
+              yPosition += 5;
+            });
+          });
+        }
+        
+        // Pie de página en todas las páginas
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+          doc.setPage(i);
+          doc.setFontSize(8);
+          doc.setTextColor(128, 128, 128);
+          doc.text(`Página ${i} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+          doc.text(`Generado el ${new Date().toLocaleDateString('es-ES')} a las ${new Date().toLocaleTimeString('es-ES')}`, pageWidth / 2, pageHeight - 5, { align: 'center' });
+        }
+        
+        // Guardar PDF
+        doc.save(`Reporte_Recepcion_${item.id}_${new Date().getTime()}.pdf`);
+        
+        toastStore.addToast({
+          message: 'Reporte PDF generado exitosamente',
+          type: 'success',
+          duration: 3000
+        });
+        
+      } catch (error) {
+        console.error('Error al generar PDF:', error);
+        toastStore.addToast({
+          message: 'Error al generar el reporte PDF',
+          type: 'error',
+          duration: 5000
+        });
+      } finally {
+        generandoPDF.value = false;
+      }
+    };
+
     // Helper para formatear fechas
     const formatDate = (dateString) => {
       if (!dateString) return 'No disponible';
@@ -1204,7 +1560,10 @@ export default {
       getImageUrl,
       // Nuevas funciones para manejo de roles y orden
       getOldestPendingChecklist,
-      canCompleteChecklist
+      canCompleteChecklist,
+      // Funciones para PDF
+      generarPDF,
+      generandoPDF
     };
   }
 };
