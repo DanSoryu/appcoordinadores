@@ -68,7 +68,9 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                   <div class="flex justify-center space-x-2">
+                    <!-- Botón Ver: solo visible si estatus es 'completado' -->
                     <button 
+                      v-if="solicitud.estatus === 'completado'"
                       @click="verDetalles(solicitud)"
                       class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       title="Ver detalles"
@@ -79,7 +81,9 @@
                       </svg>
                       Ver
                     </button>
+                    <!-- Botón Solicitar: solo visible si estatus es 'pendiente' -->
                     <button
+                      v-if="solicitud.estatus === 'pendiente'"
                       @click="abrirModalSolicitud(solicitud)"
                       class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                       title="Solicitar refacciones"
@@ -396,6 +400,7 @@ export default {
         solicitudesData.value = response.data.data.map(solicitud => ({
           id: solicitud.id,
           folio_diagnostico: solicitud.folio_diagnostico,
+          estatus: solicitud.estatus || 'pendiente',
           created_at: solicitud.created_at,
           updated_at: solicitud.updated_at,
           diagnostico: solicitud.diagnostico,
