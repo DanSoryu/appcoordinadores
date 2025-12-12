@@ -376,15 +376,16 @@ export default {
           }
         }
 
-        // Agregar las refacciones a la solicitud
+        // Agregar las refacciones a la solicitud y marcarla como completada
         if (solicitudId) {
           await apiClient.post(`/solicitudes-refacciones/${solicitudId}/detalle`, {
-            refacciones: this.refaccionesSeleccionadas
+            refacciones: this.refaccionesSeleccionadas,
+            estatus: 'completado'
           })
 
           this.toastStore.addToast({
             type: 'success',
-            message: `Se agregaron ${this.refaccionesSeleccionadas.length} items a la solicitud`,
+            message: `Se agregaron ${this.refaccionesSeleccionadas.length} items a la solicitud y se marcó como completada`,
             duration: 3000
           })
 
