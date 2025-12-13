@@ -384,17 +384,9 @@ export default {
           })
 
           // 2. Actualizar el estatus de la solicitud a completado
-          console.log('=== ACTUALIZANDO ESTATUS ===')
-          console.log('URL:', `/update/diagnosticos/${solicitudId}`)
-          console.log('Payload:', { estatus: 'completado' })
-          
-          const updateResponse = await apiClient.post(`/update/diagnosticos/${solicitudId}`, {
+          await apiClient.post(`/update/solicitudes-refacciones/${solicitudId}`, {
             estatus: 'completado'
           })
-          
-          console.log('Respuesta update estatus:', updateResponse)
-          console.log('Respuesta data:', updateResponse.data)
-          console.log('=== FIN ACTUALIZANDO ESTATUS ===')
 
           this.toastStore.addToast({
             type: 'success',
