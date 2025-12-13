@@ -376,10 +376,15 @@ export default {
           }
         }
 
-        // Agregar las refacciones a la solicitud y marcarla como completada
+        // Agregar las refacciones a la solicitud
         if (solicitudId) {
+          // 1. Guardar el detalle de refacciones
           await apiClient.post(`/solicitudes-refacciones/${solicitudId}/detalle`, {
-            refacciones: this.refaccionesSeleccionadas,
+            refacciones: this.refaccionesSeleccionadas
+          })
+
+          // 2. Actualizar el estatus de la solicitud a completado
+          await apiClient.post(`/update/diagnosticos/${solicitudId}`, {
             estatus: 'completado'
           })
 
