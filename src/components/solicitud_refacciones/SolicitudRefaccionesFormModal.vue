@@ -388,11 +388,7 @@ export default {
             estatus: 'completado'
           })
 
-          this.toastStore.addToast({
-            type: 'success',
-            message: `Se agregaron ${this.refaccionesSeleccionadas.length} items a la solicitud y se marcó como completada`,
-            duration: 3000
-          })
+          // El toast se muestra en el componente padre después de recargar los datos
 
           this.$emit('solicitud-guardada')
         }

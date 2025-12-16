@@ -534,7 +534,7 @@ export default {
         // Mapear datos de la API al formato esperado por el frontend
         diagnosticosData.value = response.data.diagnosticos.map(diagnostico => ({
           id: diagnostico.id,
-          folioRecepcion: `REC-${diagnostico.recepcion_id}`,
+          folioRecepcion: `${diagnostico.recepcion_id}`,
           estado: diagnostico.fecha_completado ? 'completado' : 'pendiente',
           fechaCreacion: diagnostico.created_at,
           fechaCompletado: diagnostico.fecha_completado,
@@ -804,11 +804,7 @@ export default {
         // Recargar la lista completa desde la API para obtener datos actualizados
         await cargarDiagnosticos()
         
-        toastStore.addToast({
-          message: 'Diagnóstico guardado exitosamente',
-          type: 'success',
-          duration: 3000
-        })
+        // Ya no mostramos toast aquí porque el FormModal ya lo muestra
         
         cerrarModalDiagnostico()
       } catch (err) {

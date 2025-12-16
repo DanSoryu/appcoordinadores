@@ -13,7 +13,7 @@
           <input 
             v-model="searchQuery"
             type="text" 
-            placeholder="Buscar por folio de diagnóstico..."
+            placeholder="Buscar por folio de recepción..."
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
         </div>
@@ -48,7 +48,7 @@
           <table class="min-w-full border-collapse table-fixed">
             <thead class="bg-gray-50">
               <tr class="divide-x divide-gray-200">
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">Folio Diagnóstico</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">Folio de Diagnostico</th>
                 <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">Acciones</th>
               </tr>
             </thead>
@@ -62,7 +62,7 @@
                       </svg>
                     </div>
                     <div class="ml-4">
-                      <div class="text-sm font-bold text-gray-900">Folio: {{ solicitud.folio_diagnostico }}</div>
+                      <div class="text-sm font-bold text-gray-900">{{ solicitud.folio_recepcion }}</div>
                     </div>
                   </div>
                 </td>
@@ -196,8 +196,8 @@
               <h4 class="text-lg font-semibold text-blue-800 mb-3">Información General</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <span class="text-sm text-gray-600">Folio Diagnóstico:</span>
-                  <p class="font-semibold text-gray-900">{{ currentSolicitud.folio_diagnostico }}</p>
+                  <span class="text-sm text-gray-600">Folio de Recepción:</span>
+                  <p class="font-semibold text-gray-900">{{ currentSolicitud.folio_recepcion || currentSolicitud.folio_diagnostico }}</p>
                 </div>
                 <div>
                   <span class="text-sm text-gray-600">Vehículo:</span>
@@ -302,8 +302,9 @@ export default {
         const search = searchQuery.value.toLowerCase()
         result = result.filter(item => {
           const folio = item.folio_diagnostico?.toString().toLowerCase() || ''
+          const folioRecepcion = item.folio_recepcion?.toString().toLowerCase() || ''
           const placa = item.diagnostico?.vehiculo_placa?.toLowerCase() || ''
-          return folio.includes(search) || placa.includes(search)
+          return folio.includes(search) || folioRecepcion.includes(search) || placa.includes(search)
         })
       }
 
@@ -400,6 +401,7 @@ export default {
         solicitudesData.value = response.data.data.map(solicitud => ({
           id: solicitud.id,
           folio_diagnostico: solicitud.folio_diagnostico,
+          folio_recepcion: solicitud.folio_recepcion,
           estatus: solicitud.estatus || 'pendiente',
           created_at: solicitud.created_at,
           updated_at: solicitud.updated_at,
