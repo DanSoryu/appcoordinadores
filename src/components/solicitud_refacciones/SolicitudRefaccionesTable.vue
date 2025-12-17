@@ -311,6 +311,13 @@ export default {
         })
       }
 
+      // Ordenar por fecha de creación (más recientes primero)
+      result = result.sort((a, b) => {
+        const dateA = new Date(a.created_at)
+        const dateB = new Date(b.created_at)
+        return dateB - dateA // Orden descendente (más reciente primero)
+      })
+
       totalItems.value = result.length
       return result
     })
