@@ -53,7 +53,10 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="solicitud in paginatedData" :key="solicitud.id" class="hover:bg-gray-50">
+              <tr v-for="solicitud in paginatedData" :key="solicitud.id" :class="[
+                'hover:bg-gray-50',
+                solicitud.estatus === 'completado' ? 'bg-green-50' : ''
+              ]">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-blue-100 rounded-full">
