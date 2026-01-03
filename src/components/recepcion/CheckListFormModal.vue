@@ -2505,14 +2505,22 @@ export default {
       console.log('Enviando formulario completo al API...');
       console.log('Datos finales:', JSON.stringify(this.finalFormData, null, 2));
       
+      // Obtener el ID numérico correcto (no el folio)
+      // Priorizar idDetalleRecepcion, luego id_detalle_recepcion, finalmente id
+      const detalleRecepcionId = this.checklistData.idDetalleRecepcion 
+        || this.checklistData.id_detalle_recepcion 
+        || this.checklistData.id;
+      
       // Verificar que tenemos un ID para actualizar
-      if (!this.checklistData.id) {
+      if (!detalleRecepcionId) {
         throw new Error('No se puede actualizar el checklist: ID no encontrado');
       }
       
+      console.log('ID de detalle recepción a actualizar:', detalleRecepcionId);
+      
       try {
-        // Hacer POST request al endpoint Laravel actualizado
-        const response = await apiClient.post(`/actualizar/detalle-recepcion/${this.checklistData.id}`, this.finalFormData);
+        // Hacer POST request al endpoint Laravel actualizado usando el ID numérico
+        const response = await apiClient.post(`/actualizar/detalle-recepcion/${detalleRecepcionId}`, this.finalFormData);
         
         console.log('Respuesta del servidor:', response.data);
         
