@@ -56,7 +56,7 @@
             Orden de Completado de CheckLists
           </h3>
           <div class="mt-2 text-sm text-blue-700">
-            <p>Los checklists deben completarse en orden secuencial. El próximo checklist a completar es el <strong>ID {{ getOldestPendingChecklist.id }}</strong>.</p>
+            <p>Los checklists deben completarse en orden secuencial. El próximo checklist a completar es el <strong>Folio {{ getOldestPendingChecklist.folio || getOldestPendingChecklist.id }}</strong>.</p>
             <p class="mt-1">Solo se puede completar un checklist cuando el más antiguo pendiente ha sido terminado.</p>
           </div>
         </div>
@@ -107,7 +107,10 @@
                   ]">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   <div class="flex items-center space-x-2">
-                    <span>{{ item.id }}</span>
+                    <div>
+                      <div>{{ item.folio || 'N/A' }}</div>
+                      <div class="text-xs text-gray-500">ID: {{ item.id }}</div>
+                    </div>
                     <!-- Indicador de "siguiente a completar" -->
                     <span v-if="!isCompleted(item) && canCompleteChecklist(item)" 
                           class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800"
@@ -272,7 +275,7 @@
       <div class="bg-white w-[90%] max-w-2xl max-h-[90vh] rounded-lg shadow-xl">
         <!-- Encabezado del modal -->
         <div class="bg-blue-600 text-white px-6 py-4 rounded-t-lg flex justify-between items-center">
-          <h3 class="text-xl font-semibold">Detalles de Checklist</h3>
+          <h3 class="text-xl font-semibold">Detalles de Checklist - Folio: {{ currentChecklistItem?.folio || currentChecklistItem?.id }}</h3>
           <button @click="showDetallesModal = false" class="text-white hover:text-gray-200">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -991,6 +994,7 @@ export default {
         const search = searchQuery.value.toLowerCase();
         result = result.filter(item => {
           return (
+            (item.folio && item.folio.toLowerCase().includes(search)) ||
             item.id.toString().includes(search) ||
             (item.cantidadLlaves !== null && item.cantidadLlaves.toString().includes(search)) ||
             (item.descripcionAccesorios && item.descripcionAccesorios.toLowerCase().includes(search)) ||
@@ -1213,7 +1217,7 @@ export default {
         doc.setFontSize(10);
         doc.setFont(undefined, 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.text(`Folio: ${item.id}`, margin + 5, yPosition);
+        doc.text(`Folio: ${item.folio || item.id}`, margin + 5, yPosition);
         doc.text(`Estado: ${isCompleted(item) ? 'COMPLETADO' : 'PENDIENTE'}`, margin + 70, yPosition);
         
         yPosition += 6;
@@ -1454,7 +1458,7 @@ export default {
         }
         
         // Guardar PDF
-        doc.save(`Reporte_Recepcion_${item.id}_${new Date().getTime()}.pdf`);
+        doc.save(`Reporte_Recepcion_${item.folio || item.id}_${new Date().getTime()}.pdf`);
         
         toastStore.addToast({
           message: 'Reporte PDF generado exitosamente',

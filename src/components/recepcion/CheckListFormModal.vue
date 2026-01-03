@@ -2505,11 +2505,8 @@ export default {
       console.log('Enviando formulario completo al API...');
       console.log('Datos finales:', JSON.stringify(this.finalFormData, null, 2));
       
-      // Obtener el ID numérico correcto (no el folio)
-      // Priorizar idDetalleRecepcion, luego id_detalle_recepcion, finalmente id
-      const detalleRecepcionId = this.checklistData.idDetalleRecepcion 
-        || this.checklistData.id_detalle_recepcion 
-        || this.checklistData.id;
+      // Obtener el ID numérico del registro (dr.id del backend)
+      const detalleRecepcionId = this.checklistData.id;
       
       // Verificar que tenemos un ID para actualizar
       if (!detalleRecepcionId) {
@@ -2517,6 +2514,7 @@ export default {
       }
       
       console.log('ID de detalle recepción a actualizar:', detalleRecepcionId);
+      console.log('Folio de la orden (para usuario):', this.checklistData.folio);
       
       try {
         // Hacer POST request al endpoint Laravel actualizado usando el ID numérico
