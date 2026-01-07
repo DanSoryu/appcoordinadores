@@ -123,7 +123,7 @@ export default {
       try {
         await executeSubmit(async () => {
           // Llamar a la API para eliminar el usuario
-          await apiClient.delete(`/users/${props.usuario.id}`);
+          await apiClient.post(`/destroy/users/${props.usuario.id}`);
           
           console.log('Usuario eliminado:', props.usuario);
           

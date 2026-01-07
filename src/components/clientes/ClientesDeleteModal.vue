@@ -120,7 +120,7 @@ export default {
       try {
         await executeSubmit(async () => {
           // Llamar a la API para eliminar el cliente
-          await apiClient.delete(`/clientes/${props.cliente.id}`);
+          await apiClient.post(`/destroy/clientes/${props.cliente.id}`);
           
           console.log('Cliente eliminado:', props.cliente);
           

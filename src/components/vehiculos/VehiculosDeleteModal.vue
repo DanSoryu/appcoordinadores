@@ -115,7 +115,7 @@ export default {
       try {
         await executeSubmit(async () => {
           // Llamar a la API para eliminar el vehículo
-          await apiClient.delete(`/vehiculos/${props.vehiculo.id}`);
+          await apiClient.post(`/destroy/vehiculos/${props.vehiculo.id}`);
           
           console.log('Vehículo eliminado:', props.vehiculo);
           
