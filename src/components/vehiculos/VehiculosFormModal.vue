@@ -531,25 +531,9 @@ export default {
 				this.areas = areasResponse.data;
 				this.divisiones = divisionesResponse.data;
 
-				// Filtrar clientes según el rol del usuario
-				let clientesFiltrados = this.clientes;
-				
-				if (this.authStore.user && this.authStore.user.rol === 'mecanico' && this.tallerDelMecanico) {
-					// Si es mecánico, solo mostrar clientes del COPE de su taller
-					const copeDelTaller = this.tallerDelMecanico.cope_id;
-					clientesFiltrados = this.clientes.filter(cliente => 
-						cliente.cope_id === copeDelTaller
-					);
-					
-					console.log(`Mecánico: Filtrando clientes para COPE ${copeDelTaller}`);
-					console.log(`Clientes filtrados: ${clientesFiltrados.length} de ${this.clientes.length} totales`);
-				} else if (this.authStore.user && this.authStore.user.rol === 'mecanico') {
-					// Si es mecánico pero no tiene taller asignado, mostrar mensaje
-					console.warn('Mecánico sin taller asignado, no se pueden filtrar clientes');
-				}
-
+				// Mostrar TODOS los clientes para todos los usuarios (sin filtrar por rol)
 				// Crear array con información concatenada
-				this.clientesWithDetails = clientesFiltrados.map(cliente => {
+				this.clientesWithDetails = this.clientes.map(cliente => {
 					const cope = this.copes.find(c => c.id === cliente.cope_id);
 					const area = cope ? this.areas.find(a => a.id === cope.area_id) : null;
 					const division = area ? this.divisiones.find(d => d.id === area.division_id) : null;
@@ -561,14 +545,8 @@ export default {
 						displayName: `${cliente.supervisor} - ${copeInfo}`
 					};
 				});
-				// Mostrar mensaje informativo si es mecánico y no tiene clientes
-				if (this.authStore.user && this.authStore.user.rol === 'mecanico' && this.clientesWithDetails.length === 0) {
-					this.toastStore.addToast({
-						message: 'No hay clientes disponibles para su COPE asignado',
-						type: 'info',
-						duration: 4000
-					});
-				}
+				
+				console.log(`Total de clientes disponibles: ${this.clientesWithDetails.length}`);
 			} catch (error) {
 				console.error('Error al cargar clientes:', error);
 				this.toastStore.addToast({
