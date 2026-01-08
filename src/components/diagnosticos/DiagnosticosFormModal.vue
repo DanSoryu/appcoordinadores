@@ -167,12 +167,12 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
                 <div class="space-y-3">
                   <!-- Empaques dañados -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.empaques" class="rounded">
                       <span class="text-sm">Empaques dañados</span>
                     </label>
-                    <div v-if="formData.motor.empaques" class="ml-2">
+                    <div v-if="formData.motor.empaques" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-empaques"
                         :key="'motor-empaques'"
@@ -187,12 +187,12 @@
                   </div>
                   
                   <!-- Sellos dañados -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.sellos" class="rounded">
                       <span class="text-sm">Sellos dañados</span>
                     </label>
-                    <div v-if="formData.motor.sellos" class="ml-2">
+                    <div v-if="formData.motor.sellos" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-sellos"
                         :key="'motor-sellos'"
@@ -207,12 +207,12 @@
                   </div>
                   
                   <!-- Desgaste de anillos -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.desgasteAnillos" class="rounded">
                       <span class="text-sm">Desgaste de anillos</span>
                     </label>
-                    <div v-if="formData.motor.desgasteAnillos" class="ml-2">
+                    <div v-if="formData.motor.desgasteAnillos" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-desgaste-anillos"
                         :key="'motor-desgasteAnillos'"
@@ -227,12 +227,12 @@
                   </div>
                   
                   <!-- Desgaste válvulas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.desgasteValvulas" class="rounded">
                       <span class="text-sm">Desgaste válvulas</span>
                     </label>
-                    <div v-if="formData.motor.desgasteValvulas" class="ml-2">
+                    <div v-if="formData.motor.desgasteValvulas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-desgaste-valvulas"
                         :key="'motor-desgasteValvulas'"
@@ -247,12 +247,12 @@
                   </div>
                   
                   <!-- Falta de lubricación -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.faltaLubricacion" class="rounded">
                       <span class="text-sm">Falta de lubricación</span>
                     </label>
-                    <div v-if="formData.motor.faltaLubricacion" class="ml-2">
+                    <div v-if="formData.motor.faltaLubricacion" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-falta-lubricacion"
                         :key="'motor-faltaLubricacion'"
@@ -267,12 +267,12 @@
                   </div>
                   
                   <!-- Piezas sueltas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.piezasSueltas" class="rounded">
                       <span class="text-sm">Piezas sueltas</span>
                     </label>
-                    <div v-if="formData.motor.piezasSueltas" class="ml-2">
+                    <div v-if="formData.motor.piezasSueltas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-piezas-sueltas"
                         :key="'motor-piezasSueltas'"
@@ -287,12 +287,12 @@
                   </div>
                   
                   <!-- Bujías defectuosas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.bujias" class="rounded">
                       <span class="text-sm">Bujías defectuosas</span>
                     </label>
-                    <div v-if="formData.motor.bujias" class="ml-2">
+                    <div v-if="formData.motor.bujias" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-bujias"
                         :key="'motor-bujias'"
@@ -307,12 +307,12 @@
                   </div>
                   
                   <!-- Problemas con la Batería -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.bateria" class="rounded">
                       <span class="text-sm">Problemas con la Batería</span>
                     </label>
-                    <div v-if="formData.motor.bateria" class="ml-2">
+                    <div v-if="formData.motor.bateria" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-bateria"
                         :key="'motor-bateria'"
@@ -327,12 +327,12 @@
                   </div>
                   
                   <!-- Problemas con la Bomba de Gasolina -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.bombaGasolina" class="rounded">
                       <span class="text-sm">Problemas con la Bomba de Gasolina</span>
                     </label>
-                    <div v-if="formData.motor.bombaGasolina" class="ml-2">
+                    <div v-if="formData.motor.bombaGasolina" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-bomba-gasolina"
                         :key="'motor-bombaGasolina'"
@@ -347,12 +347,12 @@
                   </div>
                   
                   <!-- Falla en el radiador -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.fallaRadiador" class="rounded">
                       <span class="text-sm">Falla en el radiador</span>
                     </label>
-                    <div v-if="formData.motor.fallaRadiador" class="ml-2">
+                    <div v-if="formData.motor.fallaRadiador" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-falla-radiador"
                         :key="'motor-fallaRadiador'"
@@ -367,12 +367,12 @@
                   </div>
                   
                   <!-- Falla termostato -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.fallaTermostato" class="rounded">
                       <span class="text-sm">Falla termostato</span>
                     </label>
-                    <div v-if="formData.motor.fallaTermostato" class="ml-2">
+                    <div v-if="formData.motor.fallaTermostato" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-falla-termostato"
                         :key="'motor-fallaTermostato'"
@@ -387,12 +387,12 @@
                   </div>
                   
                   <!-- Soportes de bujías defectuosas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.motor.soportes" class="rounded">
                       <span class="text-sm">Soportes de bujías defectuosas</span>
                     </label>
-                    <div v-if="formData.motor.soportes" class="ml-2">
+                    <div v-if="formData.motor.soportes" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="motor-soportes"
                         :key="'motor-soportes'"
@@ -474,12 +474,12 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
                 <div class="space-y-3">
                   <!-- Retenes dañados -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.transmision.retenesDanados" class="rounded">
                       <span class="text-sm">Retenes dañados</span>
                     </label>
-                    <div v-if="formData.transmision.retenesDanados" class="ml-2">
+                    <div v-if="formData.transmision.retenesDanados" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="transmision-retenes-danados"
                         :key="'transmision-retenesDanados'"
@@ -494,12 +494,12 @@
                   </div>
                   
                   <!-- Juntas dañadas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.transmision.juntasDanadas" class="rounded">
                       <span class="text-sm">Juntas dañadas</span>
                     </label>
-                    <div v-if="formData.transmision.juntasDanadas" class="ml-2">
+                    <div v-if="formData.transmision.juntasDanadas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="transmision-juntas-danadas"
                         :key="'transmision-juntasDanadas'"
@@ -514,12 +514,12 @@
                   </div>
                   
                   <!-- Nivel bajo de flujo -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.transmision.nivelBajoFlujo" class="rounded">
                       <span class="text-sm">Nivel bajo de flujo</span>
                     </label>
-                    <div v-if="formData.transmision.nivelBajoFlujo" class="ml-2">
+                    <div v-if="formData.transmision.nivelBajoFlujo" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="transmision-nivel-bajo-flujo"
                         :key="'transmision-nivelBajoFlujo'"
@@ -534,12 +534,12 @@
                   </div>
                   
                   <!-- Desgaste interno -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.transmision.desgasteInterno" class="rounded">
                       <span class="text-sm">Desgaste interno</span>
                     </label>
-                    <div v-if="formData.transmision.desgasteInterno" class="ml-2">
+                    <div v-if="formData.transmision.desgasteInterno" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="transmision-desgaste-interno"
                         :key="'transmision-desgasteInterno'"
@@ -554,12 +554,12 @@
                   </div>
                   
                   <!-- Desgaste de discos -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.transmision.desgasteDiscos" class="rounded">
                       <span class="text-sm">Desgaste de discos</span>
                     </label>
-                    <div v-if="formData.transmision.desgasteDiscos" class="ml-2">
+                    <div v-if="formData.transmision.desgasteDiscos" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="transmision-desgaste-discos"
                         :key="'transmision-desgasteDiscos'"
@@ -574,12 +574,12 @@
                   </div>
                   
                   <!-- Problemas con el Convertidor de torque -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.transmision.convertidorTorque" class="rounded">
                       <span class="text-sm">Problemas con el Convertidor de torque</span>
                     </label>
-                    <div v-if="formData.transmision.convertidorTorque" class="ml-2">
+                    <div v-if="formData.transmision.convertidorTorque" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="transmision-convertidor-torque"
                         :key="'transmision-convertidorTorque'"
@@ -661,12 +661,12 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Seleccione las fallas detectadas:</label>
                 <div class="space-y-3">
                   <!-- Aire en el sistema -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.frenos.aireEnSistema" class="rounded">
                       <span class="text-sm">Aire en el sistema</span>
                     </label>
-                    <div v-if="formData.frenos.aireEnSistema" class="ml-2">
+                    <div v-if="formData.frenos.aireEnSistema" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="frenos-aire-sistema"
                         :key="'frenos-aireEnSistema'"
@@ -681,12 +681,12 @@
                   </div>
                   
                   <!-- Fuga de líquido -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.frenos.fugaLiquido" class="rounded">
                       <span class="text-sm">Fuga de líquido</span>
                     </label>
-                    <div v-if="formData.frenos.fugaLiquido" class="ml-2">
+                    <div v-if="formData.frenos.fugaLiquido" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="frenos-fuga-liquido"
                         :key="'frenos-fugaLiquido'"
@@ -701,12 +701,12 @@
                   </div>
                   
                   <!-- Balatas desgastadas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.frenos.balatasDesgastadas" class="rounded">
                       <span class="text-sm">Balatas desgastadas</span>
                     </label>
-                    <div v-if="formData.frenos.balatasDesgastadas" class="ml-2">
+                    <div v-if="formData.frenos.balatasDesgastadas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="frenos-balatas-desgastadas"
                         :key="'frenos-balatasDesgastadas'"
@@ -721,12 +721,12 @@
                   </div>
                   
                   <!-- Disco desgastado -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.frenos.discoDesgastado" class="rounded">
                       <span class="text-sm">Disco desgastado</span>
                     </label>
-                    <div v-if="formData.frenos.discoDesgastado" class="ml-2">
+                    <div v-if="formData.frenos.discoDesgastado" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="frenos-disco-desgastado"
                         :key="'frenos-discoDesgastado'"
@@ -741,12 +741,12 @@
                   </div>
                   
                   <!-- Clipers defectuosos -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.frenos.clipers" class="rounded">
                       <span class="text-sm">Clipers defectuosos</span>
                     </label>
-                    <div v-if="formData.frenos.clipers" class="ml-2">
+                    <div v-if="formData.frenos.clipers" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="frenos-clipers"
                         :key="'frenos-clipers'"
@@ -761,12 +761,12 @@
                   </div>
                   
                   <!-- Mangueras defectuosas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.frenos.manguerasDefectuosas" class="rounded">
                       <span class="text-sm">Mangueras defectuosas</span>
                     </label>
-                    <div v-if="formData.frenos.manguerasDefectuosas" class="ml-2">
+                    <div v-if="formData.frenos.manguerasDefectuosas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="frenos-mangueras-defectuosas"
                         :key="'frenos-manguerasDefectuosas'"
