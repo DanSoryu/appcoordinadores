@@ -851,12 +851,12 @@
                 <h5 class="text-md font-medium text-yellow-700 mb-2">Batería</h5>
                 <div class="space-y-3">
                   <!-- Celdas dañadas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaElectrico.celdasDanadas" class="rounded">
                       <span class="text-sm">Celdas dañadas</span>
                     </label>
-                    <div v-if="formData.sistemaElectrico.celdasDanadas" class="ml-2">
+                    <div v-if="formData.sistemaElectrico.celdasDanadas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="electrico-celdas-danadas"
                         :key="'electrico-celdasDanadas'"
@@ -871,12 +871,12 @@
                   </div>
                   
                   <!-- Alternador defectuoso -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaElectrico.alternadorDefectuoso" class="rounded">
                       <span class="text-sm">Alternador defectuoso</span>
                     </label>
-                    <div v-if="formData.sistemaElectrico.alternadorDefectuoso" class="ml-2">
+                    <div v-if="formData.sistemaElectrico.alternadorDefectuoso" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="electrico-alternador-defectuoso"
                         :key="'electrico-alternadorDefectuoso'"
@@ -897,12 +897,12 @@
                 <h5 class="text-md font-medium text-yellow-700 mb-2">Alternador</h5>
                 <div class="space-y-3">
                   <!-- Banda suelta -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaElectrico.bandaSuelta" class="rounded">
                       <span class="text-sm">Banda suelta</span>
                     </label>
-                    <div v-if="formData.sistemaElectrico.bandaSuelta" class="ml-2">
+                    <div v-if="formData.sistemaElectrico.bandaSuelta" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="electrico-banda-suelta"
                         :key="'electrico-bandaSuelta'"
@@ -917,12 +917,12 @@
                   </div>
                   
                   <!-- Alternador dañado -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaElectrico.alternadorDanado" class="rounded">
                       <span class="text-sm">Alternador dañado</span>
                     </label>
-                    <div v-if="formData.sistemaElectrico.alternadorDanado" class="ml-2">
+                    <div v-if="formData.sistemaElectrico.alternadorDanado" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="electrico-alternador-danado"
                         :key="'electrico-alternadorDanado'"
@@ -943,12 +943,12 @@
                 <h5 class="text-md font-medium text-yellow-700 mb-2">Luces y Conexiones</h5>
                 <div class="space-y-3">
                   <!-- Foco fundido -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaElectrico.focoFundido" class="rounded">
                       <span class="text-sm">Foco fundido</span>
                     </label>
-                    <div v-if="formData.sistemaElectrico.focoFundido" class="ml-2">
+                    <div v-if="formData.sistemaElectrico.focoFundido" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="electrico-foco-fundido"
                         :key="'electrico-focoFundido'"
@@ -963,12 +963,12 @@
                   </div>
                   
                   <!-- Conectores sulfatados o flojos -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaElectrico.conectoresSulfatados" class="rounded">
                       <span class="text-sm">Conectores sulfatados o flojos</span>
                     </label>
-                    <div v-if="formData.sistemaElectrico.conectoresSulfatados" class="ml-2">
+                    <div v-if="formData.sistemaElectrico.conectoresSulfatados" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="electrico-conectores-sulfatados"
                         :key="'electrico-conectoresSulfatados'"
@@ -1055,12 +1055,12 @@
                 <h5 class="text-md font-medium text-orange-700 mb-2">Amortiguadores</h5>
                 <div class="space-y-3">
                   <!-- Desgaste -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.suspensionDireccion.desgaste" class="rounded">
                       <span class="text-sm">Desgaste</span>
                     </label>
-                    <div v-if="formData.suspensionDireccion.desgaste" class="ml-2">
+                    <div v-if="formData.suspensionDireccion.desgaste" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="suspension-desgaste"
                         :key="'suspension-desgaste'"
@@ -1075,12 +1075,12 @@
                   </div>
                   
                   <!-- Ruptura de retenes -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.suspensionDireccion.rupturaRetenes" class="rounded">
                       <span class="text-sm">Ruptura de retenes</span>
                     </label>
-                    <div v-if="formData.suspensionDireccion.rupturaRetenes" class="ml-2">
+                    <div v-if="formData.suspensionDireccion.rupturaRetenes" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="suspension-ruptura-retenes"
                         :key="'suspension-rupturaRetenes'"
@@ -1101,12 +1101,12 @@
                 <h5 class="text-md font-medium text-orange-700 mb-2">Dirección</h5>
                 <div class="space-y-3">
                   <!-- Terminales dañados -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.suspensionDireccion.terminales" class="rounded">
                       <span class="text-sm">Terminales dañados</span>
                     </label>
-                    <div v-if="formData.suspensionDireccion.terminales" class="ml-2">
+                    <div v-if="formData.suspensionDireccion.terminales" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="direccion-terminales"
                         :key="'direccion-terminales'"
@@ -1121,12 +1121,12 @@
                   </div>
                   
                   <!-- Cremalleras desgastadas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.suspensionDireccion.cremalleras" class="rounded">
                       <span class="text-sm">Cremalleras desgastadas</span>
                     </label>
-                    <div v-if="formData.suspensionDireccion.cremalleras" class="ml-2">
+                    <div v-if="formData.suspensionDireccion.cremalleras" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="direccion-cremalleras"
                         :key="'direccion-cremalleras'"
@@ -1147,12 +1147,12 @@
                 <h5 class="text-md font-medium text-orange-700 mb-2">Suspensión</h5>
                 <div class="space-y-3">
                   <!-- Bujes dañados -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.suspensionDireccion.bujesDanados" class="rounded">
                       <span class="text-sm">Bujes dañados</span>
                     </label>
-                    <div v-if="formData.suspensionDireccion.bujesDanados" class="ml-2">
+                    <div v-if="formData.suspensionDireccion.bujesDanados" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="suspension-bujes-danados"
                         :key="'suspension-bujesDanados'"
@@ -1167,12 +1167,12 @@
                   </div>
                   
                   <!-- Rótulas dañadas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.suspensionDireccion.rotulasDanadas" class="rounded">
                       <span class="text-sm">Rótulas dañadas</span>
                     </label>
-                    <div v-if="formData.suspensionDireccion.rotulasDanadas" class="ml-2">
+                    <div v-if="formData.suspensionDireccion.rotulasDanadas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="suspension-rotulas-danadas"
                         :key="'suspension-rotulasDanadas'"
@@ -1259,12 +1259,12 @@
                 <h5 class="text-md font-medium text-blue-700 mb-2">Radiador</h5>
                 <div class="space-y-3">
                   <!-- Mangueras perforadas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEnfriamiento.manguerasPerforadas" class="rounded">
                       <span class="text-sm">Mangueras perforadas</span>
                     </label>
-                    <div v-if="formData.sistemaEnfriamiento.manguerasPerforadas" class="ml-2">
+                    <div v-if="formData.sistemaEnfriamiento.manguerasPerforadas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="enfriamiento-mangueras-perforadas"
                         :key="'enfriamiento-manguerasPerforadas'"
@@ -1279,12 +1279,12 @@
                   </div>
                   
                   <!-- Núcleo perforado -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEnfriamiento.nucleoPerforado" class="rounded">
                       <span class="text-sm">Núcleo perforado</span>
                     </label>
-                    <div v-if="formData.sistemaEnfriamiento.nucleoPerforado" class="ml-2">
+                    <div v-if="formData.sistemaEnfriamiento.nucleoPerforado" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="enfriamiento-nucleo-perforado"
                         :key="'enfriamiento-nucleoPerforado'"
@@ -1305,12 +1305,12 @@
                 <h5 class="text-md font-medium text-blue-700 mb-2">Bomba de Agua</h5>
                 <div class="space-y-3">
                   <!-- Desgaste del retén -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEnfriamiento.desgasteReten" class="rounded">
                       <span class="text-sm">Desgaste del retén</span>
                     </label>
-                    <div v-if="formData.sistemaEnfriamiento.desgasteReten" class="ml-2">
+                    <div v-if="formData.sistemaEnfriamiento.desgasteReten" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="enfriamiento-desgaste-reten"
                         :key="'enfriamiento-desgasteReten'"
@@ -1325,12 +1325,12 @@
                   </div>
                   
                   <!-- Desgaste rodamiento -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEnfriamiento.desgasteRodamiento" class="rounded">
                       <span class="text-sm">Desgaste rodamiento</span>
                     </label>
-                    <div v-if="formData.sistemaEnfriamiento.desgasteRodamiento" class="ml-2">
+                    <div v-if="formData.sistemaEnfriamiento.desgasteRodamiento" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="enfriamiento-desgaste-rodamiento"
                         :key="'enfriamiento-desgasteRodamiento'"
@@ -1351,12 +1351,12 @@
                 <h5 class="text-md font-medium text-blue-700 mb-2">Control de Temperatura</h5>
                 <div class="space-y-3">
                   <!-- Termostato bloqueado -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEnfriamiento.termostatoBloqueado" class="rounded">
                       <span class="text-sm">Termostato bloqueado (Sobrecalentamiento)</span>
                     </label>
-                    <div v-if="formData.sistemaEnfriamiento.termostatoBloqueado" class="ml-2">
+                    <div v-if="formData.sistemaEnfriamiento.termostatoBloqueado" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="enfriamiento-termostato-bloqueado"
                         :key="'enfriamiento-termostatoBloqueado'"
@@ -1443,12 +1443,12 @@
                 <h5 class="text-md font-medium text-purple-700 mb-2">Escape</h5>
                 <div class="space-y-3">
                   <!-- Fugas o perforaciones -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEscape.fugasPerforaciones" class="rounded">
                       <span class="text-sm">Fugas o perforaciones</span>
                     </label>
-                    <div v-if="formData.sistemaEscape.fugasPerforaciones" class="ml-2">
+                    <div v-if="formData.sistemaEscape.fugasPerforaciones" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="escape-fugas-perforaciones"
                         :key="'escape-fugasPerforaciones'"
@@ -1463,12 +1463,12 @@
                   </div>
                   
                   <!-- Corrosión -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEscape.corrosion" class="rounded">
                       <span class="text-sm">Corrosión</span>
                     </label>
-                    <div v-if="formData.sistemaEscape.corrosion" class="ml-2">
+                    <div v-if="formData.sistemaEscape.corrosion" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="escape-corrosion"
                         :key="'escape-corrosion'"
@@ -1483,12 +1483,12 @@
                   </div>
                   
                   <!-- Impacto -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEscape.impacto" class="rounded">
                       <span class="text-sm">Impacto</span>
                     </label>
-                    <div v-if="formData.sistemaEscape.impacto" class="ml-2">
+                    <div v-if="formData.sistemaEscape.impacto" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="escape-impacto"
                         :key="'escape-impacto'"
@@ -1503,12 +1503,12 @@
                   </div>
                   
                   <!-- Ruido excesivo -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEscape.ruidoExcesivo" class="rounded">
                       <span class="text-sm">Ruido excesivo</span>
                     </label>
-                    <div v-if="formData.sistemaEscape.ruidoExcesivo" class="ml-2">
+                    <div v-if="formData.sistemaEscape.ruidoExcesivo" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="escape-ruido-excesivo"
                         :key="'escape-ruidoExcesivo'"
@@ -1523,12 +1523,12 @@
                   </div>
                   
                   <!-- Silenciador roto -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEscape.silenciadorRoto" class="rounded">
                       <span class="text-sm">Silenciador roto</span>
                     </label>
-                    <div v-if="formData.sistemaEscape.silenciadorRoto" class="ml-2">
+                    <div v-if="formData.sistemaEscape.silenciadorRoto" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="escape-silenciador-roto"
                         :key="'escape-silenciadorRoto'"
@@ -1543,12 +1543,12 @@
                   </div>
                   
                   <!-- Silenciador suelto -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEscape.silenciadorSuelto" class="rounded">
                       <span class="text-sm">Silenciador suelto</span>
                     </label>
-                    <div v-if="formData.sistemaEscape.silenciadorSuelto" class="ml-2">
+                    <div v-if="formData.sistemaEscape.silenciadorSuelto" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="escape-silenciador-suelto"
                         :key="'escape-silenciadorSuelto'"
@@ -1569,12 +1569,12 @@
                 <h5 class="text-md font-medium text-purple-700 mb-2">Catalizador</h5>
                 <div class="space-y-3">
                   <!-- Catalizador obstruido -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEscape.catalizadorObstruido" class="rounded">
                       <span class="text-sm">Catalizador obstruido</span>
                     </label>
-                    <div v-if="formData.sistemaEscape.catalizadorObstruido" class="ml-2">
+                    <div v-if="formData.sistemaEscape.catalizadorObstruido" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="escape-catalizador-obstruido"
                         :key="'escape-catalizadorObstruido'"
@@ -1589,12 +1589,12 @@
                   </div>
                   
                   <!-- Mala combustión -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaEscape.malaCombustion" class="rounded">
                       <span class="text-sm">Mala combustión</span>
                     </label>
-                    <div v-if="formData.sistemaEscape.malaCombustion" class="ml-2">
+                    <div v-if="formData.sistemaEscape.malaCombustion" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="escape-mala-combustion"
                         :key="'escape-malaCombustion'"
@@ -1681,12 +1681,12 @@
                 <h5 class="text-md font-medium text-teal-700 mb-2">Aire Acondicionado (A/C)</h5>
                 <div class="space-y-3">
                   <!-- A/C no enfría -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaClimatizacion.acNoEnfria" class="rounded">
                       <span class="text-sm">A/C no enfría</span>
                     </label>
-                    <div v-if="formData.sistemaClimatizacion.acNoEnfria" class="ml-2">
+                    <div v-if="formData.sistemaClimatizacion.acNoEnfria" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="climatizacion-ac-no-enfria"
                         :key="'climatizacion-acNoEnfria'"
@@ -1701,12 +1701,12 @@
                   </div>
                   
                   <!-- Fuga de gas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaClimatizacion.fugaGas" class="rounded">
                       <span class="text-sm">Fuga de gas</span>
                     </label>
-                    <div v-if="formData.sistemaClimatizacion.fugaGas" class="ml-2">
+                    <div v-if="formData.sistemaClimatizacion.fugaGas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="climatizacion-fuga-gas"
                         :key="'climatizacion-fugaGas'"
@@ -1721,12 +1721,12 @@
                   </div>
                   
                   <!-- Compresor dañado -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaClimatizacion.compresorDanado" class="rounded">
                       <span class="text-sm">Compresor dañado</span>
                     </label>
-                    <div v-if="formData.sistemaClimatizacion.compresorDanado" class="ml-2">
+                    <div v-if="formData.sistemaClimatizacion.compresorDanado" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="climatizacion-compresor-danado"
                         :key="'climatizacion-compresorDanado'"
@@ -1741,12 +1741,12 @@
                   </div>
                   
                   <!-- Mal olor ventilación -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaClimatizacion.malOlorVentilacion" class="rounded">
                       <span class="text-sm">Mal olor en ventilación</span>
                     </label>
-                    <div v-if="formData.sistemaClimatizacion.malOlorVentilacion" class="ml-2">
+                    <div v-if="formData.sistemaClimatizacion.malOlorVentilacion" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="climatizacion-mal-olor-ventilacion"
                         :key="'climatizacion-malOlorVentilacion'"
@@ -1761,12 +1761,12 @@
                   </div>
                   
                   <!-- Filtro de cabina sucio -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaClimatizacion.filtroCabinaSucio" class="rounded">
                       <span class="text-sm">Filtro de cabina sucio</span>
                     </label>
-                    <div v-if="formData.sistemaClimatizacion.filtroCabinaSucio" class="ml-2">
+                    <div v-if="formData.sistemaClimatizacion.filtroCabinaSucio" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="climatizacion-filtro-cabina-sucio"
                         :key="'climatizacion-filtroCabinaSucio'"
@@ -1787,12 +1787,12 @@
                 <h5 class="text-md font-medium text-teal-700 mb-2">Calefacción</h5>
                 <div class="space-y-3">
                   <!-- No calienta -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaClimatizacion.noCalienta" class="rounded">
                       <span class="text-sm">No calienta</span>
                     </label>
-                    <div v-if="formData.sistemaClimatizacion.noCalienta" class="ml-2">
+                    <div v-if="formData.sistemaClimatizacion.noCalienta" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="climatizacion-no-calienta"
                         :key="'climatizacion-noCalienta'"
@@ -1807,12 +1807,12 @@
                   </div>
                   
                   <!-- Falla en termostato -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaClimatizacion.fallaTermostato" class="rounded">
                       <span class="text-sm">Falla en termostato</span>
                     </label>
-                    <div v-if="formData.sistemaClimatizacion.fallaTermostato" class="ml-2">
+                    <div v-if="formData.sistemaClimatizacion.fallaTermostato" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="climatizacion-falla-termostato"
                         :key="'climatizacion-fallaTermostato'"
@@ -1827,12 +1827,12 @@
                   </div>
                   
                   <!-- Falla en el Radiador interior -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.sistemaClimatizacion.radiadorInterior" class="rounded">
                       <span class="text-sm">Falla en el Radiador interior</span>
                     </label>
-                    <div v-if="formData.sistemaClimatizacion.radiadorInterior" class="ml-2">
+                    <div v-if="formData.sistemaClimatizacion.radiadorInterior" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="climatizacion-radiador-interior"
                         :key="'climatizacion-radiadorInterior'"
@@ -1919,12 +1919,12 @@
                 <h5 class="text-md font-medium text-pink-700 mb-2">Carrocería</h5>
                 <div class="space-y-3">
                   <!-- Rayones y abolladuras -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.rayonesAbolladuras" class="rounded">
                       <span class="text-sm">Rayones y abolladuras</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.rayonesAbolladuras" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.rayonesAbolladuras" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="carroceria-rayones-abolladuras"
                         :key="'carroceria-rayonesAbolladuras'"
@@ -1939,12 +1939,12 @@
                   </div>
                   
                   <!-- Golpes -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.golpes" class="rounded">
                       <span class="text-sm">Golpes</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.golpes" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.golpes" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="carroceria-golpes"
                         :key="'carroceria-golpes'"
@@ -1959,12 +1959,12 @@
                   </div>
                   
                   <!-- Roces -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.roces" class="rounded">
                       <span class="text-sm">Roces</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.roces" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.roces" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="carroceria-roces"
                         :key="'carroceria-roces'"
@@ -1985,12 +1985,12 @@
                 <h5 class="text-md font-medium text-pink-700 mb-2">Puertas</h5>
                 <div class="space-y-3">
                   <!-- Cierre deficiente -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.cierreDeficiente" class="rounded">
                       <span class="text-sm">Cierre deficiente</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.cierreDeficiente" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.cierreDeficiente" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="puertas-cierre-deficiente"
                         :key="'puertas-cierreDeficiente'"
@@ -2005,12 +2005,12 @@
                   </div>
                   
                   <!-- Cerraduras defectuosas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.cerraduras" class="rounded">
                       <span class="text-sm">Cerraduras defectuosas</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.cerraduras" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.cerraduras" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="puertas-cerraduras"
                         :key="'puertas-cerraduras'"
@@ -2025,12 +2025,12 @@
                   </div>
                   
                   <!-- Bisagra desajustada -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.bisagraDesajustada" class="rounded">
                       <span class="text-sm">Bisagra desajustada</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.bisagraDesajustada" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.bisagraDesajustada" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="puertas-bisagra-desajustada"
                         :key="'puertas-bisagraDesajustada'"
@@ -2051,12 +2051,12 @@
                 <h5 class="text-md font-medium text-pink-700 mb-2">Cristales</h5>
                 <div class="space-y-3">
                   <!-- Grietas y astilladuras -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.grietasAstilladuras" class="rounded">
                       <span class="text-sm">Grietas y astilladuras</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.grietasAstilladuras" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.grietasAstilladuras" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="cristales-grietas-astilladuras"
                         :key="'cristales-grietasAstilladuras'"
@@ -2071,12 +2071,12 @@
                   </div>
                   
                   <!-- Impacto -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.impactoCristal" class="rounded">
                       <span class="text-sm">Impacto</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.impactoCristal" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.impactoCristal" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="cristales-impacto-cristal"
                         :key="'cristales-impactoCristal'"
@@ -2091,12 +2091,12 @@
                   </div>
                   
                   <!-- Tensión térmica -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.tensionTermica" class="rounded">
                       <span class="text-sm">Tensión térmica</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.tensionTermica" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.tensionTermica" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="cristales-tension-termica"
                         :key="'cristales-tensionTermica'"
@@ -2117,12 +2117,12 @@
                 <h5 class="text-md font-medium text-pink-700 mb-2">Limpia parabrisas</h5>
                 <div class="space-y-3">
                   <!-- Limpia no funciona -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.limpiaNoFunciona" class="rounded">
                       <span class="text-sm">Limpia parabrisas no funciona</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.limpiaNoFunciona" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.limpiaNoFunciona" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="limpia-parabrisas-no-funciona"
                         :key="'limpia-limpiaNoFunciona'"
@@ -2137,12 +2137,12 @@
                   </div>
                   
                   <!-- Motor dañado -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.motorDanado" class="rounded">
                       <span class="text-sm">Motor dañado</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.motorDanado" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.motorDanado" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="limpia-parabrisas-motor-danado"
                         :key="'limpia-motorDanado'"
@@ -2157,12 +2157,12 @@
                   </div>
                   
                   <!-- Fusible dañado -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.carroceriaAccesorios.fusibleDanado" class="rounded">
                       <span class="text-sm">Fusible dañado</span>
                     </label>
-                    <div v-if="formData.carroceriaAccesorios.fusibleDanado" class="ml-2">
+                    <div v-if="formData.carroceriaAccesorios.fusibleDanado" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="limpia-parabrisas-fusible-danado"
                         :key="'limpia-fusibleDanado'"
@@ -2249,12 +2249,12 @@
                 <h5 class="text-md font-medium text-indigo-700 mb-2">Llantas</h5>
                 <div class="space-y-3">
                   <!-- Alineación -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.llantasRines.alineacion" class="rounded">
                       <span class="text-sm">Alineación</span>
                     </label>
-                    <div v-if="formData.llantasRines.alineacion" class="ml-2">
+                    <div v-if="formData.llantasRines.alineacion" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="llantas-alineacion"
                         :key="'llantas-alineacion'"
@@ -2269,12 +2269,12 @@
                   </div>
                   
                   <!-- Balanceo deficiente -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.llantasRines.balanceoDeficiente" class="rounded">
                       <span class="text-sm">Balanceo deficiente</span>
                     </label>
-                    <div v-if="formData.llantasRines.balanceoDeficiente" class="ml-2">
+                    <div v-if="formData.llantasRines.balanceoDeficiente" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="llantas-balanceo-deficiente"
                         :key="'llantas-balanceoDeficiente'"
@@ -2289,12 +2289,12 @@
                   </div>
                   
                   <!-- Presión incorrecta -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.llantasRines.presionIncorrecta" class="rounded">
                       <span class="text-sm">Presión incorrecta</span>
                     </label>
-                    <div v-if="formData.llantasRines.presionIncorrecta" class="ml-2">
+                    <div v-if="formData.llantasRines.presionIncorrecta" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="llantas-presion-incorrecta"
                         :key="'llantas-presionIncorrecta'"
@@ -2309,12 +2309,12 @@
                   </div>
                   
                   <!-- Revisión de fecha de fabricación -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.llantasRines.revisionFechaFabricacion" class="rounded">
                       <span class="text-sm">Revisión de fecha de fabricación</span>
                     </label>
-                    <div v-if="formData.llantasRines.revisionFechaFabricacion" class="ml-2">
+                    <div v-if="formData.llantasRines.revisionFechaFabricacion" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="llantas-revision-fecha-fabricacion"
                         :key="'llantas-revisionFechaFabricacion'"
@@ -2335,12 +2335,12 @@
                 <h5 class="text-md font-medium text-indigo-700 mb-2">Rines</h5>
                 <div class="space-y-3">
                   <!-- Impacto con baches -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.llantasRines.impactoBaches" class="rounded">
                       <span class="text-sm">Impacto con baches</span>
                     </label>
-                    <div v-if="formData.llantasRines.impactoBaches" class="ml-2">
+                    <div v-if="formData.llantasRines.impactoBaches" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="rines-impacto-baches"
                         :key="'rines-impactoBaches'"
@@ -2355,12 +2355,12 @@
                   </div>
                   
                   <!-- Impacto banquetas -->
-                  <div class="flex items-center justify-between p-2 bg-white rounded border">
+                  <div class="p-2 bg-white rounded border">
                     <label class="flex items-center space-x-2">
                       <input type="checkbox" v-model="formData.llantasRines.impactoBanquetas" class="rounded">
                       <span class="text-sm">Impacto banquetas</span>
                     </label>
-                    <div v-if="formData.llantasRines.impactoBanquetas" class="ml-2">
+                    <div v-if="formData.llantasRines.impactoBanquetas" class="mt-2 ml-6">
                       <PhotoUploadAndPreview
                         id="rines-impacto-banquetas"
                         :key="'rines-impactoBanquetas'"
@@ -3374,46 +3374,139 @@ export default {
       
       // Si es el nuevo formato con base64, usar esos datos
       if (photoData && typeof photoData === 'object' && photoData.base64) {
-        // Mapear los sistemas con sus nombres de carpeta
-        const sistemaMapping = {
-          'motor': { key: 'motor', folder: 'motor' },
-          'transmision': { key: 'transmision', folder: 'transmision' }, 
-          'frenos': { key: 'frenos', folder: 'frenos' },
-          'sistemaElectrico': { key: 'sistemaElectrico', folder: 'sistema_electrico' },
-          'suspensionDireccion': { key: 'suspensionDireccion', folder: 'suspension_direccion' },
-          'sistemaEnfriamiento': { key: 'sistemaEnfriamiento', folder: 'sistema_enfriamiento' },
-          'sistemaEscape': { key: 'sistemaEscape', folder: 'sistema_escape' },
-          'sistemaClimatizacion': { key: 'sistemaClimatizacion', folder: 'sistema_climatizacion' },
-          'carroceriaAccesorios': { key: 'carroceriaAccesorios', folder: 'carroceria_accesorios' },
-          'llantasRines': { key: 'llantasRines', folder: 'llantas_rines' }
+        // Mapeo de prefijos a sistemas y campos en formData
+        // Algunos sistemas usan prefijos diferentes en los campos de imagen
+        const prefixMapping = {
+          // Motor
+          'motor': { formDataKey: 'motor', folder: 'motor' },
+          // Transmisión
+          'transmision': { formDataKey: 'transmision', folder: 'transmision' },
+          // Frenos
+          'frenos': { formDataKey: 'frenos', folder: 'frenos' },
+          // Sistema Eléctrico - usa prefijo 'electrico'
+          'electrico': { formDataKey: 'sistemaElectrico', folder: 'sistema_electrico' },
+          // Suspensión y Dirección - usa prefijos 'suspension' y 'direccion'
+          'suspension': { formDataKey: 'suspensionDireccion', folder: 'suspension_direccion' },
+          'direccion': { formDataKey: 'suspensionDireccion', folder: 'suspension_direccion' },
+          // Sistema de Enfriamiento - usa prefijo 'enfriamiento'
+          'enfriamiento': { formDataKey: 'sistemaEnfriamiento', folder: 'sistema_enfriamiento' },
+          // Sistema de Escape - usa prefijo 'escape'
+          'escape': { formDataKey: 'sistemaEscape', folder: 'sistema_escape' },
+          // Sistema de Climatización - usa prefijo 'climatizacion'
+          'climatizacion': { formDataKey: 'sistemaClimatizacion', folder: 'sistema_climatizacion' },
+          // Carrocería y Accesorios - usa prefijos 'carroceria', 'puertas', 'cristales', 'limpiaParabrisas'
+          'carroceria': { formDataKey: 'carroceriaAccesorios', folder: 'carroceria_accesorios' },
+          'puertas': { formDataKey: 'carroceriaAccesorios', folder: 'carroceria_accesorios' },
+          'cristales': { formDataKey: 'carroceriaAccesorios', folder: 'carroceria_accesorios' },
+          'limpiaParabrisas': { formDataKey: 'carroceriaAccesorios', folder: 'carroceria_accesorios' },
+          // Llantas y Rines - usa prefijos 'llantas' y 'rines'
+          'llantas': { formDataKey: 'llantasRines', folder: 'llantas_rines' },
+          'rines': { formDataKey: 'llantasRines', folder: 'llantas_rines' }
         };
         
-        // Buscar a qué sistema pertenece el field
-        for (const [sistemaKey, sistemaInfo] of Object.entries(sistemaMapping)) {
-          if (field.startsWith(sistemaKey)) {
-            // Obtener el nombre del campo sin el prefijo del sistema
-            // Ej: "motorEmpaquesImagen" -> "EmpaquesImagen" -> "empaquesImagen"
-            let imagenField = field.replace(sistemaKey, '');
-            // Convertir la primera letra a minúscula para que coincida con el formData
-            imagenField = imagenField.charAt(0).toLowerCase() + imagenField.slice(1);
+        // Mapeo de campos de imagen a campos en formData (para casos especiales)
+        const fieldToFormDataField = {
+          // Sistema Eléctrico
+          'electricoCeldasDanadasImagen': 'celdasDanadasImagen',
+          'electricoAlternadorDefectuosoImagen': 'alternadorDefectuosoImagen',
+          'electricoBandaSueltaImagen': 'bandaSueltaImagen',
+          'electricoAlternadorDanadoImagen': 'alternadorDanadoImagen',
+          'electricoFocoFundidoImagen': 'focoFundidoImagen',
+          'electricoConectoresSulfatadosImagen': 'conectoresSulfatadosImagen',
+          // Suspensión y Dirección
+          'suspensionDesgasteImagen': 'desgasteImagen',
+          'suspensionRupturaRetenesImagen': 'rupturaRetenesImagen',
+          'direccionTerminalesImagen': 'terminalesImagen',
+          'direccionCremallerasImagen': 'cremallerasImagen',
+          'suspensionBujesDanadosImagen': 'bujesDanadosImagen',
+          'suspensionRotulasDanadasImagen': 'rotulasDanadasImagen',
+          // Sistema de Enfriamiento
+          'enfriamientoManguerasPerforadasImagen': 'manguerasPerforadasImagen',
+          'enfriamientoNucleoPerforadoImagen': 'nucleoPerforadoImagen',
+          'enfriamientoDesgasteRetenImagen': 'desgasteRetenImagen',
+          'enfriamientoDesgasteRodamientoImagen': 'desgasteRodamientoImagen',
+          'enfriamientoTermostatoBloqueadoImagen': 'termostatoBloqueadoImagen',
+          // Sistema de Escape
+          'escapeFugasPerforacionesImagen': 'fugasPerforacionesImagen',
+          'escapeCorrosionImagen': 'corrosionImagen',
+          'escapeImpactoImagen': 'impactoImagen',
+          'escapeRuidoExcesivoImagen': 'ruidoExcesivoImagen',
+          'escapeSilenciadorRotoImagen': 'silenciadorRotoImagen',
+          'escapeSilenciadorSueltoImagen': 'silenciadorSueltoImagen',
+          'escapeCatalizadorObstruidoImagen': 'catalizadorObstruidoImagen',
+          'escapeMalaCombustionImagen': 'malaCombustionImagen',
+          // Sistema de Climatización
+          'climatizacionAcNoEnfriaImagen': 'acNoEnfriaImagen',
+          'climatizacionFugaGasImagen': 'fugaGasImagen',
+          'climatizacionCompresorDanadoImagen': 'compresorDanadoImagen',
+          'climatizacionMalOlorVentilacionImagen': 'malOlorVentilacionImagen',
+          'climatizacionFiltroCabinaSucioImagen': 'filtroCabinaSucioImagen',
+          'climatizacionNoCalientaImagen': 'noCalientaImagen',
+          'climatizacionFallaTermostatoImagen': 'fallaTermostatoImagen',
+          'climatizacionRadiadorInteriorImagen': 'radiadorInteriorImagen',
+          // Carrocería y Accesorios
+          'carroceriaRayonesAbolladurasImagen': 'rayonesAbolladurasImagen',
+          'carroceriaGolpesImagen': 'golpesImagen',
+          'carroceriaRocesImagen': 'rocesImagen',
+          'puertasCierreDeficienteImagen': 'cierreDeficienteImagen',
+          'puertasCerradurasImagen': 'cerradurasImagen',
+          'puertasBisagraDesajustadaImagen': 'bisagraDesajustadaImagen',
+          'cristalesGrietasAstilladurasImagen': 'grietasAstilladurasImagen',
+          'cristalesImpactoCristalImagen': 'impactoCristalImagen',
+          'cristalesTensionTermicaImagen': 'tensionTermicaImagen',
+          'limpiaParabrisasNoFuncionaImagen': 'limpiaNoFuncionaImagen',
+          'limpiaParabrisasMotorDanadoImagen': 'motorDanadoImagen',
+          'limpiaParabrisasFusibleDanadoImagen': 'fusibleDanadoImagen',
+          // Llantas y Rines
+          'llantasAlineacionImagen': 'alineacionImagen',
+          'llantasBalanceoDeficienteImagen': 'balanceoDeficienteImagen',
+          'llantasPresionIncorrectaImagen': 'presionIncorrectaImagen',
+          'llantasRevisionFechaFabricacionImagen': 'revisionFechaFabricacionImagen',
+          'rinesImpactoBachesImagen': 'impactoBachesImagen',
+          'rinesImpactoBanquetasImagen': 'impactoBanquetasImagen'
+        };
+        
+        let assigned = false;
+        
+        // Buscar a qué sistema pertenece el field usando los prefijos
+        for (const [prefix, mapping] of Object.entries(prefixMapping)) {
+          if (field.startsWith(prefix)) {
+            const formDataKey = mapping.formDataKey;
+            const folder = mapping.folder;
             
-            if (this.formData[sistemaInfo.key] && imagenField in this.formData[sistemaInfo.key]) {
+            // Determinar el nombre del campo en formData
+            let imagenField;
+            if (fieldToFormDataField[field]) {
+              // Usar el mapeo directo si existe
+              imagenField = fieldToFormDataField[field];
+            } else {
+              // Intentar derivar el nombre del campo quitando el prefijo
+              imagenField = field.replace(prefix, '');
+              imagenField = imagenField.charAt(0).toLowerCase() + imagenField.slice(1);
+            }
+            
+            if (this.formData[formDataKey] && imagenField in this.formData[formDataKey]) {
               // Crear nombre de archivo con carpeta
               const originalFileName = photoData.fileName || 'foto.jpg';
-              const fileNameWithFolder = `${sistemaInfo.folder}/${originalFileName}`;
+              const fileNameWithFolder = `${folder}/${originalFileName}`;
               
               // Guardar tanto el base64 como el nombre de archivo con carpeta
-              this.formData[sistemaInfo.key][imagenField] = {
+              this.formData[formDataKey][imagenField] = {
                 base64: photoData.base64,
                 fileName: fileNameWithFolder
               };
-              console.log(`Imagen asignada: ${sistemaInfo.key}.${imagenField}`);
+              console.log(`Imagen asignada: ${formDataKey}.${imagenField}`);
               console.log(`Nombre de archivo con carpeta: ${fileNameWithFolder}`);
+              assigned = true;
               break;
             } else {
-              console.warn(`Campo no encontrado: ${sistemaInfo.key}.${imagenField}`);
+              console.warn(`Campo no encontrado: ${formDataKey}.${imagenField}`);
             }
           }
+        }
+        
+        if (!assigned) {
+          console.warn(`No se pudo asignar el campo: ${field}`);
         }
       } else {
         console.warn('Formato de foto no reconocido:', photoData);
