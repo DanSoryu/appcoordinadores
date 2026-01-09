@@ -188,6 +188,15 @@ const errorMessage = ref('')
 
 // Verificar si ya está autenticado al cargar el componente
 onMounted(async () => {
+  // Limpiar caché PWA al entrar al login para forzar descarga fresca
+  if ('caches' in window) {
+    caches.keys().then(names => {
+      for (const name of names) {
+        caches.delete(name)
+      }
+    })
+  }
+  
   // Esperar un poco para que se inicialice el store
   await new Promise(resolve => setTimeout(resolve, 100))
   

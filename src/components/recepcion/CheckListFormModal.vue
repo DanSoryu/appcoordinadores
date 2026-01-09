@@ -1258,7 +1258,16 @@
           </div>
         </div>
         <div class="mt-6 flex justify-center gap-2">
-          <span v-for="step in 3" :key="step" :class="[ 'h-3 w-3 rounded-full', currentStep === step ? 'bg-blue-500' : 'bg-gray-300' ]"></span>
+          <span 
+            v-for="step in 3" 
+            :key="step" 
+            :class="[
+              'h-3 w-3 rounded-full transition-colors',
+              currentStep === step ? 'bg-blue-500' : 
+              (checklistData.checklist_step && step < checklistData.checklist_step) ? 'bg-green-500' : 'bg-gray-300'
+            ]"
+            :title="step < (checklistData.checklist_step || 1) ? 'Completado' : (currentStep === step ? 'Actual' : 'Pendiente')"
+          ></span>
         </div>
       </form>
     </div>
@@ -2172,6 +2181,19 @@ export default {
       
       console.log('Cargando datos del checklist:', this.checklistData);
       
+      // Cargar el step guardado en la BD (si existe), de lo contrario iniciar en step 1
+      // checklist_step: 1=pendiente step1, 2=pendiente step2, 3=pendiente step3, 4=completado
+      if ('checklist_step' in this.checklistData && this.checklistData.checklist_step) {
+        const savedStep = parseInt(this.checklistData.checklist_step);
+        // Si el step es 4 (completado), mostrar desde el step 1 para ver los datos
+        // Si es 1, 2, o 3, iniciar en ese step
+        this.currentStep = savedStep >= 4 ? 1 : savedStep;
+        console.log('Step cargado desde BD:', savedStep, '-> Iniciando en step:', this.currentStep);
+      } else {
+        this.currentStep = 1;
+        console.log('No hay step guardado, iniciando en step 1');
+      }
+      
       // Reiniciar todos los controles UI a estado vacío (sin selección)
       Object.keys(this.uiControls).forEach(key => {
         this.uiControls[key] = '';
@@ -2447,12 +2469,36 @@ export default {
       console.log('Estado de uiControls después de cargar:', JSON.stringify(this.uiControls, null, 2));
     },
     
-    handleNextStep() {
-      // Avanzar al siguiente paso sin guardar datos
+    async handleNextStep() {
+      // Validar que el step actual esté completo
+      if (!this.isStepValid) return;
+      
+      // Guardar datos del step actual antes de avanzar
       if (this.currentStep < 3) {
-        this.currentStep++;
-        // Hacer scroll al top del modal
-        this.scrollToTop();
+        try {
+          await this.executeNavigation(async () => {
+            await this.saveStepData(this.currentStep);
+          });
+          
+          // Avanzar al siguiente paso
+          this.currentStep++;
+          // Hacer scroll al top del modal
+          this.scrollToTop();
+          
+          // Mostrar toast de éxito
+          this.toastStore.addToast({
+            message: `Step ${this.currentStep - 1} guardado correctamente`,
+            type: 'success',
+            duration: 3000
+          });
+        } catch (error) {
+          console.error('Error al guardar step:', error);
+          this.toastStore.addToast({
+            message: 'Error al guardar el step. Intente nuevamente.',
+            type: 'error',
+            duration: 4000
+          });
+        }
       }
     },
     
@@ -2482,23 +2528,244 @@ export default {
       try {
         // Usar executeSubmit para mostrar loading y manejar el estado
         await this.executeSubmit(async () => {
-          await this.submitFormData();
+          // Guardar datos del step 3 (final)
+          await this.saveStepData(3);
+        });
+        
+        // Mostrar toast de éxito
+        this.toastStore.addToast({
+          message: 'CheckList completado exitosamente',
+          type: 'success',
+          duration: 4000
         });
         
         // Cerrar modal después del envío exitoso
         this.$emit('close');
         
-        console.log('CheckList actualizado exitosamente');
+        console.log('CheckList completado exitosamente');
       } catch (error) {
         console.error('Error al enviar formulario:', error);
-        // El error ya fue manejado en submitFormData con toast
-        // Solo logeamos aquí para debugging
+        this.toastStore.addToast({
+          message: error.message || 'Error al guardar el CheckList. Intente nuevamente.',
+          type: 'error',
+          duration: 4000
+        });
       }
     },
     
-    // Este método ya no se utiliza porque ahora solo guardamos al final
-    async saveCurrentStepData() {
-      console.log(`El guardado por pasos ha sido deshabilitado`);
+    // Obtener los datos específicos de cada step
+    getStep1Data() {
+      const data = {
+        checklist_step: 2, // Al completar step 1, el próximo es step 2
+      };
+      
+      // Llaves
+      if (this.uiControls.llavesRecibidas === 'true' && this.formData.cantidadLlaves) {
+        data.cantidadLlaves = this.formData.cantidadLlaves;
+      } else {
+        data.cantidadLlaves = 0;
+      }
+      
+      // Póliza de Seguro
+      data.polizaSeguro = this.uiControls.polizaSeguro === 'true';
+      if (data.polizaSeguro && this.formData.polizaSeguroImagen) {
+        data.polizaSeguroImagen = this.formData.polizaSeguroImagen;
+      }
+      
+      // Tarjeta de Circulación
+      data.tarjetaCirculacion = this.uiControls.tarjetaCirculacion === 'true';
+      
+      // Accesorios/Herramienta
+      data.descripcionAccesorios = this.formData.descripcionAccesorios || '';
+      if (this.formData.accesoriosHerramientaImagen) {
+        data.accesoriosHerramientaImagen = this.formData.accesoriosHerramientaImagen;
+      }
+      
+      return data;
+    },
+    
+    getStep2Data() {
+      const data = {
+        checklist_step: 3, // Al completar step 2, el próximo es step 3
+      };
+      
+      // Cluster
+      if (this.formData.odometroImagen) {
+        data.odometroImagen = this.formData.odometroImagen;
+      }
+      data.nivelCombustible = this.formData.nivelCombustible;
+      if (this.formData.combustibleImagen) {
+        data.combustibleImagen = this.formData.combustibleImagen;
+      }
+      data.testigosEncendidos = Array.isArray(this.formData.testigosEncendidos) ? this.formData.testigosEncendidos : [];
+      if (this.formData.testigosImagen) {
+        data.testigosImagen = this.formData.testigosImagen;
+      }
+      
+      // Tablero
+      data.estereo = this.uiControls.estereo === 'true' ? true : (this.uiControls.estereo === 'false' ? false : null);
+      if (this.uiControls.bocinas === 'true' && this.formData.cantidadBocinas) {
+        data.cantidadBocinas = this.formData.cantidadBocinas;
+      } else {
+        data.cantidadBocinas = 0;
+      }
+      
+      // Puertas
+      data.manijas = this.formData.manijas === 'true' ? true : (this.formData.manijas === 'false' ? false : null);
+      data.estadoSeguros = this.formData.estadoSeguros;
+      if (this.formData.segurosImagen) {
+        data.segurosImagen = this.formData.segurosImagen;
+      }
+      data.estadoCristales = this.formData.estadoCristales;
+      if (this.formData.cristalesImagen) {
+        data.cristalesImagen = this.formData.cristalesImagen;
+      }
+      
+      // Asientos
+      data.estadoVestiduras = this.formData.estadoVestiduras;
+      if (this.formData.vestidurasImagen) {
+        data.vestidurasImagen = this.formData.vestidurasImagen;
+      }
+      data.estadoCabeceras = this.formData.estadoCabeceras;
+      if (this.formData.cabecerasImagen) {
+        data.cabecerasImagen = this.formData.cabecerasImagen;
+      }
+      
+      // Cinturones
+      data.funcionalidadCinturones = this.formData.funcionalidadCinturones;
+      
+      return data;
+    },
+    
+    getStep3Data() {
+      const data = {
+        checklist_step: 4, // Al completar step 3, el checklist está completado
+        estado: 'COMPLETADO', // Marcar como completado
+      };
+      
+      // Carrocería
+      data.carroceriaLadoDerecho = this.formData.carroceriaLadoDerecho;
+      if (this.formData.carroceriaLadoDerechoImagen) {
+        data.carroceriaLadoDerechoImagen = this.formData.carroceriaLadoDerechoImagen;
+      }
+      data.carroceriaLadoIzquierdo = this.formData.carroceriaLadoIzquierdo;
+      if (this.formData.carroceriaLadoIzquierdoImagen) {
+        data.carroceriaLadoIzquierdoImagen = this.formData.carroceriaLadoIzquierdoImagen;
+      }
+      data.carroceriaLadoTrasero = this.formData.carroceriaLadoTrasero;
+      if (this.formData.carroceriaLadoTraseroImagen) {
+        data.carroceriaLadoTraseroImagen = this.formData.carroceriaLadoTraseroImagen;
+      }
+      data.carroceriaLadoFrontal = this.formData.carroceriaLadoFrontal;
+      if (this.formData.carroceriaLadoFrontalImagen) {
+        data.carroceriaLadoFrontalImagen = this.formData.carroceriaLadoFrontalImagen;
+      }
+      
+      // Neumáticos
+      data.neumaticosLadoPiloto = this.formData.neumaticosLadoPiloto;
+      if (this.formData.neumaticosLadoPilotoImagen) {
+        data.neumaticosLadoPilotoImagen = this.formData.neumaticosLadoPilotoImagen;
+      }
+      data.neumaticosLadoAtrasPiloto = this.formData.neumaticosLadoAtrasPiloto;
+      if (this.formData.neumaticosLadoAtrasPilotoImagen) {
+        data.neumaticosLadoAtrasPilotoImagen = this.formData.neumaticosLadoAtrasPilotoImagen;
+      }
+      data.neumaticosLadoCopiloto = this.formData.neumaticosLadoCopiloto;
+      if (this.formData.neumaticosLadoCopilotoImagen) {
+        data.neumaticosLadoCopilotoImagen = this.formData.neumaticosLadoCopilotoImagen;
+      }
+      data.neumaticosLadoAtrasCopiloto = this.formData.neumaticosLadoAtrasCopiloto;
+      if (this.formData.neumaticosLadoAtrasCopilotoImagen) {
+        data.neumaticosLadoAtrasCopilotoImagen = this.formData.neumaticosLadoAtrasCopilotoImagen;
+      }
+      
+      // Cristales
+      data.cristalesParabrisas = this.formData.cristalesParabrisas;
+      if (this.formData.cristalesParabrisasImagen) {
+        data.cristalesParabrisasImagen = this.formData.cristalesParabrisasImagen;
+      }
+      data.cristalesMedallonTrasero = this.formData.cristalesMedallonTrasero;
+      if (this.formData.cristalesMedallonTraseroImagen) {
+        data.cristalesMedallonTraseroImagen = this.formData.cristalesMedallonTraseroImagen;
+      }
+      data.cristalesLimpiadores = this.formData.cristalesLimpiadores;
+      if (this.formData.cristalesLimpiadoresImagen) {
+        data.cristalesLimpiadoresImagen = this.formData.cristalesLimpiadoresImagen;
+      }
+      
+      // Motor
+      data.motorTapones = this.formData.motorTapones;
+      if (this.formData.motorTaponesImagen) {
+        data.motorTaponesImagen = this.formData.motorTaponesImagen;
+      }
+      data.motorBateria = this.formData.motorBateria;
+      if (this.formData.motorBateriaImagen) {
+        data.motorBateriaImagen = this.formData.motorBateriaImagen;
+      }
+      data.motorNivelAceite = this.formData.motorNivelAceite;
+      if (this.formData.motorNivelAceiteImagen) {
+        data.motorNivelAceiteImagen = this.formData.motorNivelAceiteImagen;
+      }
+      data.motorNivelLiquidoFrenos = this.formData.motorNivelLiquidoFrenos;
+      if (this.formData.motorNivelLiquidoFrenosImagen) {
+        data.motorNivelLiquidoFrenosImagen = this.formData.motorNivelLiquidoFrenosImagen;
+      }
+      data.motorNivelAnticongelante = this.formData.motorNivelAnticongelante;
+      if (this.formData.motorNivelAnticongelanteImagen) {
+        data.motorNivelAnticongelanteImagen = this.formData.motorNivelAnticongelanteImagen;
+      }
+      
+      // Depósito Gasolina y Escape
+      data.depositoPuerta = this.formData.depositoPuerta === 'true' ? true : (this.formData.depositoPuerta === 'false' ? false : null);
+      data.depositoTapon = this.formData.depositoTapon === 'true' ? true : (this.formData.depositoTapon === 'false' ? false : null);
+      data.escapeSilenciador = this.formData.escapeSilenciador === 'true' ? true : (this.formData.escapeSilenciador === 'false' ? false : null);
+      if (this.formData.escapeSilenciadorImagen) {
+        data.escapeSilenciadorImagen = this.formData.escapeSilenciadorImagen;
+      }
+      data.escapeCatalizador = this.formData.escapeCatalizador === 'true' ? true : (this.formData.escapeCatalizador === 'false' ? false : null);
+      if (this.formData.escapeCatalizadorImagen) {
+        data.escapeCatalizadorImagen = this.formData.escapeCatalizadorImagen;
+      }
+      
+      // Comentarios Generales
+      data.comentarioGeneral = this.formData.comentarioGeneral || '';
+      
+      return data;
+    },
+    
+    // Guardar datos del step específico
+    async saveStepData(step) {
+      const detalleRecepcionId = this.checklistData.id;
+      
+      if (!detalleRecepcionId) {
+        throw new Error('No se puede actualizar el checklist: ID no encontrado');
+      }
+      
+      let stepData;
+      switch (step) {
+        case 1:
+          stepData = this.getStep1Data();
+          break;
+        case 2:
+          stepData = this.getStep2Data();
+          break;
+        case 3:
+          stepData = this.getStep3Data();
+          break;
+        default:
+          throw new Error('Step no válido');
+      }
+      
+      console.log(`Guardando datos del Step ${step}:`, JSON.stringify(stepData, null, 2));
+      
+      const response = await apiClient.post(`/actualizar/detalle-recepcion/${detalleRecepcionId}`, stepData);
+      
+      console.log('Respuesta del servidor:', response.data);
+      
+      // Emitir evento para notificar al componente padre que hubo un cambio
+      this.$emit('checklist-saved', response.data.data);
+      
+      return response.data;
     },
     
     async submitFormData() {
