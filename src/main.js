@@ -117,14 +117,12 @@ async function initApp() {
 // Inicializar la aplicación
 initApp()
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('SW registrado:', registration)
-      })
-      .catch(error => {
-        console.log('SW registro falló:', error)
-      })
-  })
-}
+// Registrar Service Worker con actualización automática
+import { registerSW } from 'virtual:pwa-register'
+
+const updateSW = registerSW({
+  onNeedRefresh() {
+    updateSW(true)
+    window.location.reload()
+  },
+})
