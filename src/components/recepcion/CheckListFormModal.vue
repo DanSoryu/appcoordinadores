@@ -2475,29 +2475,36 @@ export default {
       
       // Guardar datos del step actual antes de avanzar
       if (this.currentStep < 3) {
+        const stepToSave = this.currentStep;
+        
         try {
           await this.executeNavigation(async () => {
-            await this.saveStepData(this.currentStep);
+            await this.saveStepData(stepToSave);
           });
           
-          // Avanzar al siguiente paso
-          this.currentStep++;
-          // Hacer scroll al top del modal
-          this.scrollToTop();
-          
-          // Mostrar toast de éxito
+          // Mostrar toast de éxito PRIMERO
           this.toastStore.addToast({
-            message: `Step ${this.currentStep - 1} guardado correctamente`,
+            message: `Step ${stepToSave} guardado correctamente. Continuando con Step ${stepToSave + 1}...`,
             type: 'success',
             duration: 3000
           });
+          
+          // Avanzar al siguiente paso (NO cerrar el modal)
+          this.currentStep++;
+          
+          // Hacer scroll al top del modal
+          this.scrollToTop();
+          
+          console.log(`Avanzado de Step ${stepToSave} a Step ${this.currentStep}`);
+          
         } catch (error) {
           console.error('Error al guardar step:', error);
           this.toastStore.addToast({
-            message: 'Error al guardar el step. Intente nuevamente.',
+            message: error.message || 'Error al guardar el step. Intente nuevamente.',
             type: 'error',
             duration: 4000
           });
+          // NO avanzar al siguiente step si hay error
         }
       }
     },

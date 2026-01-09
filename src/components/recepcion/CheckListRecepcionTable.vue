@@ -939,6 +939,9 @@ export default {
             return processedItem;
           });
           
+          // Ordenar por ID descendente (más reciente arriba, más antiguo abajo)
+          processedData.sort((a, b) => b.id - a.id);
+          
           checklistData.value = processedData;
           totalItems.value = data.total || 0;
           totalPages.value = data.last_page || 1;
