@@ -3,6 +3,17 @@
     <!-- Encabezado con título -->
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold text-gray-900">Diagnósticos</h2>
+      <button 
+        @click="exportarExcel"
+        :disabled="exportandoExcel || diagnosticosData.length === 0"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg v-if="!exportandoExcel" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <div v-else class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+        <span>{{ exportandoExcel ? 'Exportando...' : 'Exportar Excel' }}</span>
+      </button>
     </div>
 
     <!-- Filtros de búsqueda -->
@@ -392,6 +403,7 @@ import { useAuthStore } from '../../stores/auth.js'
 import DiagnosticosFormModal from './DiagnosticosFormModal.vue'
 import ImageModal from '../global/ImageModal.vue'
 import apiClient from '../../services/api.js'
+import ExcelJS from 'exceljs'
 
 export default {
   name: 'DiagnosticosTable',
@@ -418,8 +430,9 @@ export default {
     const showImageModal = ref(false)
     const currentImageUrl = ref(null)
     
-    // Estado de generación de PDF
+    // Estado de generación de PDF y Excel
     const generandoPDF = ref(false)
+    const exportandoExcel = ref(false)
     
     // Filtros
     const searchQuery = ref('')
@@ -898,6 +911,336 @@ export default {
       }
     };
     
+    // Función para exportar a Excel con imágenes
+    const exportarExcel = async () => {
+      if (diagnosticosData.value.length === 0) {
+        toastStore.addToast({
+          message: 'No hay datos para exportar',
+          type: 'warning',
+          duration: 3000
+        })
+        return
+      }
+
+      exportandoExcel.value = true
+      
+      try {
+        // Crear un nuevo libro de Excel
+        const workbook = new ExcelJS.Workbook()
+        workbook.creator = 'Sistema de Diagnósticos'
+        workbook.created = new Date()
+        
+        // Crear una hoja por cada diagnóstico
+        for (const diagnostico of diagnosticosData.value) {
+          const nombreHoja = `Diag_${diagnostico.folioRecepcion}`.substring(0, 31) // Límite de Excel
+          const worksheet = workbook.addWorksheet(nombreHoja)
+          
+          // Configurar ancho de columnas
+          worksheet.columns = [
+            { width: 30 },
+            { width: 50 }
+          ]
+          
+          let filaActual = 1
+          
+          // ENCABEZADO PRINCIPAL
+          worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+          const headerCell = worksheet.getCell(`A${filaActual}`)
+          headerCell.value = `DIAGNÓSTICO TÉCNICO - FOLIO RECEPCIÓN ${diagnostico.folioRecepcion}`
+          headerCell.font = { size: 16, bold: true, color: { argb: 'FFFFFFFF' } }
+          headerCell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FF2563EB' }
+          }
+          headerCell.alignment = { vertical: 'middle', horizontal: 'center' }
+          worksheet.getRow(filaActual).height = 30
+          filaActual += 2
+          
+          // SECCIÓN: INFORMACIÓN GENERAL
+          worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+          const seccionGeneral = worksheet.getCell(`A${filaActual}`)
+          seccionGeneral.value = 'INFORMACIÓN GENERAL'
+          seccionGeneral.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+          seccionGeneral.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FF059669' }
+          }
+          seccionGeneral.alignment = { vertical: 'middle', horizontal: 'center' }
+          filaActual++
+          
+          // Datos generales
+          const datosGenerales = [
+            ['ID Diagnóstico:', diagnostico.id],
+            ['Folio de Recepción:', diagnostico.folioRecepcion],
+            ['Estado:', diagnostico.estado.toUpperCase()],
+            ['Mecánico:', diagnostico.mecanicoNombre || 'No asignado'],
+            ['Fecha de Creación:', formatDate(diagnostico.fechaCreacion)],
+            ['Fecha de Completado:', diagnostico.fechaCompletado ? formatDate(diagnostico.fechaCompletado) : 'Pendiente']
+          ]
+          
+          for (const [label, value] of datosGenerales) {
+            const labelCell = worksheet.getCell(`A${filaActual}`)
+            labelCell.value = label
+            labelCell.font = { bold: true }
+            labelCell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FFE5E7EB' }
+            }
+            
+            const valueCell = worksheet.getCell(`B${filaActual}`)
+            valueCell.value = value || 'N/A'
+            filaActual++
+          }
+          
+          filaActual++
+          
+          // SECCIÓN: DIAGNÓSTICOS POR SISTEMA
+          if (diagnostico.diagnosticos && diagnostico.diagnosticos.length > 0) {
+            worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+            const seccionDiagnosticos = worksheet.getCell(`A${filaActual}`)
+            seccionDiagnosticos.value = 'DIAGNÓSTICOS DETECTADOS'
+            seccionDiagnosticos.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+            seccionDiagnosticos.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FF3B82F6' }
+            }
+            seccionDiagnosticos.alignment = { vertical: 'middle', horizontal: 'center' }
+            filaActual++
+            
+            // Procesar cada sección de diagnóstico
+            for (const diag of diagnostico.diagnosticos) {
+              // Título de la sección
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const tituloSeccion = worksheet.getCell(`A${filaActual}`)
+              tituloSeccion.value = diag.seccion
+              tituloSeccion.font = { size: 11, bold: true, color: { argb: 'FF1F2937' } }
+              tituloSeccion.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFF3F4F6' }
+              }
+              tituloSeccion.alignment = { vertical: 'middle', horizontal: 'left', indent: 1 }
+              filaActual++
+              
+              // Extraer fallas del string
+              const fallas = parseFallasFromDescription(diag.descripcion)
+              
+              if (fallas.length > 0) {
+                for (const falla of fallas) {
+                  const labelCell = worksheet.getCell(`A${filaActual}`)
+                  labelCell.value = '• ' + falla
+                  labelCell.alignment = { vertical: 'middle', horizontal: 'left', indent: 2 }
+                  worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+                  filaActual++
+                }
+              } else {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = diag.descripcion
+                labelCell.alignment = { vertical: 'middle', horizontal: 'left', indent: 2 }
+                worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+                filaActual++
+              }
+              
+              filaActual++
+            }
+          } else {
+            worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+            const noDiagnosticos = worksheet.getCell(`A${filaActual}`)
+            noDiagnosticos.value = 'No se han registrado diagnósticos'
+            noDiagnosticos.font = { italic: true, color: { argb: 'FF6B7280' } }
+            noDiagnosticos.alignment = { horizontal: 'center' }
+            filaActual++
+          }
+          
+          filaActual++
+          
+          // SECCIÓN: OBSERVACIONES
+          if (diagnostico.observaciones && diagnostico.observaciones.trim()) {
+            worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+            const seccionObservaciones = worksheet.getCell(`A${filaActual}`)
+            seccionObservaciones.value = 'OBSERVACIONES GENERALES'
+            seccionObservaciones.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+            seccionObservaciones.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FF6B7280' }
+            }
+            seccionObservaciones.alignment = { vertical: 'middle', horizontal: 'center' }
+            filaActual++
+            
+            const observacionesCell = worksheet.getCell(`A${filaActual}`)
+            observacionesCell.value = diagnostico.observaciones
+            observacionesCell.alignment = { vertical: 'top', horizontal: 'left', wrapText: true }
+            worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+            worksheet.getRow(filaActual).height = Math.max(30, diagnostico.observaciones.length / 50 * 15)
+            filaActual++
+            filaActual++
+          }
+          
+          // SECCIÓN: IMÁGENES DEL DIAGNÓSTICO
+          const imagenes = extractImagesFromDiagnostico(diagnostico)
+          
+          if (imagenes.length > 0) {
+            worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+            const seccionImagenes = worksheet.getCell(`A${filaActual}`)
+            seccionImagenes.value = 'FOTOGRAFÍAS DEL DIAGNÓSTICO'
+            seccionImagenes.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+            seccionImagenes.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FF8B5CF6' }
+            }
+            seccionImagenes.alignment = { vertical: 'middle', horizontal: 'center' }
+            filaActual++
+            
+            let imagenAgregada = false
+            
+            for (const imagen of imagenes) {
+              try {
+                // Construir URL completa
+                const urlCompleta = getImageUrl(imagen.path)
+                
+                if (!urlCompleta) {
+                  // Si no hay URL, mostrar mensaje
+                  const labelCell = worksheet.getCell(`A${filaActual}`)
+                  labelCell.value = imagen.label
+                  labelCell.font = { bold: true }
+                  
+                  const valueCell = worksheet.getCell(`B${filaActual}`)
+                  valueCell.value = 'Imagen no disponible'
+                  valueCell.font = { italic: true, color: { argb: 'FFEF4444' } }
+                  filaActual++
+                  continue
+                }
+                
+                // Descargar la imagen
+                const imageResponse = await fetch(urlCompleta)
+                
+                if (imageResponse.ok) {
+                  const imageBlob = await imageResponse.blob()
+                  const arrayBuffer = await imageBlob.arrayBuffer()
+                  
+                  // Determinar la extensión de la imagen
+                  let extension = 'jpeg'
+                  const contentType = imageResponse.headers.get('content-type')
+                  if (contentType) {
+                    if (contentType.includes('png')) extension = 'png'
+                    else if (contentType.includes('jpg') || contentType.includes('jpeg')) extension = 'jpeg'
+                    else if (contentType.includes('gif')) extension = 'gif'
+                  }
+                  
+                  // Agregar la imagen al workbook
+                  const imageId = workbook.addImage({
+                    buffer: arrayBuffer,
+                    extension: extension
+                  })
+                  
+                  // Escribir el nombre de la imagen
+                  const labelCell = worksheet.getCell(`A${filaActual}`)
+                  labelCell.value = imagen.label
+                  labelCell.font = { bold: true }
+                  labelCell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FFF3F4F6' }
+                  }
+                  
+                  // Aumentar altura de fila para la imagen
+                  worksheet.getRow(filaActual).height = 120
+                  
+                  // Insertar imagen en la celda B
+                  worksheet.addImage(imageId, {
+                    tl: { col: 1, row: filaActual - 1 },
+                    ext: { width: 200, height: 150 }
+                  })
+                  
+                  filaActual++
+                  imagenAgregada = true
+                } else {
+                  // Si no se puede descargar, mostrar mensaje
+                  const labelCell = worksheet.getCell(`A${filaActual}`)
+                  labelCell.value = imagen.label
+                  labelCell.font = { bold: true }
+                  
+                  const valueCell = worksheet.getCell(`B${filaActual}`)
+                  valueCell.value = 'Imagen no disponible'
+                  valueCell.font = { italic: true, color: { argb: 'FFEF4444' } }
+                  filaActual++
+                }
+              } catch (imageError) {
+                console.error(`Error al procesar imagen ${imagen.label}:`, imageError)
+                // Si hay error, mostrar mensaje
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = imagen.label
+                labelCell.font = { bold: true }
+                
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = 'Error al cargar imagen'
+                valueCell.font = { italic: true, color: { argb: 'FFEF4444' } }
+                filaActual++
+              }
+            }
+            
+            if (!imagenAgregada) {
+              const noImagenesCell = worksheet.getCell(`A${filaActual}`)
+              noImagenesCell.value = 'No hay imágenes disponibles'
+              noImagenesCell.font = { italic: true, color: { argb: 'FF6B7280' } }
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              filaActual++
+            }
+          } else {
+            // No hay imágenes
+            worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+            const noImagenesCell = worksheet.getCell(`A${filaActual}`)
+            noImagenesCell.value = 'No se registraron fotografías para este diagnóstico'
+            noImagenesCell.font = { italic: true, color: { argb: 'FF6B7280' } }
+            noImagenesCell.alignment = { horizontal: 'center' }
+            filaActual++
+          }
+        }
+        
+        // Generar el archivo Excel
+        const buffer = await workbook.xlsx.writeBuffer()
+        
+        // Crear blob y descargar
+        const blob = new Blob([buffer], { 
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+        })
+        
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        
+        // Nombre del archivo con fecha
+        const fecha = new Date().toISOString().split('T')[0]
+        link.download = `Diagnosticos_${fecha}.xlsx`
+        
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        
+        toastStore.addToast({
+          message: 'Excel exportado correctamente',
+          type: 'success',
+          duration: 3000
+        })
+      } catch (error) {
+        console.error('Error al exportar Excel:', error)
+        toastStore.addToast({
+          message: 'Error al exportar el archivo Excel',
+          type: 'error',
+          duration: 5000
+        })
+      } finally {
+        exportandoExcel.value = false
+      }
+    }
+    
     // Función para generar el PDF
     const generarPDF = async (diagnostico) => {
       generandoPDF.value = true;
@@ -1244,9 +1587,11 @@ export default {
       getImageUrl,
       extractImagesFromDiagnostico,
       hasAnyImages,
-      // Funciones para PDF
+      // Funciones para PDF y Excel
       generarPDF,
-      generandoPDF
+      generandoPDF,
+      exportarExcel,
+      exportandoExcel
     }
   }
 }
