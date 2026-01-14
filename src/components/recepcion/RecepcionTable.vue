@@ -2,15 +2,28 @@
   <div>
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold text-gray-900">Recepciones de Vehículos</h2>
-      <button 
-        @click="abrirModalNuevaRecepcion"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
-        <span>Nueva Recepción</span>
-      </button>
+      <div class="flex space-x-3">
+        <button 
+          @click="exportarExcel"
+          :disabled="exportandoExcel || recepciones.length === 0"
+          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg v-if="!exportandoExcel" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <div v-else class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+          <span>{{ exportandoExcel ? 'Exportando...' : 'Exportar Excel' }}</span>
+        </button>
+        <button 
+          @click="abrirModalNuevaRecepcion"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span>Nueva Recepción</span>
+        </button>
+      </div>
     </div>
 
     <div class="bg-white p-4 rounded-lg shadow mb-6">
@@ -272,6 +285,7 @@ import { useToastStore } from '../../stores/toast.js'
 import { useAuthStore } from '../../stores/auth.js'
 import apiClient from '../../services/api.js'
 import DatosRecepcionFormModal from './DatosRecepcionFormModal.vue'
+import ExcelJS from 'exceljs'
 
 export default {
   name: 'RecepcionTable',
@@ -293,6 +307,7 @@ export default {
     const showDetallesModal = ref(false)
     const currentRecepcion = ref(null)
     const recepcionToEdit = ref(null)
+    const exportandoExcel = ref(false)
 
     // Filtros
     const searchQuery = ref('')
@@ -608,6 +623,341 @@ export default {
       showRecepcionModal.value = false
     }
 
+    // Función para exportar a Excel con imágenes
+    const exportarExcel = async () => {
+      if (recepciones.value.length === 0) {
+        toastStore.addToast({
+          message: 'No hay datos para exportar',
+          type: 'warning',
+          duration: 3000
+        })
+        return
+      }
+
+      exportandoExcel.value = true
+      
+      try {
+        // Crear un nuevo libro de Excel
+        const workbook = new ExcelJS.Workbook()
+        workbook.creator = 'Sistema de Recepciones'
+        workbook.created = new Date()
+        
+        // Crear una hoja por cada recepción
+        for (const recepcion of recepciones.value) {
+          const nombreHoja = `Recep_${recepcion.id}`.substring(0, 31) // Límite de Excel
+          const worksheet = workbook.addWorksheet(nombreHoja)
+          
+          // Configurar ancho de columnas
+          worksheet.columns = [
+            { width: 25 },
+            { width: 40 }
+          ]
+          
+          let filaActual = 1
+          
+          // ENCABEZADO PRINCIPAL
+          worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+          const headerCell = worksheet.getCell(`A${filaActual}`)
+          headerCell.value = `RECEPCIÓN DE VEHÍCULO - FOLIO ${recepcion.id}`
+          headerCell.font = { size: 16, bold: true, color: { argb: 'FFFFFFFF' } }
+          headerCell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FF2563EB' }
+          }
+          headerCell.alignment = { vertical: 'middle', horizontal: 'center' }
+          worksheet.getRow(filaActual).height = 30
+          filaActual += 2
+          
+          // SECCIÓN: DATOS DE RECEPCIÓN
+          worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+          const seccionRecepcion = worksheet.getCell(`A${filaActual}`)
+          seccionRecepcion.value = 'DATOS DE RECEPCIÓN'
+          seccionRecepcion.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+          seccionRecepcion.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FF059669' }
+          }
+          seccionRecepcion.alignment = { vertical: 'middle', horizontal: 'center' }
+          filaActual++
+          
+          // Datos de recepción
+          const datosRecepcion = [
+            ['Fecha de Recepción:', recepcion.fecha_recepcion],
+            ['Kilometraje:', `${recepcion.kilometraje?.toLocaleString()} km`],
+            ['Taller:', getTallerNombre(recepcion.taller_id)],
+            ['Entregado por:', recepcion.entregado_por],
+            ['Número Económico:', recepcion.numero_economico],
+            ['Placas:', recepcion.placas]
+          ]
+          
+          for (const [label, value] of datosRecepcion) {
+            const labelCell = worksheet.getCell(`A${filaActual}`)
+            labelCell.value = label
+            labelCell.font = { bold: true }
+            labelCell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FFE5E7EB' }
+            }
+            
+            const valueCell = worksheet.getCell(`B${filaActual}`)
+            valueCell.value = value || 'N/A'
+            filaActual++
+          }
+          
+          filaActual++
+          
+          // Obtener datos del checklist
+          try {
+            const checklistResponse = await apiClient.get(`/detalle-recepcion/${recepcion.id}`)
+            const checklist = checklistResponse.data.data
+            
+            if (checklist) {
+              // SECCIÓN: DATOS DEL CHECKLIST
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionChecklist = worksheet.getCell(`A${filaActual}`)
+              seccionChecklist.value = 'DATOS DEL CHECKLIST'
+              seccionChecklist.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionChecklist.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FF3B82F6' }
+              }
+              seccionChecklist.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              // Datos del checklist
+              const datosChecklist = [
+                ['Estado:', checklist.estado || 'PENDIENTE'],
+                ['Cantidad de Llaves:', checklist.cantidadLlaves || 'N/A'],
+                ['Tarjeta de Circulación:', checklist.tarjetaCirculacion ? 'SÍ' : 'NO'],
+                ['Nivel de Combustible:', checklist.nivelCombustible || 'N/A'],
+                ['Estéreo:', checklist.estereo || 'N/A'],
+                ['Cantidad de Bocinas:', checklist.cantidadBocinas || 'N/A'],
+                ['Estado de Manijas:', checklist.manijas || 'N/A'],
+                ['Estado de Seguros:', checklist.estadoSeguros || 'N/A'],
+                ['Estado de Cristales:', checklist.estadoCristales || 'N/A'],
+                ['Estado de Vestiduras:', checklist.estadoVestiduras || 'N/A'],
+                ['Estado de Cabeceras:', checklist.estadoCabeceras || 'N/A']
+              ]
+              
+              if (checklist.descripcionAccesorios) {
+                datosChecklist.push(['Descripción de Accesorios:', checklist.descripcionAccesorios])
+              }
+              
+              if (checklist.comentarioGeneral) {
+                datosChecklist.push(['Comentario General:', checklist.comentarioGeneral])
+              }
+              
+              for (const [label, value] of datosChecklist) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: 'FFE5E7EB' }
+                }
+                
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              
+              filaActual++
+              
+              // SECCIÓN: IMÁGENES DEL CHECKLIST
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionImagenes = worksheet.getCell(`A${filaActual}`)
+              seccionImagenes.value = 'IMÁGENES DEL CHECKLIST'
+              seccionImagenes.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionImagenes.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FF8B5CF6' }
+              }
+              seccionImagenes.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              // Mapeo de campos de imagen con sus nombres
+              const imagenesChecklist = [
+                { campo: 'polizaSeguroImagen', nombre: 'Póliza de Seguro' },
+                { campo: 'accesoriosHerramientaImagen', nombre: 'Accesorios y Herramientas' },
+                { campo: 'odometroImagen', nombre: 'Odómetro' },
+                { campo: 'combustibleImagen', nombre: 'Combustible' },
+                { campo: 'testigosImagen', nombre: 'Testigos' },
+                { campo: 'segurosImagen', nombre: 'Seguros' },
+                { campo: 'cristalesImagen', nombre: 'Cristales' },
+                { campo: 'vestidurasImagen', nombre: 'Vestiduras' },
+                { campo: 'cabecerasImagen', nombre: 'Cabeceras' },
+                { campo: 'carroceriaLadoDerechoImagen', nombre: 'Carrocería Lado Derecho' },
+                { campo: 'carroceriaLadoIzquierdoImagen', nombre: 'Carrocería Lado Izquierdo' },
+                { campo: 'carroceriaFrenteImagen', nombre: 'Carrocería Frente' },
+                { campo: 'carroceriaTraseraImagen', nombre: 'Carrocería Trasera' },
+                { campo: 'luzFaroDerechoImagen', nombre: 'Luz Faro Derecho' },
+                { campo: 'luzFaroIzquierdoImagen', nombre: 'Luz Faro Izquierdo' },
+                { campo: 'tableroInstrumentosImagen', nombre: 'Tablero de Instrumentos' },
+                { campo: 'espejoRetrovisorImagen', nombre: 'Espejo Retrovisor' },
+                { campo: 'tapaBaulesImagen', nombre: 'Tapa Baúles' },
+                { campo: 'llantasImagen', nombre: 'Llantas' },
+                { campo: 'paraChoqueDelanteImagen', nombre: 'Parachoque Delante' },
+                { campo: 'paraChoqueTraseraImagen', nombre: 'Parachoque Trasera' },
+                { campo: 'sistemaEscapeImagen', nombre: 'Sistema de Escape' },
+                { campo: 'escapeCatalizadorImagen', nombre: 'Escape Catalizador' }
+              ]
+              
+              let imagenAgregada = false
+              
+              for (const { campo, nombre } of imagenesChecklist) {
+                const imagenUrl = checklist[campo]
+                
+                if (imagenUrl) {
+                  try {
+                    // Construir URL completa
+                    let urlCompleta = imagenUrl
+                    if (!imagenUrl.startsWith('http')) {
+                      // Usar la base URL de la API
+                      const baseURL = apiClient.defaults.baseURL || 'http://localhost:8000'
+                      urlCompleta = `${baseURL}${imagenUrl.startsWith('/') ? imagenUrl : '/' + imagenUrl}`
+                    }
+                    
+                    // Descargar la imagen
+                    const imageResponse = await fetch(urlCompleta)
+                    
+                    if (imageResponse.ok) {
+                      const imageBlob = await imageResponse.blob()
+                      const arrayBuffer = await imageBlob.arrayBuffer()
+                      
+                      // Determinar la extensión de la imagen
+                      let extension = 'jpeg'
+                      const contentType = imageResponse.headers.get('content-type')
+                      if (contentType) {
+                        if (contentType.includes('png')) extension = 'png'
+                        else if (contentType.includes('jpg') || contentType.includes('jpeg')) extension = 'jpeg'
+                        else if (contentType.includes('gif')) extension = 'gif'
+                      }
+                      
+                      // Agregar la imagen al workbook
+                      const imageId = workbook.addImage({
+                        buffer: arrayBuffer,
+                        extension: extension
+                      })
+                      
+                      // Escribir el nombre de la imagen
+                      const labelCell = worksheet.getCell(`A${filaActual}`)
+                      labelCell.value = nombre
+                      labelCell.font = { bold: true }
+                      labelCell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFF3F4F6' }
+                      }
+                      
+                      // Aumentar altura de fila para la imagen
+                      worksheet.getRow(filaActual).height = 120
+                      
+                      // Insertar imagen en la celda B
+                      worksheet.addImage(imageId, {
+                        tl: { col: 1, row: filaActual - 1 },
+                        ext: { width: 200, height: 150 }
+                      })
+                      
+                      filaActual++
+                      imagenAgregada = true
+                    } else {
+                      // Si no se puede descargar, mostrar mensaje
+                      const labelCell = worksheet.getCell(`A${filaActual}`)
+                      labelCell.value = nombre
+                      labelCell.font = { bold: true }
+                      
+                      const valueCell = worksheet.getCell(`B${filaActual}`)
+                      valueCell.value = 'Imagen no disponible'
+                      valueCell.font = { italic: true, color: { argb: 'FFEF4444' } }
+                      filaActual++
+                    }
+                  } catch (imageError) {
+                    console.error(`Error al procesar imagen ${nombre}:`, imageError)
+                    // Si hay error, mostrar mensaje
+                    const labelCell = worksheet.getCell(`A${filaActual}`)
+                    labelCell.value = nombre
+                    labelCell.font = { bold: true }
+                    
+                    const valueCell = worksheet.getCell(`B${filaActual}`)
+                    valueCell.value = 'Error al cargar imagen'
+                    valueCell.font = { italic: true, color: { argb: 'FFEF4444' } }
+                    filaActual++
+                  }
+                }
+              }
+              
+              if (!imagenAgregada) {
+                const noImagenesCell = worksheet.getCell(`A${filaActual}`)
+                noImagenesCell.value = 'No hay imágenes disponibles'
+                noImagenesCell.font = { italic: true, color: { argb: 'FF6B7280' } }
+                worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+                filaActual++
+              }
+            } else {
+              // No hay checklist
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const noChecklistCell = worksheet.getCell(`A${filaActual}`)
+              noChecklistCell.value = 'No hay checklist asociado a esta recepción'
+              noChecklistCell.font = { italic: true, color: { argb: 'FF6B7280' } }
+              noChecklistCell.alignment = { horizontal: 'center' }
+              filaActual++
+            }
+          } catch (checklistError) {
+            console.error(`Error al obtener checklist para recepción ${recepcion.id}:`, checklistError)
+            // Si hay error al obtener el checklist
+            worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+            const errorCell = worksheet.getCell(`A${filaActual}`)
+            errorCell.value = 'Error al cargar datos del checklist'
+            errorCell.font = { italic: true, color: { argb: 'FFEF4444' } }
+            errorCell.alignment = { horizontal: 'center' }
+            filaActual++
+          }
+        }
+        
+        // Generar el archivo Excel
+        const buffer = await workbook.xlsx.writeBuffer()
+        
+        // Crear blob y descargar
+        const blob = new Blob([buffer], { 
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+        })
+        
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        
+        // Nombre del archivo con fecha
+        const fecha = new Date().toISOString().split('T')[0]
+        link.download = `Recepciones_${fecha}.xlsx`
+        
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        
+        toastStore.addToast({
+          message: 'Excel exportado correctamente',
+          type: 'success',
+          duration: 3000
+        })
+      } catch (error) {
+        console.error('Error al exportar Excel:', error)
+        toastStore.addToast({
+          message: 'Error al exportar el archivo Excel',
+          type: 'error',
+          duration: 5000
+        })
+      } finally {
+        exportandoExcel.value = false
+      }
+    }
+
     // Reset de filtros
     const resetFiltros = () => {
       searchQuery.value = ''
@@ -649,6 +999,7 @@ export default {
       currentRecepcion,
       recepcionToEdit,
       isAdmin,
+      exportandoExcel,
       previousPage,
       nextPage,
       goToPage,
@@ -659,7 +1010,8 @@ export default {
       resetFiltros,
       cargarRecepciones,
       cargarTalleres,
-      getTallerNombre
+      getTallerNombre,
+      exportarExcel
     }
   }
 }
