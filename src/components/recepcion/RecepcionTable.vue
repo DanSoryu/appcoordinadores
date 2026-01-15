@@ -711,8 +711,14 @@ export default {
           
           // Obtener datos del checklist
           try {
-            const checklistResponse = await apiClient.get(`/detalle-recepcion/${recepcion.id}`)
-            const checklist = checklistResponse.data.data
+            // Obtener todos los checklists y buscar el que corresponde a esta recepción
+            const checklistResponse = await apiClient.get('/detalle-recepcion?per_page=1000')
+            
+            // Buscar el checklist que corresponde a esta recepción
+            let checklist = null
+            if (checklistResponse.data.success && checklistResponse.data.data.data) {
+              checklist = checklistResponse.data.data.data.find(cl => cl.recepcion_id === recepcion.id)
+            }
             
             if (checklist) {
               // SECCIÓN: DATOS DEL CHECKLIST
