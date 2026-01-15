@@ -721,57 +721,315 @@ export default {
             }
             
             if (checklist) {
-              // SECCIÓN: DATOS DEL CHECKLIST
+              // SECCIÓN: DATOS DEL CHECKLIST - RECEPCIÓN
               worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
-              const seccionChecklist = worksheet.getCell(`A${filaActual}`)
-              seccionChecklist.value = 'DATOS DEL CHECKLIST'
-              seccionChecklist.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
-              seccionChecklist.fill = {
+              const seccionRecepcionChecklist = worksheet.getCell(`A${filaActual}`)
+              seccionRecepcionChecklist.value = 'RECEPCIÓN - LLAVES Y DOCUMENTOS'
+              seccionRecepcionChecklist.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionRecepcionChecklist.fill = {
                 type: 'pattern',
                 pattern: 'solid',
-                fgColor: { argb: 'FF3B82F6' }
+                fgColor: { argb: 'FF10B981' }
               }
-              seccionChecklist.alignment = { vertical: 'middle', horizontal: 'center' }
+              seccionRecepcionChecklist.alignment = { vertical: 'middle', horizontal: 'center' }
               filaActual++
               
-              // Datos del checklist
-              const datosChecklist = [
-                ['Estado:', checklist.estado || 'PENDIENTE'],
-                ['Cantidad de Llaves:', checklist.cantidadLlaves || 'N/A'],
+              const datosRecepcionChecklist = [
+                ['Estado del Checklist:', checklist.estado || 'PENDIENTE'],
+                ['Cantidad de Llaves:', checklist.cantidadLlaves !== null ? checklist.cantidadLlaves : 'N/A'],
+                ['Póliza de Seguro:', checklist.polizaSeguro ? 'SÍ' : 'NO'],
                 ['Tarjeta de Circulación:', checklist.tarjetaCirculacion ? 'SÍ' : 'NO'],
-                ['Nivel de Combustible:', checklist.nivelCombustible || 'N/A'],
-                ['Estéreo:', checklist.estereo || 'N/A'],
-                ['Cantidad de Bocinas:', checklist.cantidadBocinas || 'N/A'],
-                ['Estado de Manijas:', checklist.manijas || 'N/A'],
-                ['Estado de Seguros:', checklist.estadoSeguros || 'N/A'],
-                ['Estado de Cristales:', checklist.estadoCristales || 'N/A'],
-                ['Estado de Vestiduras:', checklist.estadoVestiduras || 'N/A'],
-                ['Estado de Cabeceras:', checklist.estadoCabeceras || 'N/A']
+                ['Descripción de Accesorios:', checklist.descripcionAccesorios || 'N/A']
               ]
               
-              if (checklist.descripcionAccesorios) {
-                datosChecklist.push(['Descripción de Accesorios:', checklist.descripcionAccesorios])
-              }
-              
-              if (checklist.comentarioGeneral) {
-                datosChecklist.push(['Comentario General:', checklist.comentarioGeneral])
-              }
-              
-              for (const [label, value] of datosChecklist) {
+              for (const [label, value] of datosRecepcionChecklist) {
                 const labelCell = worksheet.getCell(`A${filaActual}`)
                 labelCell.value = label
                 labelCell.font = { bold: true }
-                labelCell.fill = {
-                  type: 'pattern',
-                  pattern: 'solid',
-                  fgColor: { argb: 'FFE5E7EB' }
-                }
-                
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
                 const valueCell = worksheet.getCell(`B${filaActual}`)
                 valueCell.value = value
                 filaActual++
               }
+              filaActual++
               
+              // SECCIÓN: CLUSTER
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionCluster = worksheet.getCell(`A${filaActual}`)
+              seccionCluster.value = 'CLUSTER'
+              seccionCluster.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionCluster.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFEAB308' } }
+              seccionCluster.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosCluster = [
+                ['Nivel de Combustible:', checklist.nivelCombustible || 'N/A'],
+                ['Testigos Encendidos:', Array.isArray(checklist.testigosEncendidos) ? checklist.testigosEncendidos.join(', ') : (checklist.testigosEncendidos || 'N/A')]
+              ]
+              
+              for (const [label, value] of datosCluster) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: TABLERO
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionTablero = worksheet.getCell(`A${filaActual}`)
+              seccionTablero.value = 'TABLERO'
+              seccionTablero.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionTablero.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF59E0B' } }
+              seccionTablero.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosTablero = [
+                ['Estéreo:', checklist.estereo === true ? 'SÍ' : (checklist.estereo === false ? 'NO' : 'N/A')],
+                ['Cantidad de Bocinas:', checklist.cantidadBocinas !== null ? checklist.cantidadBocinas : 'N/A']
+              ]
+              
+              for (const [label, value] of datosTablero) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: PUERTAS
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionPuertas = worksheet.getCell(`A${filaActual}`)
+              seccionPuertas.value = 'PUERTAS'
+              seccionPuertas.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionPuertas.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF14B8A6' } }
+              seccionPuertas.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosPuertas = [
+                ['Manijas:', checklist.manijas === true ? 'SÍ' : (checklist.manijas === false ? 'NO' : 'N/A')],
+                ['Estado de Seguros:', checklist.estadoSeguros?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Estado de Cristales:', checklist.estadoCristales?.replace(/_/g, ' ').toUpperCase() || 'N/A']
+              ]
+              
+              for (const [label, value] of datosPuertas) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: ASIENTOS
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionAsientos = worksheet.getCell(`A${filaActual}`)
+              seccionAsientos.value = 'ASIENTOS'
+              seccionAsientos.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionAsientos.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFA855F7' } }
+              seccionAsientos.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosAsientos = [
+                ['Estado de Vestiduras:', checklist.estadoVestiduras?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Estado de Cabeceras:', checklist.estadoCabeceras?.replace(/_/g, ' ').toUpperCase() || 'N/A']
+              ]
+              
+              for (const [label, value] of datosAsientos) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: CINTURONES
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionCinturones = worksheet.getCell(`A${filaActual}`)
+              seccionCinturones.value = 'CINTURONES DE SEGURIDAD'
+              seccionCinturones.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionCinturones.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF43F5E' } }
+              seccionCinturones.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosCinturones = [
+                ['Funcionalidad Cinturones:', checklist.funcionalidadCinturones?.replace(/_/g, ' ').toUpperCase() || 'N/A']
+              ]
+              
+              for (const [label, value] of datosCinturones) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: CARROCERÍA
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionCarroceria = worksheet.getCell(`A${filaActual}`)
+              seccionCarroceria.value = 'CARROCERÍA'
+              seccionCarroceria.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionCarroceria.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFEF4444' } }
+              seccionCarroceria.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosCarroceria = [
+                ['Lado Derecho:', checklist.carroceriaLadoDerecho?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Lado Izquierdo:', checklist.carroceriaLadoIzquierdo?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Lado Trasero:', checklist.carroceriaLadoTrasero?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Lado Frontal:', checklist.carroceriaLadoFrontal?.replace(/_/g, ' ').toUpperCase() || 'N/A']
+              ]
+              
+              for (const [label, value] of datosCarroceria) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: NEUMÁTICOS
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionNeumaticos = worksheet.getCell(`A${filaActual}`)
+              seccionNeumaticos.value = 'NEUMÁTICOS'
+              seccionNeumaticos.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionNeumaticos.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6B7280' } }
+              seccionNeumaticos.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosNeumaticos = [
+                ['Lado Piloto:', checklist.neumaticosLadoPiloto?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Atrás Piloto:', checklist.neumaticosLadoAtrasPiloto?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Lado Copiloto:', checklist.neumaticosLadoCopiloto?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Atrás Copiloto:', checklist.neumaticosLadoAtrasCopiloto?.replace(/_/g, ' ').toUpperCase() || 'N/A']
+              ]
+              
+              for (const [label, value] of datosNeumaticos) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: CRISTALES DEL VEHÍCULO
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionCristalesVehiculo = worksheet.getCell(`A${filaActual}`)
+              seccionCristalesVehiculo.value = 'CRISTALES DEL VEHÍCULO'
+              seccionCristalesVehiculo.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionCristalesVehiculo.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF06B6D4' } }
+              seccionCristalesVehiculo.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosCristalesVehiculo = [
+                ['Parabrisas:', checklist.cristalesParabrisas?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Medallón Trasero:', checklist.cristalesMedallonTrasero?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Limpiaparabrisas:', checklist.cristalesLimpiadores?.replace(/_/g, ' ').toUpperCase() || 'N/A']
+              ]
+              
+              for (const [label, value] of datosCristalesVehiculo) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: MOTOR
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionMotor = worksheet.getCell(`A${filaActual}`)
+              seccionMotor.value = 'MOTOR'
+              seccionMotor.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionMotor.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF97316' } }
+              seccionMotor.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosMotor = [
+                ['Tapones:', checklist.motorTapones?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Batería:', checklist.motorBateria?.replace(/_/g, ' ').toUpperCase() || 'N/A'],
+                ['Nivel de Aceite:', checklist.motorNivelAceite || 'N/A'],
+                ['Nivel Líquido Frenos:', checklist.motorNivelLiquidoFrenos || 'N/A'],
+                ['Nivel Anticongelante:', checklist.motorNivelAnticongelante || 'N/A']
+              ]
+              
+              for (const [label, value] of datosMotor) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: DEPÓSITO Y ESCAPE
+              worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+              const seccionDeposito = worksheet.getCell(`A${filaActual}`)
+              seccionDeposito.value = 'DEPÓSITO DE GASOLINA Y ESCAPE'
+              seccionDeposito.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+              seccionDeposito.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF7C3AED' } }
+              seccionDeposito.alignment = { vertical: 'middle', horizontal: 'center' }
+              filaActual++
+              
+              const datosDeposito = [
+                ['Puerta Depósito:', checklist.depositoPuerta === true ? 'SÍ' : (checklist.depositoPuerta === false ? 'NO' : 'N/A')],
+                ['Tapón Depósito:', checklist.depositoTapon === true ? 'SÍ' : (checklist.depositoTapon === false ? 'NO' : 'N/A')],
+                ['Silenciador:', checklist.escapeSilenciador === true ? 'SÍ' : (checklist.escapeSilenciador === false ? 'NO' : 'N/A')],
+                ['Catalizador:', checklist.escapeCatalizador === true ? 'SÍ' : (checklist.escapeCatalizador === false ? 'NO' : 'N/A')]
+              ]
+              
+              for (const [label, value] of datosDeposito) {
+                const labelCell = worksheet.getCell(`A${filaActual}`)
+                labelCell.value = label
+                labelCell.font = { bold: true }
+                labelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' } }
+                const valueCell = worksheet.getCell(`B${filaActual}`)
+                valueCell.value = value
+                filaActual++
+              }
+              filaActual++
+              
+              // SECCIÓN: COMENTARIOS GENERALES
+              if (checklist.comentarioGeneral) {
+                worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+                const seccionComentarios = worksheet.getCell(`A${filaActual}`)
+                seccionComentarios.value = 'COMENTARIOS GENERALES'
+                seccionComentarios.font = { size: 12, bold: true, color: { argb: 'FFFFFFFF' } }
+                seccionComentarios.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4B5563' } }
+                seccionComentarios.alignment = { vertical: 'middle', horizontal: 'center' }
+                filaActual++
+                
+                worksheet.mergeCells(`A${filaActual}:B${filaActual}`)
+                const comentarioCell = worksheet.getCell(`A${filaActual}`)
+                comentarioCell.value = checklist.comentarioGeneral
+                comentarioCell.alignment = { wrapText: true }
+                worksheet.getRow(filaActual).height = 40
+                filaActual++
+              }
               filaActual++
               
               // SECCIÓN: IMÁGENES DEL CHECKLIST
@@ -787,6 +1045,9 @@ export default {
               seccionImagenes.alignment = { vertical: 'middle', horizontal: 'center' }
               filaActual++
               
+              // URL base para las imágenes del checklist
+              const imageBaseUrl = 'https://api.ed-intra.com/Mecasoft/detalles_ordenes/'
+              
               // Mapeo de campos de imagen con sus nombres
               const imagenesChecklist = [
                 { campo: 'polizaSeguroImagen', nombre: 'Póliza de Seguro' },
@@ -795,39 +1056,38 @@ export default {
                 { campo: 'combustibleImagen', nombre: 'Combustible' },
                 { campo: 'testigosImagen', nombre: 'Testigos' },
                 { campo: 'segurosImagen', nombre: 'Seguros' },
-                { campo: 'cristalesImagen', nombre: 'Cristales' },
+                { campo: 'cristalesImagen', nombre: 'Cristales de Puertas' },
                 { campo: 'vestidurasImagen', nombre: 'Vestiduras' },
                 { campo: 'cabecerasImagen', nombre: 'Cabeceras' },
                 { campo: 'carroceriaLadoDerechoImagen', nombre: 'Carrocería Lado Derecho' },
                 { campo: 'carroceriaLadoIzquierdoImagen', nombre: 'Carrocería Lado Izquierdo' },
-                { campo: 'carroceriaFrenteImagen', nombre: 'Carrocería Frente' },
-                { campo: 'carroceriaTraseraImagen', nombre: 'Carrocería Trasera' },
-                { campo: 'luzFaroDerechoImagen', nombre: 'Luz Faro Derecho' },
-                { campo: 'luzFaroIzquierdoImagen', nombre: 'Luz Faro Izquierdo' },
-                { campo: 'tableroInstrumentosImagen', nombre: 'Tablero de Instrumentos' },
-                { campo: 'espejoRetrovisorImagen', nombre: 'Espejo Retrovisor' },
-                { campo: 'tapaBaulesImagen', nombre: 'Tapa Baúles' },
-                { campo: 'llantasImagen', nombre: 'Llantas' },
-                { campo: 'paraChoqueDelanteImagen', nombre: 'Parachoque Delante' },
-                { campo: 'paraChoqueTraseraImagen', nombre: 'Parachoque Trasera' },
-                { campo: 'sistemaEscapeImagen', nombre: 'Sistema de Escape' },
+                { campo: 'carroceriaLadoTraseroImagen', nombre: 'Carrocería Lado Trasero' },
+                { campo: 'carroceriaLadoFrontalImagen', nombre: 'Carrocería Lado Frontal' },
+                { campo: 'neumaticosLadoPilotoImagen', nombre: 'Neumático Lado Piloto' },
+                { campo: 'neumaticosLadoAtrasPilotoImagen', nombre: 'Neumático Atrás Piloto' },
+                { campo: 'neumaticosLadoCopilotoImagen', nombre: 'Neumático Lado Copiloto' },
+                { campo: 'neumaticosLadoAtrasCopilotoImagen', nombre: 'Neumático Atrás Copiloto' },
+                { campo: 'cristalesParabrisasImagen', nombre: 'Cristal Parabrisas' },
+                { campo: 'cristalesMedallonTraseroImagen', nombre: 'Cristal Medallón Trasero' },
+                { campo: 'cristalesLimpiadoresImagen', nombre: 'Limpiaparabrisas' },
+                { campo: 'motorTaponesImagen', nombre: 'Motor Tapones' },
+                { campo: 'motorBateriaImagen', nombre: 'Motor Batería' },
+                { campo: 'motorNivelAceiteImagen', nombre: 'Nivel de Aceite' },
+                { campo: 'motorNivelLiquidoFrenosImagen', nombre: 'Nivel Líquido Frenos' },
+                { campo: 'motorNivelAnticongelanteImagen', nombre: 'Nivel Anticongelante' },
+                { campo: 'escapeSilenciadorImagen', nombre: 'Escape Silenciador' },
                 { campo: 'escapeCatalizadorImagen', nombre: 'Escape Catalizador' }
               ]
               
               let imagenAgregada = false
               
               for (const { campo, nombre } of imagenesChecklist) {
-                const imagenUrl = checklist[campo]
+                const nombreArchivo = checklist[campo]
                 
-                if (imagenUrl) {
+                if (nombreArchivo) {
                   try {
-                    // Construir URL completa
-                    let urlCompleta = imagenUrl
-                    if (!imagenUrl.startsWith('http')) {
-                      // Usar la base URL de la API
-                      const baseURL = apiClient.defaults.baseURL || 'http://localhost:8000'
-                      urlCompleta = `${baseURL}${imagenUrl.startsWith('/') ? imagenUrl : '/' + imagenUrl}`
-                    }
+                    // Construir URL completa usando la base correcta
+                    const urlCompleta = `${imageBaseUrl}${nombreArchivo}`
                     
                     // Descargar la imagen
                     const imageResponse = await fetch(urlCompleta)
