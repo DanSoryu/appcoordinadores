@@ -7,6 +7,7 @@ import SolicitudRefacciones from '../components/SolicitudRefacciones.vue'
 import Vehiculos from '../components/Vehiculos.vue'
 import Clientes from '../components/Clientes.vue'
 import Usuarios from '../components/Usuarios.vue'
+import Talleres from '../components/Talleres.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const routes = [
@@ -65,6 +66,14 @@ const routes = [
   {
     path: '/usuarios',
     component: Usuarios,
+    meta: { 
+      requiresAuth: true,
+      allowedRoles: ['admin']
+    }
+  },
+  {
+    path: '/talleres',
+    component: Talleres,
     meta: { 
       requiresAuth: true,
       allowedRoles: ['admin']

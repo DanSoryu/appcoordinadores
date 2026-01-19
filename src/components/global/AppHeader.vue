@@ -116,6 +116,7 @@ const allRoutes = [
   { path: '/solicitud-refacciones', name: 'Solicitud Refacciones', icon: 'clipboard-check', roles: ['admin', 'mecanico'] },
   { path: '/vehiculos', name: 'Vehículos', icon: 'car', roles: ['admin'] },
   { path: '/clientes', name: 'Clientes', icon: 'id-card', roles: ['admin'] },
+  { path: '/talleres', name: 'Talleres', icon: 'wrench', roles: ['admin'] },
   { path: '/usuarios', name: 'Usuarios', icon: 'users', roles: ['admin'] }
 ]
 
@@ -148,6 +149,10 @@ const tabs = computed(() => {
     case '/usuarios':
       return [
         { id: 'usuarios', name: 'Gestión de Usuarios' }
+      ]
+    case '/talleres':
+      return [
+        { id: 'talleres', name: 'Gestión de Talleres' }
       ]
     case '/diagnosticos':
       return [

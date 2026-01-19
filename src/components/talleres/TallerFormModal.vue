@@ -6,7 +6,9 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
 				</svg>
 			</button>
-			<h2 class="text-2xl font-bold mb-6 text-blue-600 text-center">Nuevo Taller</h2>
+			<h2 class="text-2xl font-bold mb-6 text-blue-600 text-center">
+				{{ tallerData?.id ? 'Editar Taller' : 'Nuevo Taller' }}
+			</h2>
 			<form @submit.prevent="handleSubmit">
 				<!-- SECCIÓN ÚNICA: DATOS DE TALLER -->
 				<div class="mb-8 p-6 bg-gradient-to-r from-primary-50 to-blue-50 rounded-xl border-l-4 border-primary-500">
@@ -90,7 +92,7 @@
 						custom-loading-text="Procesando"
 						:min-delay="1500"
 					>
-						Crear Taller
+						{{ tallerData?.id ? 'Actualizar Taller' : 'Crear Taller' }}
 					</BaseButton>
 				</div>
 			</form>
@@ -121,6 +123,10 @@ export default {
 		show: {
 			type: Boolean,
 			required: true
+		},
+		tallerData: {
+			type: Object,
+			default: () => ({})
 		}
 	},
 	emits: ['close', 'taller-guardado'],
@@ -148,6 +154,32 @@ export default {
 	created() {
 		this.loadCopesData();
 	},
+	watch: {
+		tallerData: {
+			handler(newData) {
+				if (newData && Object.keys(newData).length > 0) {
+					this.formData = { 
+						...newData,
+						// Asegurar que cope_ids sea un array
+						cope_ids: Array.isArray(newData.cope_ids) ? [...newData.cope_ids] : []
+					};
+					console.log('Datos de taller cargados para edición:', this.formData);
+				}
+			},
+			immediate: true
+		},
+		show(value) {
+			if (value) {
+				// Cargar copes si no están cargados
+				if (this.copesWithDetails.length === 0) {
+					this.loadCopesData();
+				}
+				if (!Object.keys(this.tallerData).length) {
+					this.resetForm();
+				}
+			}
+		}
+	},
 	computed: {
 		// Validaciones individuales de cada campo
 		nombreValid() {
@@ -167,13 +199,6 @@ export default {
 				nombre: this.formData.nombre.trim(),
 				cope_ids: this.formData.cope_ids.map(id => parseInt(id))
 			};
-		}
-	},
-	watch: {
-		show(value) {
-			if (value) {
-				this.resetForm();
-			}
 		}
 	},
 	methods: {
@@ -238,25 +263,39 @@ export default {
 			
 			try {
 				await this.executeSubmit(async () => {
-					console.log('Creando nuevo taller...');
+					console.log('Guardando taller...');
 					
-					const response = await apiClient.post('/talleres', this.finalFormData);
-					console.log('Taller creado:', response.data);
+					let response;
+					if (this.tallerData?.id) {
+						// Actualizar taller existente
+						response = await apiClient.post(`/update/talleres/${this.tallerData.id}`, this.finalFormData);
+						console.log('Taller actualizado:', response.data);
+						
+						this.toastStore.addToast({
+							message: 'Taller actualizado exitosamente',
+							type: 'success',
+							duration: 3000
+						});
+					} else {
+						// Crear nuevo taller
+						response = await apiClient.post('/talleres', this.finalFormData);
+						console.log('Taller creado:', response.data);
+						
+						this.toastStore.addToast({
+							message: 'Taller creado exitosamente',
+							type: 'success',
+							duration: 3000
+						});
+					}
 					
-					// Emitir evento con el nuevo taller
+					// Emitir evento con el taller guardado
 					this.$emit('taller-guardado', response.data.taller);
-					
-					this.toastStore.addToast({
-						message: 'Taller creado exitosamente',
-						type: 'success',
-						duration: 3000
-					});
 				});
 				
 				// Cerrar el modal al finalizar
 				this.$emit('close');
 			} catch (error) {
-				console.error('Error al crear taller:', error);
+				console.error('Error al guardar taller:', error);
 				
 				// Manejar errores específicos del servidor
 				if (error.response?.data?.error) {
@@ -280,7 +319,7 @@ export default {
 					});
 				} else {
 					this.toastStore.addToast({
-						message: 'Error al crear el taller. Por favor, intente nuevamente.',
+						message: `Error al ${this.tallerData?.id ? 'actualizar' : 'crear'} el taller. Por favor, intente nuevamente.`,
 						type: 'error',
 						duration: 5000
 					});
