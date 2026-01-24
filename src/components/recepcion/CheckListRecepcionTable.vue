@@ -1487,6 +1487,8 @@ export default {
       
       try {
         const date = new Date(dateString);
+        // Restar 6 horas para ajustar la diferencia de zona horaria de la BD
+        date.setHours(date.getHours() - 6);
         return date.toLocaleString('es-ES', {
           year: 'numeric',
           month: '2-digit',
