@@ -44,7 +44,7 @@
     </div>
 
     <!-- Mensaje informativo sobre el orden de completado -->
-    <div v-if="getOldestPendingChecklist" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+    <div v-if="getPendingChecklistsByLocalidad.length > 0" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
       <div class="flex items-start">
         <div class="flex-shrink-0">
           <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
@@ -53,11 +53,16 @@
         </div>
         <div class="ml-3">
           <h3 class="text-sm font-medium text-blue-800">
-            Orden de Completado de CheckLists
+            Orden de Completado de CheckLists por Localidad
           </h3>
           <div class="mt-2 text-sm text-blue-700">
-            <p>Los checklists deben completarse en orden secuencial. El próximo checklist a completar es el <strong>Folio {{ getOldestPendingChecklist.folio || getOldestPendingChecklist.id }}</strong>.</p>
-            <p class="mt-1">Solo se puede completar un checklist cuando el más antiguo pendiente ha sido terminado.</p>
+            <p>Los checklists deben completarse en orden secuencial <strong>por localidad</strong>. Próximos a completar:</p>
+            <ul class="mt-2 list-disc list-inside space-y-1">
+              <li v-for="item in getPendingChecklistsByLocalidad" :key="item.localidad">
+                <strong>{{ item.localidad }}</strong>: Folio <strong>{{ item.folio }}</strong>
+              </li>
+            </ul>
+            <p class="mt-2 text-xs text-blue-600">Solo se puede completar el checklist más antiguo pendiente de cada localidad.</p>
           </div>
         </div>
       </div>
@@ -1501,28 +1506,98 @@ export default {
       }
     };
 
-    // Función para obtener el checklist más antiguo pendiente
+    // Helper para extraer la localidad (prefijo) del folio
+    // Ejemplo: GON0001 -> GON, GUA0001 -> GUA, SAL0001 -> SAL
+    const getLocalidadFromFolio = (folio) => {
+      if (!folio) return null;
+      // Extraer las letras del inicio del folio (antes de los números)
+      const match = folio.match(/^([A-Za-z]+)/);
+      return match ? match[1].toUpperCase() : null;
+    };
+
+    // Función para obtener el checklist más antiguo pendiente POR LOCALIDAD
+    const getOldestPendingChecklistByLocalidad = (localidad) => {
+      if (!localidad) return null;
+      
+      const pendingChecklists = checklistData.value.filter(item => {
+        const itemLocalidad = getLocalidadFromFolio(item.folio);
+        return !isCompleted(item) && itemLocalidad === localidad;
+      });
+      
+      if (pendingChecklists.length === 0) return null;
+      
+      // Ordenar por ID (asumiendo que ID menor = más antiguo)
+      return pendingChecklists.reduce((oldest, current) => {
+        return current.id < oldest.id ? current : oldest;
+      });
+    };
+
+    // Función para obtener el primer checklist pendiente de cada localidad (para mostrar en el mensaje informativo)
     const getOldestPendingChecklist = computed(() => {
       const pendingChecklists = checklistData.value.filter(item => !isCompleted(item));
       if (pendingChecklists.length === 0) return null;
       
-      // Ordenar por ID (asumiendo que ID menor = más antiguo)
-      // También se podría usar created_at si está disponible
-      return pendingChecklists.reduce((oldest, current) => {
+      // Agrupar por localidad y obtener el más antiguo de cada una
+      const localidades = {};
+      pendingChecklists.forEach(item => {
+        const localidad = getLocalidadFromFolio(item.folio);
+        if (localidad) {
+          if (!localidades[localidad] || item.id < localidades[localidad].id) {
+            localidades[localidad] = item;
+          }
+        }
+      });
+      
+      // Retornar el primero para mantener compatibilidad con el mensaje (se mostrará uno)
+      // Pero la lógica real de canComplete usará getOldestPendingChecklistByLocalidad
+      const oldestByLocalidad = Object.values(localidades);
+      if (oldestByLocalidad.length === 0) return null;
+      
+      // Retornar el más antiguo global solo para el mensaje informativo
+      return oldestByLocalidad.reduce((oldest, current) => {
         return current.id < oldest.id ? current : oldest;
       });
     });
 
-    // Función para verificar si un checklist puede ser completado
+    // Función para obtener lista de checklists pendientes más antiguos por cada localidad (para el mensaje informativo)
+    const getPendingChecklistsByLocalidad = computed(() => {
+      const pendingChecklists = checklistData.value.filter(item => !isCompleted(item));
+      if (pendingChecklists.length === 0) return [];
+      
+      // Agrupar por localidad y obtener el más antiguo de cada una
+      const localidades = {};
+      pendingChecklists.forEach(item => {
+        const localidad = getLocalidadFromFolio(item.folio);
+        if (localidad) {
+          if (!localidades[localidad] || item.id < localidades[localidad].id) {
+            localidades[localidad] = item;
+          }
+        }
+      });
+      
+      // Retornar array con la info de cada localidad
+      return Object.entries(localidades).map(([localidad, item]) => ({
+        localidad,
+        folio: item.folio,
+        id: item.id
+      })).sort((a, b) => a.localidad.localeCompare(b.localidad));
+    });
+
+    // Función para verificar si un checklist puede ser completado (POR LOCALIDAD)
     const canCompleteChecklist = (item) => {
       // Si ya está completado, no se puede "completar" de nuevo
       if (isCompleted(item)) return false;
       
-      const oldestPending = getOldestPendingChecklist.value;
-      if (!oldestPending) return false;
+      // Obtener la localidad del item actual
+      const localidad = getLocalidadFromFolio(item.folio);
+      if (!localidad) return false;
       
-      // Solo se puede completar si es el más antiguo pendiente
-      return item.id === oldestPending.id;
+      // Obtener el checklist más antiguo pendiente de ESA localidad
+      const oldestPendingForLocalidad = getOldestPendingChecklistByLocalidad(localidad);
+      if (!oldestPendingForLocalidad) return false;
+      
+      // Solo se puede completar si es el más antiguo pendiente de su localidad
+      return item.id === oldestPendingForLocalidad.id;
     };
 
     // Watchers para filtros
@@ -1567,8 +1642,9 @@ export default {
       formatDate,
       cargarChecklistData,
       getImageUrl,
-      // Nuevas funciones para manejo de roles y orden
+      // Nuevas funciones para manejo de roles y orden por localidad
       getOldestPendingChecklist,
+      getPendingChecklistsByLocalidad,
       canCompleteChecklist,
       // Funciones para PDF
       generarPDF,
