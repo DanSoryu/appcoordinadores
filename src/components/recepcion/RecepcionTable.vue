@@ -100,6 +100,7 @@
                 <th v-if="isAdmin" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taller</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehículo</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entregado por</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registrado por</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
               </tr>
             </thead>
@@ -113,6 +114,7 @@
                   {{ item.numero_economico }} - {{ item.placas }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.entregado_por }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.usuario_registro || 'N/A' }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
                   <!-- Botones de acciones -->
                   <button 
@@ -131,7 +133,7 @@
               </tr>
               <!-- Mensaje cuando no hay datos -->
               <tr v-if="paginatedData.length === 0">
-                <td :colspan="isAdmin ? 7 : 6" class="px-6 py-8 text-center text-gray-500">
+                <td :colspan="isAdmin ? 8 : 7" class="px-6 py-8 text-center text-gray-500">
                   No se encontraron registros de recepción.
                 </td>
               </tr>
@@ -250,6 +252,10 @@
               <div class="space-y-1">
                 <p class="text-sm font-medium text-gray-500">Entregado por</p>
                 <p class="font-semibold">{{ currentRecepcion.entregado_por }}</p>
+              </div>
+              <div class="space-y-1">
+                <p class="text-sm font-medium text-gray-500">Registrado por</p>
+                <p class="font-semibold">{{ currentRecepcion.usuario_registro || 'N/A' }}</p>
               </div>
             </div>
             
