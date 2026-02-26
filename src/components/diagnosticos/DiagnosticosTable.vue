@@ -547,77 +547,28 @@ export default {
       error.value = null
       
       try {
-        // Cargar diagnósticos primero (obligatorio)
-        const responseDiag = await apiClient.get('/diagnosticos')
+        const response = await apiClient.get('/diagnosticos')
         
-        if (!responseDiag.data || !Array.isArray(responseDiag.data.diagnosticos)) {
+        if (!response.data || !Array.isArray(response.data.diagnosticos)) {
           throw new Error('Estructura de datos inválida')
         }
         
-        // Cargar recepciones y vehículos por separado (manejo individual de errores)
-        let recepcionesData = []
-        let vehiculosData = []
-        
-        // Intentar cargar recepciones
-        try {
-          const responseRec = await apiClient.get('/recepcion')
-          recepcionesData = Array.isArray(responseRec.data) ? responseRec.data : []
-        } catch (recErr) {
-          if (recErr.response?.status === 404) {
-            console.log('No hay recepciones disponibles (404)')
-          } else {
-            console.warn('Error al cargar recepciones:', recErr)
-          }
-          recepcionesData = []
-        }
-        
-        // Intentar cargar vehículos
-        try {
-          const responseVeh = await apiClient.get('/vehiculos')
-          vehiculosData = Array.isArray(responseVeh.data) ? responseVeh.data : []
-        } catch (vehErr) {
-          if (vehErr.response?.status === 404) {
-            console.log('No hay vehículos disponibles (404)')
-          } else {
-            console.warn('Error al cargar vehículos:', vehErr)
-          }
-          vehiculosData = []
-        }
-        
-        // Crear mapas para búsqueda rápida
-        const recepcionesMap = {}
-        recepcionesData.forEach(rec => {
-          recepcionesMap[rec.id] = rec
-        })
-        
-        const vehiculosMap = {}
-        vehiculosData.forEach(veh => {
-          vehiculosMap[veh.id] = veh
-        })
-        
         // Mapear datos de la API al formato esperado por el frontend
-        diagnosticosData.value = responseDiag.data.diagnosticos.map(diagnostico => {
-          // Obtener numero_economico a través de recepcion -> vehiculo
-          const recepcion = recepcionesMap[diagnostico.recepcion_id]
-          const vehiculo = recepcion ? vehiculosMap[recepcion.vehiculo_id] : null
-          const numeroEconomico = vehiculo?.numero_economico || 'N/A'
-          
-          return {
-            id: diagnostico.id,
-            folioRecepcion: `${diagnostico.recepcion_id}`,
-            numeroEconomico,
-            estado: diagnostico.fecha_completado ? 'completado' : 'pendiente',
-            fechaCreacion: diagnostico.created_at,
-            fechaCompletado: diagnostico.fecha_completado,
-            mecanicoNombre: diagnostico.mecanico_nombre,
-            mecanicoId: diagnostico.mecanico_id,
-            // Extraer diagnósticos de los campos JSON
-            diagnosticos: extraerDiagnosticos(diagnostico),
-            observaciones: generarObservaciones(diagnostico),
-            // Guardar los datos originales para el modal de edición
-            _original: diagnostico
-          }
-        })
+        diagnosticosData.value = response.data.diagnosticos.map(diagnostico => ({
+          id: diagnostico.id,
+          folioRecepcion: `${diagnostico.recepcion_id}`,
+          numeroEconomico: diagnostico.numero_economico || 'N/A',
+          estado: diagnostico.fecha_completado ? 'completado' : 'pendiente',
+          fechaCreacion: diagnostico.created_at,
+          fechaCompletado: diagnostico.fecha_completado,
+          mecanicoNombre: diagnostico.mecanico_nombre,
+          mecanicoId: diagnostico.mecanico_id,
+          // Extraer diagnósticos de los campos JSON
+          diagnosticos: extraerDiagnosticos(diagnostico),
+          observaciones: generarObservaciones(diagnostico),
+          // Guardar los datos originales para el modal de edición
+          _original: diagnostico
+        }))
         
         console.log('Datos de diagnósticos cargados:', diagnosticosData.value.length, 'registros')
       } catch (err) {
