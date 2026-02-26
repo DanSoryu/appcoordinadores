@@ -554,30 +554,34 @@ export default {
           throw new Error('Estructura de datos inválida')
         }
         
-        // Cargar recepciones y vehículos en paralelo (no bloqueantes)
+        // Cargar recepciones y vehículos por separado (manejo individual de errores)
         let recepcionesData = []
         let vehiculosData = []
         
+        // Intentar cargar recepciones
         try {
-          const [responseRec, responseVeh] = await Promise.all([
-            apiClient.get('/recepcion'),
-            apiClient.get('/vehiculos')
-          ])
-          
-          // recepciones y vehiculos devuelven arrays directamente en response.data
-          if (Array.isArray(responseRec.data)) {
-            recepcionesData = responseRec.data
-          } else if (responseRec.data && Array.isArray(responseRec.data.recepciones)) {
-            recepcionesData = responseRec.data.recepciones
+          const responseRec = await apiClient.get('/recepcion')
+          recepcionesData = Array.isArray(responseRec.data) ? responseRec.data : []
+        } catch (recErr) {
+          if (recErr.response?.status === 404) {
+            console.log('No hay recepciones disponibles (404)')
+          } else {
+            console.warn('Error al cargar recepciones:', recErr)
           }
-          
-          if (Array.isArray(responseVeh.data)) {
-            vehiculosData = responseVeh.data
-          } else if (responseVeh.data && Array.isArray(responseVeh.data.vehiculos)) {
-            vehiculosData = responseVeh.data.vehiculos
+          recepcionesData = []
+        }
+        
+        // Intentar cargar vehículos
+        try {
+          const responseVeh = await apiClient.get('/vehiculos')
+          vehiculosData = Array.isArray(responseVeh.data) ? responseVeh.data : []
+        } catch (vehErr) {
+          if (vehErr.response?.status === 404) {
+            console.log('No hay vehículos disponibles (404)')
+          } else {
+            console.warn('Error al cargar vehículos:', vehErr)
           }
-        } catch (auxErr) {
-          console.warn('No se pudieron cargar recepciones/vehículos para número económico:', auxErr)
+          vehiculosData = []
         }
         
         // Crear mapas para búsqueda rápida
