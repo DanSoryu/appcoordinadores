@@ -24,7 +24,7 @@
           <input 
             v-model="searchQuery"
             type="text" 
-            placeholder="Buscar folio de recepción..."
+            placeholder="Buscar folio de recepción o No. económico..."
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
         </div>
@@ -71,10 +71,11 @@
           <table class="min-w-full border-collapse table-fixed">
             <thead class="bg-gray-50">
               <tr class="divide-x divide-gray-200">
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Folio Recepción</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Mecánico</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Estado</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Acciones</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Folio Recepción</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">No. Económico</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Mecánico</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Estado</th>
+                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">Acciones</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -91,6 +92,9 @@
                       ✓ Completado
                     </span>
                   </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ diagnostico.numeroEconomico || 'N/A' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {{ diagnostico.mecanicoNombre || 'No asignado' }}
@@ -153,7 +157,7 @@
               </tr>
               <!-- Mensaje cuando no hay datos -->
               <tr v-if="paginatedData.length === 0 && !isLoading">
-                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                <td colspan="5" class="px-6 py-8 text-center text-gray-500">
                   No se encontraron diagnósticos.
                 </td>
               </tr>
@@ -255,6 +259,10 @@
                 <div>
                   <label class="text-sm font-medium text-gray-500">Folio de Recepción</label>
                   <p class="text-sm text-gray-900 font-semibold">{{ currentDiagnostico.folioRecepcion }}</p>
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-gray-500">No. Económico</label>
+                  <p class="text-sm text-gray-900 font-semibold">{{ currentDiagnostico.numeroEconomico || 'N/A' }}</p>
                 </div>
                 <div>
                   <label class="text-sm font-medium text-gray-500">Mecánico Asignado</label>
@@ -458,7 +466,8 @@ export default {
         const search = searchQuery.value.toLowerCase()
         result = result.filter(item => {
           return item.folioRecepcion.toLowerCase().includes(search) ||
-                 item.id.toString().includes(search)
+                 item.id.toString().includes(search) ||
+                 (item.numeroEconomico && item.numeroEconomico.toLowerCase().includes(search))
         })
       }
 
@@ -538,27 +547,55 @@ export default {
       error.value = null
       
       try {
-        const response = await apiClient.get('/diagnosticos')
+        // Cargar diagnósticos, recepciones y vehículos en paralelo
+        const [responseDiag, responseRec, responseVeh] = await Promise.all([
+          apiClient.get('/diagnosticos'),
+          apiClient.get('/recepcion'),
+          apiClient.get('/vehiculos')
+        ])
         
-        if (!response.data || !Array.isArray(response.data.diagnosticos)) {
+        if (!responseDiag.data || !Array.isArray(responseDiag.data.diagnosticos)) {
           throw new Error('Estructura de datos inválida')
         }
         
+        // Crear mapas para búsqueda rápida
+        const recepcionesMap = {}
+        if (responseRec.data && Array.isArray(responseRec.data.recepciones)) {
+          responseRec.data.recepciones.forEach(rec => {
+            recepcionesMap[rec.id] = rec
+          })
+        }
+        
+        const vehiculosMap = {}
+        if (responseVeh.data && Array.isArray(responseVeh.data.vehiculos)) {
+          responseVeh.data.vehiculos.forEach(veh => {
+            vehiculosMap[veh.id] = veh
+          })
+        }
+        
         // Mapear datos de la API al formato esperado por el frontend
-        diagnosticosData.value = response.data.diagnosticos.map(diagnostico => ({
-          id: diagnostico.id,
-          folioRecepcion: `${diagnostico.recepcion_id}`,
-          estado: diagnostico.fecha_completado ? 'completado' : 'pendiente',
-          fechaCreacion: diagnostico.created_at,
-          fechaCompletado: diagnostico.fecha_completado,
-          mecanicoNombre: diagnostico.mecanico_nombre,
-          mecanicoId: diagnostico.mecanico_id,
-          // Extraer diagnósticos de los campos JSON
-          diagnosticos: extraerDiagnosticos(diagnostico),
-          observaciones: generarObservaciones(diagnostico),
-          // Guardar los datos originales para el modal de edición
-          _original: diagnostico
-        }))
+        diagnosticosData.value = responseDiag.data.diagnosticos.map(diagnostico => {
+          // Obtener numero_economico a través de recepcion -> vehiculo
+          const recepcion = recepcionesMap[diagnostico.recepcion_id]
+          const vehiculo = recepcion ? vehiculosMap[recepcion.vehiculo_id] : null
+          const numeroEconomico = vehiculo?.numero_economico || 'N/A'
+          
+          return {
+            id: diagnostico.id,
+            folioRecepcion: `${diagnostico.recepcion_id}`,
+            numeroEconomico,
+            estado: diagnostico.fecha_completado ? 'completado' : 'pendiente',
+            fechaCreacion: diagnostico.created_at,
+            fechaCompletado: diagnostico.fecha_completado,
+            mecanicoNombre: diagnostico.mecanico_nombre,
+            mecanicoId: diagnostico.mecanico_id,
+            // Extraer diagnósticos de los campos JSON
+            diagnosticos: extraerDiagnosticos(diagnostico),
+            observaciones: generarObservaciones(diagnostico),
+            // Guardar los datos originales para el modal de edición
+            _original: diagnostico
+          }
+        })
         
         console.log('Datos de diagnósticos cargados:', diagnosticosData.value.length, 'registros')
       } catch (err) {
@@ -976,6 +1013,7 @@ export default {
           const datosGenerales = [
             ['ID Diagnóstico:', diagnostico.id],
             ['Folio de Recepción:', diagnostico.folioRecepcion],
+            ['No. Económico:', diagnostico.numeroEconomico || 'N/A'],
             ['Estado:', diagnostico.estado.toUpperCase()],
             ['Mecánico:', diagnostico.mecanicoNombre || 'No asignado'],
             ['Fecha de Creación:', formatDate(diagnostico.fechaCreacion)],
@@ -1287,7 +1325,7 @@ export default {
         // Información general
         doc.setTextColor(0, 0, 0);
         doc.setFillColor(239, 246, 255); // bg-blue-50
-        doc.roundedRect(margin, yPosition, contentWidth, 35, 3, 3, 'F');
+        doc.roundedRect(margin, yPosition, contentWidth, 47, 3, 3, 'F');
         
         yPosition += 8;
         doc.setFontSize(14);
@@ -1301,6 +1339,9 @@ export default {
         doc.setTextColor(0, 0, 0);
         doc.text(`Folio: ${diagnostico.folioRecepcion}`, margin + 5, yPosition);
         doc.text(`Estado: ${diagnostico.estado.toUpperCase()}`, margin + 70, yPosition);
+        
+        yPosition += 6;
+        doc.text(`No. Económico: ${diagnostico.numeroEconomico || 'N/A'}`, margin + 5, yPosition);
         
         yPosition += 6;
         doc.text(`Mecánico: ${diagnostico.mecanicoNombre || 'No asignado'}`, margin + 5, yPosition);
