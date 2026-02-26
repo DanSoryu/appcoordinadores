@@ -547,31 +547,49 @@ export default {
       error.value = null
       
       try {
-        // Cargar diagnósticos, recepciones y vehículos en paralelo
-        const [responseDiag, responseRec, responseVeh] = await Promise.all([
-          apiClient.get('/diagnosticos'),
-          apiClient.get('/recepcion'),
-          apiClient.get('/vehiculos')
-        ])
+        // Cargar diagnósticos primero (obligatorio)
+        const responseDiag = await apiClient.get('/diagnosticos')
         
         if (!responseDiag.data || !Array.isArray(responseDiag.data.diagnosticos)) {
           throw new Error('Estructura de datos inválida')
         }
         
-        // Crear mapas para búsqueda rápida
-        const recepcionesMap = {}
-        if (responseRec.data && Array.isArray(responseRec.data.recepciones)) {
-          responseRec.data.recepciones.forEach(rec => {
-            recepcionesMap[rec.id] = rec
-          })
+        // Cargar recepciones y vehículos en paralelo (no bloqueantes)
+        let recepcionesData = []
+        let vehiculosData = []
+        
+        try {
+          const [responseRec, responseVeh] = await Promise.all([
+            apiClient.get('/recepcion'),
+            apiClient.get('/vehiculos')
+          ])
+          
+          // recepciones y vehiculos devuelven arrays directamente en response.data
+          if (Array.isArray(responseRec.data)) {
+            recepcionesData = responseRec.data
+          } else if (responseRec.data && Array.isArray(responseRec.data.recepciones)) {
+            recepcionesData = responseRec.data.recepciones
+          }
+          
+          if (Array.isArray(responseVeh.data)) {
+            vehiculosData = responseVeh.data
+          } else if (responseVeh.data && Array.isArray(responseVeh.data.vehiculos)) {
+            vehiculosData = responseVeh.data.vehiculos
+          }
+        } catch (auxErr) {
+          console.warn('No se pudieron cargar recepciones/vehículos para número económico:', auxErr)
         }
         
+        // Crear mapas para búsqueda rápida
+        const recepcionesMap = {}
+        recepcionesData.forEach(rec => {
+          recepcionesMap[rec.id] = rec
+        })
+        
         const vehiculosMap = {}
-        if (responseVeh.data && Array.isArray(responseVeh.data.vehiculos)) {
-          responseVeh.data.vehiculos.forEach(veh => {
-            vehiculosMap[veh.id] = veh
-          })
-        }
+        vehiculosData.forEach(veh => {
+          vehiculosMap[veh.id] = veh
+        })
         
         // Mapear datos de la API al formato esperado por el frontend
         diagnosticosData.value = responseDiag.data.diagnosticos.map(diagnostico => {
